@@ -10,7 +10,9 @@ const Colors = {
     deepGray: "#333333",
     deepestGray: "#1A1A1A",
     blue: "#0000FF",
+    lightpink: "#FFEAEA",
     underline: "#E5E5E5",
+    
   };
   
   export default Colors;
