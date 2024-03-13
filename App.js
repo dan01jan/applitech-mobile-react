@@ -3,6 +3,7 @@ import { Box, NativeBaseProvider, Text } from 'native-base';
 import LoginScreen from './src/Screens/LoginScreen';
 import RegisterScreen from './src/Screens/RegisterScreen';
 import NotVerifyScreen from './src/Screens/NotVerifyScreen';
+import HomeScreen from './src/Screens/HomeScreen';
 
 
 export default function App() {
@@ -10,7 +11,8 @@ export default function App() {
     <NativeBaseProvider>
       {/* <LoginScreen /> */}
       {/* <RegisterScreen /> */}
-      <NotVerifyScreen />
+      {/* <NotVerifyScreen /> */}
+      <HomeScreen/>
     </NativeBaseProvider>
   );
 }
