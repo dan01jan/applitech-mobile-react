@@ -1,20 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Box, NativeBaseProvider, Text } from 'native-base';
+import LoginScreen from './src/Screens/LoginScreen';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>NAKAKABADTRIP SI JOHN MATTHEW DULLAS</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NativeBaseProvider>
+      <LoginScreen />
+    </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
