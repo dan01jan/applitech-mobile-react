@@ -6,6 +6,7 @@ import NotVerifyScreen from './src/Screens/NotVerifyScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 import SingleProductScreen from './src/Screens/SingleProductScreen';
 import CartScreen from './src/Screens/CartScreen';
+import ProfileScreen from './src/Screens/ProfileScreen';
 
 export default function App() {
   return (
@@ -15,7 +16,8 @@ export default function App() {
       {/* <NotVerifyScreen /> */}
       {/* <HomeScreen/> */}
       {/* <SingleProductScreen /> */}
-      <CartScreen/>
+      {/* <CartScreen/> */}
+      <ProfileScreen/>
     </NativeBaseProvider>
   );
 }
