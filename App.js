@@ -7,6 +7,8 @@ import HomeScreen from './src/Screens/HomeScreen';
 import SingleProductScreen from './src/Screens/SingleProductScreen';
 import CartScreen from './src/Screens/CartScreen';
 import ProfileScreen from './src/Screens/ProfileScreen';
+import ShippingScreen from './src/Screens/ShippingScreen';
+import PaymentScreen from './src/Screens/PaymentScreen';
 
 export default function App() {
   return (
@@ -17,7 +19,9 @@ export default function App() {
       {/* <HomeScreen/> */}
       {/* <SingleProductScreen /> */}
       {/* <CartScreen/> */}
-      <ProfileScreen/>
+      {/* <ProfileScreen/> */}
+      {/* <ShippingScreen/> */}
+      <PaymentScreen/>
     </NativeBaseProvider>
   );
 }
