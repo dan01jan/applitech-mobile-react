@@ -1,6 +1,7 @@
-import { Box, Text } from 'native-base'
+import { Box, Text, Center} from 'native-base'
 import colors from '../color'
 import React from 'react'
+import CartEmpty from '../Components/CartEmpty'
 
 function CartScreen() {
   return (
@@ -10,6 +11,7 @@ function CartScreen() {
      <Text color={colors.black} fontSize={20} bold>CART</Text>
     </Center>
     {/* Empty Cart */}
+    <CartEmpty/>
    </Box>
   )
 }
