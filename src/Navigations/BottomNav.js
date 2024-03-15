@@ -1,16 +1,29 @@
-import { View, Text, StyleSheet} from "react-native";
+import { View, Text, StyleSheet, Pressable} from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../Screens/HomeScreen";
 import ProfileScreen from "../Screens/ProfileScreen"
+import CartScreen from "../Screens/CartScreen"
 import { Center } from "native-base";
-import { Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
+import { Entypo, AntDesign, FontAwesome, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import color from "../color";
 
 
 const Tab = createBottomTabNavigator();
 
-const customTab = ({ children, onPress }) => <Text>hh</Text>; // Example custom tab component   
+const CustomTab = ({ children, onPress }) => (
+  <Pressable
+    onPress={onPress}
+    h={70}
+    w={70}
+    rounded="full"
+    bg={color.main}
+    top={-30}
+    shadow={2}
+    >
+      {children}
+  </Pressable>
+)  
 
 const BottomNav = () => {
   return (
@@ -34,6 +47,23 @@ const BottomNav = () => {
                 <Entypo name="home" size={24} color={color.main} />
               ) : (
                 <AntDesign name="home" size={24} color={color.black} />
+              )}
+            </Center>
+          ),
+        }}
+      />
+
+<Tab.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          tabBarButton: (props) => <CustomTab {...props}/>,
+          tabBarIcon: ({ focused }) => (
+            <Center>
+              {focused ? (
+                <FontAwesome5 name="shopping-basket" size={24} color={color.black} />
+              ) : (
+                <MaterialCommunityIcons name="shopping-outline" size={24} color={color.black} />
               )}
             </Center>
           ),
@@ -66,6 +96,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: color.white,
         height: 60,
+        paddingTop: 15,
     }
 })
 export default BottomNav;
