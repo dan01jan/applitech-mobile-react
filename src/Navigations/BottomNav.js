@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, Pressable} from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../Screens/HomeScreen";
 import ProfileScreen from "../Screens/ProfileScreen"
 import CartScreen from "../Screens/CartScreen"
 import { Center } from "native-base";
 import { Entypo, AntDesign, FontAwesome, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import color from "../color";
+import StackNav from "../Navigations/StackNav"
 
 
 const Tab = createBottomTabNavigator();
@@ -28,7 +28,7 @@ const CustomTab = ({ children, onPress }) => (
 const BottomNav = () => {
   return (
     <Tab.Navigator
-      backBehavior="main"
+      backBehavior="Main"
       initialRouteName="Main"
       screenOptions={{
         tabBarShowLabel: false,
@@ -39,7 +39,7 @@ const BottomNav = () => {
     >
       <Tab.Screen
         name="Main"
-        component={HomeScreen}
+        component={StackNav}
         options={{
           tabBarIcon: ({ focused }) => (
             <Center>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         elevation: 0,
         backgroundColor: color.white,
         height: 60,
-        paddingTop: 15,
+        // paddingTop: 15,
     }
 })
 export default BottomNav;

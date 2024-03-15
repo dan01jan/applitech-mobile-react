@@ -11,8 +11,8 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@react-native-community/viewpager": "^5.0.11",
-    "@react-navigation/bottom-tabs": "^6.3.1",
-    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/bottom-tabs": "^6.5.19",
+    "@react-navigation/native": "^6.1.16",
     "@react-navigation/native-stack": "^6.6.2",
     "expo": "~50.0.11",
     "expo-status-bar": "~1.11.1",
