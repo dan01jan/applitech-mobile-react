@@ -2,8 +2,9 @@ import { View, Text, StyleSheet} from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../Screens/HomeScreen";
+import ProfileScreen from "../Screens/ProfileScreen"
 import { Center } from "native-base";
-import { Entypo, AntDesign } from "@expo/vector-icons";
+import { Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import color from "../color";
 
 
@@ -38,6 +39,22 @@ const BottomNav = () => {
           ),
         }}
       />
+
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Center>
+              { focused ? (
+                <FontAwesome name="user" size={24} color={color.main}/>
+              ) : (
+                <AntDesign name="user" size={24} color={color.black}/>
+              )}
+            </Center>
+          )
+        }}
+        />
       {/* Example of using customTab component */}
       {/* <Tab.Screen name="Custom" component={customTab} /> */}
     </Tab.Navigator>
