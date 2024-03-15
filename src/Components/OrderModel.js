@@ -6,12 +6,12 @@ import colors from "../color"
 const OrdersInfos = [
   {
     title: "Products",
-   price:123.22,
+   price:13.22,
    color:"black"
   },
   {
     title: "Shipping",
-   price:123.22,
+   price:103.22,
    color:"black"
   },
   {

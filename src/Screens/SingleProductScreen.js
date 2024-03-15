@@ -16,9 +16,12 @@ import colors from "../color";
 import Rating from "../Components/Rating";
 import Buttone from "../Components/Buttone";
 import Review from "../Components/Review";
+import { useNavigation } from '@react-navigation/native'
 
-function SingleProductScreen() {
+function SingleProductScreen({route}) {
   const [quantity, setQuantity] = useState(1);
+  const navigation = useNavigation()
+  const product = route.params
 
   const increment = () => {
     setQuantity(quantity + 1);
@@ -34,16 +37,16 @@ function SingleProductScreen() {
     <Box safeArea flex={1} bg={colors.white}>
       <ScrollView px={5} showsVerticalScrollIndicator={false}>
         <Image
-          source={require("../../assets/images/1.png")}
+          source={{ uri: product.image }} 
           alt="Image"
           w="full"
           h={300}
           resizeMode="contain"
         />
         <Heading bold fontSize={15} mb={2} lineHeight={22}>
-          Blue Blouse
+          {product.name}
         </Heading>
-        <Rating value={4} />
+        <Rating value={product.rating} text={`${product.numReviews} reviews`} />
         <HStack alignItems="center" my={5}>
           <Button size="sm" colorScheme="pink" onPress={decrement}>-</Button>
           <View
@@ -60,6 +63,8 @@ function SingleProductScreen() {
           </View>
           <Button size="sm" colorScheme="pink" onPress={increment}>+</Button>
           <Spacer />
+         
+          <Spacer />
           <Heading bold color={colors.black} fontSize={19}>
             500
           </Heading>
@@ -71,6 +76,7 @@ function SingleProductScreen() {
           ADD TO CART
         </Buttone>
         <Review/>
+       
       </ScrollView>
     </Box>
   );
