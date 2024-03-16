@@ -80,7 +80,7 @@ function HomeProducts() {
       </Flex>
       {loading && (
         <Flex alignItems="center" justifyContent="center" mt={4}>
-          <Spinner />
+          <Spinner color="#0000FF" thickness="5px" size={50} accessibilityLabel="Loading" />
         </Flex>
       )}
     </ScrollView>
