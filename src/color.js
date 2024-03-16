@@ -12,7 +12,9 @@ const Colors = {
     blue: "#0000FF",
     lightpink: "#FFEAEA",
     underline: "#E5E5E5",
-    
+    coral: "#F88379",
+    salmon: "#FF9999",
+    brightpink: "#FF007F"
   };
   
   export default Colors;
