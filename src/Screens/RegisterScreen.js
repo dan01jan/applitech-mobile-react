@@ -1,13 +1,12 @@
 import { Box, Image, Input, Heading, Text, Button, VStack } from "native-base";
 import React from "react";
 import colors from "../color";
-import { MaterialIcons,Ionicons,FontAwesome  } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 
-function RegisterScreen() {
+function RegisterScreen({ navigation }) {
   return (
-    <Box flex={1} bg={colors.black}>
+    <Box flex={1} bg={colors.black} alignItems="center" justifyContent="center">
       <Image
         flex={1}
         alt="logo"
@@ -22,38 +21,52 @@ function RegisterScreen() {
         position="absolute"
         top="0"
         px="6"
-        justifyContent="center"
+        alignItems="center" // Center children horizontally
+        justifyContent="center" // Center children vertically
       >
-        {/* <Text fontSize="2xl" color={colors.white} fontWeight="bold">
-          LOGIN
-        </Text> */}
+        {/* Heading */}
         <Heading>SIGN UP</Heading>
-        <VStack space={2} pt="6">
+
+        {/* Form */}
+        <VStack space={2} pt="6" alignItems="center" width="70%">
           {/* Username */}
-        <Input
+          <Input
             InputLeftElement={
               <FontAwesome name="user" size={20} color={colors.main} />
             }
             variant="underlined"
-            placeholder="Input your username"
-            w="70%"
+            placeholder="Input your name"
+            w="100%" // Full width
             pl={2}
             color={colors.main}
             borderBottomColor={colors.underline}
+            fontSize={13}
           />
           {/* Email */}
           <Input
             InputLeftElement={
-              <MaterialIcons name="email" size={20} color={colors.main} />
+              <MaterialIcons name="phone" size={20} color={colors.main} />
             }
             variant="underlined"
             placeholder="Input your email"
-            w="70%"
+            w="100%" // Full width
             pl={2}
             color={colors.main}
             borderBottomColor={colors.underline}
+            fontSize={13}
           />
-
+           <Input
+            InputLeftElement={
+              <MaterialIcons name="email" size={20} color={colors.main} />
+            }
+            variant="underlined"
+            placeholder="Input your number"
+            w="100%" // Full width
+            pl={2}
+            color={colors.main}
+            borderBottomColor={colors.underline}
+            fontSize={13}
+          />
           {/* Password */}
           <Input
             InputLeftElement={
@@ -61,32 +74,43 @@ function RegisterScreen() {
             }
             variant="underlined"
             placeholder="Input your password"
-            w="70%"
+            w="100%" // Full width
             type="password"
             pl={2}
             color={colors.main}
             borderBottomColor={colors.underline}
+            fontSize={13}
           />
         </VStack>
       
+        {/* Button */}
         <Button 
-         _pressed={{
-          bg: colors.main
-         }}
-        my={30}
-         w="40%" 
-         rounded={50}
-          bg={colors.main}>
-        
+          _pressed={{
+            bg: colors.main
+          }}
+          my={30}
+          w="60%" 
+          rounded={50}
+          bg={colors.main}
+        >
           SIGN UP
         </Button>
-        <Pressable mt={4}>
-          <Text color={colors.deepestGray}>SIGN UP</Text> 
-
+        
+        {/* Text */}
+        <Pressable 
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text 
+            mt={-4} 
+            color={colors.salmon}
+            fontWeight="bold"
+          >
+            Already have an account? Log in
+          </Text>
         </Pressable>
       </Box>
     </Box>
   )
 }
 
-export default RegisterScreen
+export default RegisterScreen;
