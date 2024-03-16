@@ -23,11 +23,12 @@ function LoginScreen({ navigation }) {
         justifyContent="center"
         alignItems="center" // Center children horizontally
       >
-   <Image
-          source={require("../../assets/images/logoApp.png")} // Your login image
-          alt="Login Image" // Alt text for accessibility
-          size="lg" // Size of the image
-        />
+  <Image
+  source={require("../../assets/images/logoApp.png")} // Your login image
+  alt="Login Image" // Alt text for accessibility
+  h={300} // Height of the image
+  w={300} // Width of the image
+/>
 
         {/* Google Login Button */}
         <Pressable 
