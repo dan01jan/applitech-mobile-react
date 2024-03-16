@@ -1,46 +1,36 @@
-import { ScrollView, Text, Flex, Pressable, Image, Box, Heading } from "native-base";
-import React, { useState } from "react";
+import { ScrollView, Flex, Pressable, Box, Heading,Image,Text } from "native-base";
+import React from "react";
+import { WebView } from 'react-native-webview';
 import products from "../data/Products";
 import colors from "../color";
 import Rating from "./Rating";
 import { useNavigation } from "@react-navigation/native";
 
+
 function HomeProducts() {
   const navigation = useNavigation();
-  const [loadedProducts, setLoadedProducts] = useState(products.slice(0, 6)); // Initial number of products to load
-  const [loading, setLoading] = useState(false);
-
-  // Function to handle infinite scrolling
-  const handleScroll = (event) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-
-    const paddingToBottom = 20; // Adjust as needed
-    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-      // User has reached the bottom of the list
-      if (!loading && loadedProducts.length < products.length) { // Check if there are more products available
-        setLoading(true);
-        // Simulate loading more products (you can replace this with your actual data fetching logic)
-        setTimeout(() => {
-          const additionalProducts = products.slice(loadedProducts.length, loadedProducts.length + 10); // Load additional products
-          setLoadedProducts(prevProducts => [...prevProducts, ...additionalProducts]);
-          setLoading(false);
-        }, 1000); // Simulated loading delay (adjust as needed)
-      }
-    }
-  };
-
   return (
-    <ScrollView flex={1} showsVerticalScrollIndicator={false} onScroll={handleScroll}>
+    <>
+
+    <ScrollView flex={1} showsHorizontalScrollIndicator={false}>
+      {/* YouTube video section */}
+      <Flex alignItems="center" justifyContent="center" my={4}>
+        <WebView
+          style={{ width: 300, height: 215 }}
+          source={{ uri: "https://www.youtube.com/embed/e176vc5gxxM?si=MVAL6Jn14eiyS4u9" }}
+        />
+      </Flex>
+
       <Flex
         flexWrap="wrap"
         direction="row"
         justifyContent="space-between"
         px={6}
       >
-        {loadedProducts.map((product) => (
+        {products.map((product, index) => (
           <Pressable
+            key={index}
             onPress={() => navigation.navigate("Single", product)}
-            key={product._id}
             w="47%"
             bg={colors.white}
             rounded="md"
@@ -71,6 +61,7 @@ function HomeProducts() {
         {loading && <Text>Loading...</Text>}
       </Flex>
     </ScrollView>
+    </>
   );
 }
 
