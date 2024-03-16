@@ -4,9 +4,11 @@ import colors from "../color";
 import HomeSearch from "../Components/HomeSearch";
 import HomeProducts from '../Components/HomeProducts';
 
+
 function HomeScreen() {
   return (
   <Box flex={1} bg={colors.lightpink}>
+   
 <HomeSearch />
 <HomeProducts />
   </Box>

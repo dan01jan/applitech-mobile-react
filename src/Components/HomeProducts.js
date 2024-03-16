@@ -1,24 +1,36 @@
-import { ScrollView, Text, Flex, Pressable, Image,Box,Heading } from "native-base";
+import { ScrollView, Flex, Pressable, Box, Heading,Image,Text } from "native-base";
 import React from "react";
+import { WebView } from 'react-native-webview';
 import products from "../data/Products";
 import colors from "../color";
 import Rating from "./Rating";
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native";
+
 
 function HomeProducts() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
-    <ScrollView flex={1} showsHorizontalScrollIndicator ={false}>
+    <>
+
+    <ScrollView flex={1} showsHorizontalScrollIndicator={false}>
+      {/* YouTube video section */}
+      <Flex alignItems="center" justifyContent="center" my={4}>
+        <WebView
+          style={{ width: 300, height: 215 }}
+          source={{ uri: "https://www.youtube.com/embed/e176vc5gxxM?si=MVAL6Jn14eiyS4u9" }}
+        />
+      </Flex>
+
       <Flex
         flexWrap="wrap"
         direction="row"
         justifyContent="space-between"
         px={6}
       >
-        {products.map((product) => (
+        {products.map((product, index) => (
           <Pressable
-            onPress={() => navigation.navigate("Single",product)}
-            key={product._id}
+            key={index}
+            onPress={() => navigation.navigate("Single", product)}
             w="47%"
             bg={colors.white}
             rounded="md"
@@ -29,26 +41,27 @@ function HomeProducts() {
             overflow="hidden"
           >
             <Image
-              source={{ uri:product.image}}
+              source={{ uri: product.image }}
               alt={product.name}
               w="full"
               h={24}
               resizeMode="contain"
             />
             <Box px={4} pt={1}>
-                <Heading size="sm" bold>
-                    {product.price}
-                </Heading>
-                <Text fontSize={10} mt={1} isTruncated w="full">
-                    {product.name}
-                </Text>
-                {/* rating */}
-                <Rating value={product.rating}></Rating>
+              <Heading size="sm" bold>
+                {product.price}
+              </Heading>
+              <Text fontSize={10} mt={1} isTruncated w="full">
+                {product.name}
+              </Text>
+              {/* rating */}
+              <Rating value={product.rating}></Rating>
             </Box>
           </Pressable>
         ))}
       </Flex>
     </ScrollView>
+    </>
   );
 }
 
