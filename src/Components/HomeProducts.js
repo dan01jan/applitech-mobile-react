@@ -1,4 +1,4 @@
-import { ScrollView, Text, Flex, Pressable, Image, Box, Heading } from "native-base";
+import { ScrollView, Text, Flex, Pressable, Image, Box, Heading, Spinner } from "native-base";
 import React, { useState } from "react";
 import products from "../data/Products";
 import colors from "../color";
@@ -76,9 +76,13 @@ function HomeProducts() {
             </Box>
           </Pressable>
         ))}
-        {!loading && loadedProducts.length === products.length && <Text>No more products to load.</Text>}
-        {loading && <Text>Loading...</Text>}
+      
       </Flex>
+      {loading && (
+        <Flex alignItems="center" justifyContent="center" mt={4}>
+          <Spinner />
+        </Flex>
+      )}
     </ScrollView>
   );
 }
