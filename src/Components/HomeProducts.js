@@ -1,52 +1,74 @@
-import { ScrollView, Text, Flex, Pressable, Image,Box,Heading } from "native-base";
-import React from "react";
+import { ScrollView, Text, Flex, Pressable, Image, Box, Heading } from "native-base";
+import React, { useState } from "react";
 import products from "../data/Products";
 import colors from "../color";
 import Rating from "./Rating";
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native";
 
 function HomeProducts() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const [loadedProducts, setLoadedProducts] = useState(products.slice(0, 6)); // Initial number of products to load
+  const [loading, setLoading] = useState(false);
+
+  // Function to handle infinite scrolling
+  const handleScroll = (event) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+
+    const paddingToBottom = 20; // Adjust as needed
+    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+      // User has reached the bottom of the list
+      if (!loading && loadedProducts.length < products.length) { // Check if there are more products available
+        setLoading(true);
+        // Simulate loading more products (you can replace this with your actual data fetching logic)
+        setTimeout(() => {
+          const additionalProducts = products.slice(loadedProducts.length, loadedProducts.length + 10); // Load additional products
+          setLoadedProducts(prevProducts => [...prevProducts, ...additionalProducts]);
+          setLoading(false);
+        }, 1000); // Simulated loading delay (adjust as needed)
+      }
+    }
+  };
+
   return (
-    <ScrollView flex={1} showsHorizontalScrollIndicator ={false}>
+    <ScrollView flex={1} showsVerticalScrollIndicator={false} onScroll={handleScroll}>
       <Flex
         flexWrap="wrap"
         direction="row"
         justifyContent="space-between"
         px={6}
       >
-        {products.map((product) => (
+        {loadedProducts.map((product) => (
           <Pressable
-            onPress={() => navigation.navigate("Single",product)}
+            onPress={() => navigation.navigate("Single", product)}
             key={product._id}
             w="47%"
             bg={colors.white}
             rounded="md"
             shadow={2}
-            pt={0.3}
             my={3}
-            pb={2}
             overflow="hidden"
           >
             <Image
-              source={{ uri:product.image}}
+              source={{ uri: product.image }}
               alt={product.name}
-              w="full"
-              h={24}
-              resizeMode="contain"
+              w="100%"
+              h={200} // Adjust the height as needed
+              resizeMode="cover"
             />
             <Box px={4} pt={1}>
-                <Heading size="sm" bold>
-                    {product.price}
-                </Heading>
-                <Text fontSize={10} mt={1} isTruncated w="full">
-                    {product.name}
-                </Text>
-                {/* rating */}
-                <Rating value={product.rating}></Rating>
+              <Heading size="sm" bold>
+                {product.price}
+              </Heading>
+              <Text fontSize={10} mt={1} isTruncated w="full">
+                {product.name}
+              </Text>
+              {/* rating */}
+              <Rating value={product.rating}></Rating>
             </Box>
           </Pressable>
         ))}
+        {!loading && loadedProducts.length === products.length && <Text>No more products to load.</Text>}
+        {loading && <Text>Loading...</Text>}
       </Flex>
     </ScrollView>
   );
