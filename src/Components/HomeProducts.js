@@ -1,16 +1,30 @@
 import { ScrollView, Text, Flex, Pressable, Image, Box, Heading, Spinner } from "native-base";
-import React, { useState } from "react";
-import products from "../data/Products";
+import React, { useState, useEffect } from "react";
 import colors from "../color";
-import Rating from "./Rating";
 import { useNavigation } from "@react-navigation/native";
 import WebView1 from "react-native-webview";
-import WebView2 from "react-native-webview";
+import baseURL from "../../assets/common/baseurl";
+import axios from 'axios';
+import Rating from './Rating';
 
 function HomeProducts() {
   const navigation = useNavigation();
-  const [loadedProducts, setLoadedProducts] = useState(products.slice(0, 6)); // Initial number of products to load
+  const [loadedProducts, setLoadedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+  
+    axios.get(`${baseURL}products`)
+      .then(response => {
+        setLoadedProducts(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+        setLoading(false);
+      });
+  }, []); 
 
   // Function to handle infinite scrolling
   const handleScroll = (event) => {
@@ -19,11 +33,11 @@ function HomeProducts() {
     const paddingToBottom = 20; // Adjust as needed
     if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
       // User has reached the bottom of the list
-      if (!loading && loadedProducts.length < products.length) { // Check if there are more products available
+      if (!loading && loadedProducts.length < loadedProducts.length) { // Check if there are more products available
         setLoading(true);
         // Simulate loading more products (you can replace this with your actual data fetching logic)
         setTimeout(() => {
-          const additionalProducts = products.slice(loadedProducts.length, loadedProducts.length + 10); // Load additional products
+          const additionalProducts = loadedProducts.slice(loadedProducts.length, loadedProducts.length + 10); // Load additional products
           setLoadedProducts(prevProducts => [...prevProducts, ...additionalProducts]);
           setLoading(false);
         }, 1000); // Simulated loading delay (adjust as needed)
@@ -48,8 +62,8 @@ function HomeProducts() {
       >
         {loadedProducts.map((product) => (
           <Pressable
-            onPress={() => navigation.navigate("Single", product)}
             key={product._id}
+            onPress={() => navigation.navigate("Single", product)}
             w="47%"
             bg={colors.white}
             rounded="md"
@@ -57,11 +71,11 @@ function HomeProducts() {
             my={3}
             overflow="hidden"
           >
-            <Image
-              source={{ uri: product.image }}
+           <Image
+              source={{ uri: product.images && product.images.length > 0 ? product.images[0] : 'https://example.com/default-image.jpg' }}
               alt={product.name}
               w="100%"
-              h={200} // Adjust the height as needed
+              h={200}
               resizeMode="cover"
             />
             <Box px={4} pt={1}>
