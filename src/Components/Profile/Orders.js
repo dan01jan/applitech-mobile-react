@@ -70,7 +70,7 @@ const Orders = () => {
                 px = {7}
                 py = {1.5} 
                 rounded = {50} 
-                bg = {Colors.red}
+                bg = {Colors.salmon}
                 _text = {{
                     color:Colors.white
                 }}

@@ -31,7 +31,7 @@ export default function Tabs() {
             tabStyle = {styles.tabStyle} 
             indicatorStyle = {{backgroundColor:Colors.black}}
             activeColor={Colors.main} 
-            inactiveColor = {Colors.white}
+            inactiveColor = {Colors.salmon}
             renderLabel = {({route, color}) => (
                 <Text style = {{color, ...styles.text}}>{route.title}</Text>
             )}
@@ -52,7 +52,7 @@ export default function Tabs() {
 
 const styles = StyleSheet.create({
     tabStyle: {
-        backgroundColor: "black",
+        backgroundColor: "white",
     },
     text: {
         fontSize: 13,

@@ -38,7 +38,7 @@ function CartScreen() {
       
       {/* Checkout */}
       <Center px={5} position="absolute" bottom={0} left={0} right={0} zIndex={1}>
-        <Buttone bg={Colors.black} color={Colors.white} mt={10}>
+        <Buttone bg={Colors.main} color={Colors.white} mt={10}>
           CHECKOUT
         </Buttone>
       </Center>

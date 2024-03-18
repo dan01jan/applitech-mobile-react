@@ -13,7 +13,7 @@ function RegisterScreen({ navigation }) {
         resizeMode="cover"
         size="lg"
         w="full"
-        source={require("../../assets/images/bg.png")}
+        source={require("../../assets/images/bg2.png")}
       />
       <Box
         w="full"
@@ -25,7 +25,7 @@ function RegisterScreen({ navigation }) {
         justifyContent="center" // Center children vertically
       >
         {/* Heading */}
-        <Heading>SIGN UP</Heading>
+        <Heading color={colors.deepPink}>SIGN UP</Heading>
 
         {/* Form */}
         <VStack space={2} pt="6" alignItems="center" width="70%">
@@ -102,7 +102,7 @@ function RegisterScreen({ navigation }) {
         >
           <Text 
             mt={-4} 
-            color={colors.salmon}
+            color={colors.Pinklight}
             fontWeight="bold"
           >
             Already have an account? Log in

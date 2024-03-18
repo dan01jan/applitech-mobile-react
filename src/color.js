@@ -14,7 +14,9 @@ const Colors = {
     underline: "#E5E5E5",
     coral: "#F88379",
     salmon: "#FF9999",
-    brightpink: "#FF007F"
+    brightpink: "#FF007F",
+    deepPink: "#FF1D8E",
+    Pinklight: "#FF369B"
   };
   
   export default Colors;
