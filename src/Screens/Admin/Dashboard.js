@@ -1,50 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Import the navigation hook
-import Header from './Header'; // Import Header component
-import Sidebar from './Sidebar'; // Import Sidebar component
+import { useNavigation } from '@react-navigation/native';
+import Header from './Header';
+import Sidebar from './Sidebar';
+import { LineChart } from 'react-native-chart-kit';
+import axios from 'axios'; // Import Axios for making HTTP requests
+import baseURL from '../../../assets/common/baseurl';
 
 const Dashboard = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const navigation = useNavigation(); // Initialize navigation
+  const [chartData, setChartData] = useState(null); // State to hold chart data
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    fetchData(); // Fetch data when component mounts
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };
 
-  // Sidebar items
-  const sidebarItems = [
-    { id: 1, title: 'Product', screen: 'AdminProduct' },
-    { id: 2, title: 'Brand', screen: 'AdminBrand' },
-    // { id: 3, title: 'Sidebar Item 3', screen: 'Screen3' },
-    // Add more items as needed
-  ];
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${baseURL}products`); // Make GET request to your API
+      const products = response.data; // Assuming your API returns an array of products
+      const chartData = {
+        labels: products.map(product => product.name), // Use product names as labels
+        datasets: [
+          {
+            data: products.map(product => product.price), // Use product prices as data
+          },
+        ],
+      };
+      setChartData(chartData); // Set chart data state
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    mainContent: {
+      flex: 1,
+      backgroundColor: '#ffffff',
+      padding: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <Header title="Dashboard" onPress={toggleSidebar} />
-      {/* Sidebar */}
       {sidebarVisible && <Sidebar items={sidebarItems} />}
-      {/* Main Content */}
       <View style={styles.mainContent}>
-        <Text>Main Content</Text>
+        <Text>Products and Prices Chart</Text>
+        {chartData && (
+          <LineChart
+            data={chartData}
+            width={300}
+            height={200}
+            yAxisLabel="$"
+            chartConfig={{
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
+          />
+        )}
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  mainContent: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default Dashboard;
