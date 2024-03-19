@@ -14,8 +14,10 @@ const Dashboard = () => {
 
   // Define the sidebar items
   const sidebarItems = [
-    { id: 1, title: 'Product', screen: 'AdminProduct' },
-    { id: 2, title: 'Brand', screen: 'AdminBrand' },
+    { id: 1, title: 'Main', screen: 'AdminBrand' },
+    { id: 2, title: 'Product', screen: 'AdminProduct' },
+    { id: 3, title: 'Brand', screen: 'AdminBrand' },
+
     // Add more sidebar items as needed
   ];
 
