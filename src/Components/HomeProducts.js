@@ -6,11 +6,26 @@ import WebView1 from "react-native-webview";
 import baseURL from "../../assets/common/baseurl";
 import axios from 'axios';
 import Rating from './Rating';
+import FloatingChatButton from './FloatingChatButton';
 
 function HomeProducts() {
   const navigation = useNavigation();
   const [loadedProducts, setLoadedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const steps = [
+    {
+      id: '1',
+      message: 'Hello! How can I assist you today?',
+      trigger: '2',
+    },
+    {
+      id: '2',
+      user: true,
+      trigger: '3',
+    }
+  ];
+  
 
   useEffect(() => {
     setLoading(true);
@@ -98,6 +113,7 @@ function HomeProducts() {
           <Spinner color="#0000FF" thickness="5px" size={50} accessibilityLabel="Loading" />
         </Flex>
       )}
+       <FloatingChatButton steps={steps} />
     </ScrollView>
   );
 }
