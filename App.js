@@ -6,7 +6,7 @@ import LoginScreen from './src/Screens/LoginScreen';
 import OrderScreen from './src/Screens/OrderScreen';
 import RegisterScreen from './src/Screens/RegisterScreen';
 import BottomNav from './src/Navigations/BottomNav';
-
+import AdminProduct from './src/Screens/Admin/ProductForm'
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -15,7 +15,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar hidden={true} />
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName="AdminProduct"
           screenOptions={{
             headerShown: false,
           }}
@@ -25,6 +25,7 @@ export default function App() {
           <Stack.Screen name="Order" component={OrderScreen} />
           {/* Add a Screen for BottomNav */}
           <Stack.Screen name="Main" component={BottomNav} />
+          <Stack.Screen name = "AdminProduct" component = {AdminProduct}/>
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
