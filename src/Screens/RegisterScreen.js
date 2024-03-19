@@ -1,11 +1,12 @@
-import { Box, Image, Input, Heading, Text, Button, VStack } from "native-base";
+import { Box, Image, Input, Heading, Text, Button, VStack, View } from "native-base";
 import React, { useState } from "react";
 import colors from "../color";
 import { MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import baseURL from "../../assets/common/baseurl";
 import axios from "axios";
 import { Toast } from "native-base"; // Import Toast from native-base
+import SignUp from '../../assets/images/Signup.png'
 
 function RegisterScreen({ navigation }) {
   const [formData, setFormData] = useState({ // State for form data
@@ -50,6 +51,7 @@ function RegisterScreen({ navigation }) {
   };
 
   return (
+  
     <Box flex={1} bg={colors.black} alignItems="center" justifyContent="center">
       <Image
         flex={1}
@@ -69,7 +71,10 @@ function RegisterScreen({ navigation }) {
         justifyContent="center"
       >
         {/* Heading */}
-        <Heading color={colors.deepPink}>SIGN UP</Heading>
+        <View style={styles.headerImageContainer}>
+      <Image source={SignUp} style={[styles.headerImage, { width: 200, height: 70 }]} />
+        {/* <Text style={styles.headerText}>{title}</Text> */}
+      </View>
 
         {/* Form */}
         <VStack space={2} pt="6" alignItems="center" width="70%">
@@ -161,5 +166,34 @@ function RegisterScreen({ navigation }) {
     </Box>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#F8CDD5',
+    padding: 10,
+  },
+  headerImageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerImage: {
+    width: 40,
+    height: 40, // Set the height of the image as needed
+    marginRight: 10, // Add spacing between image and text
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  toggleButton: {
+    padding: 10,
+  },
+  placeholder: {
+    width: 40, // Adjust width as needed
+  },
+});
 
 export default RegisterScreen;
