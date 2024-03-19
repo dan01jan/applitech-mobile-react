@@ -12,6 +12,13 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState(null); // State to hold chart data
   const navigation = useNavigation();
 
+  // Define the sidebar items
+  const sidebarItems = [
+    { id: 1, title: 'Product', screen: 'AdminProduct' },
+    { id: 2, title: 'Brand', screen: 'AdminBrand' },
+    // Add more sidebar items as needed
+  ];
+
   useEffect(() => {
     fetchData(); // Fetch data when component mounts
   }, []);
