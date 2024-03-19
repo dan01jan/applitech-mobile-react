@@ -33,15 +33,26 @@ function CartScreen() {
             justifyContent="space-between"
             bg={colors.white} shadow={2} w='90%' pl={5} h={45} alignItems="center">
             <Text>Total</Text>
-            <Button px={10} h={45} rounded={50} bg={colors.main} _text={{
-              color: colors.white,
-              fontWeight: "semibold"
-            }}
-            _pressed={{
-              bg: colors.main,
-            }}>
-              {total.toFixed(2)} {/* Display the total here */}
-            </Button>
+            <Button
+  px={10}
+  h={45}
+  rounded={50}
+  bg={colors.main}
+  _text={{
+    color: colors.white,
+    fontWeight: "semibold",
+  }}
+  _pressed={{
+    bg: colors.main,
+  }}
+>
+  <Center flex={1}>
+    <Text color={colors.white} textAlign="center"> {/* Center-align the text */}
+      {total.toFixed(2)}
+    </Text>
+  </Center>
+</Button>
+
           </HStack>
         </Center>
       </ScrollView>

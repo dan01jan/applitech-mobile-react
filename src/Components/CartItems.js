@@ -93,12 +93,20 @@ const CartItems = () => {
         showsVerticalScrollIndicator={false}
       />
       <Center px={5} position="justify" bottom={0} left={0} right={0} zIndex={1}>
-        <Buttone bg={Colors.main} color={Colors.white} mt={2} onPress={handleClearCart}>
-          <HStack space={2} alignItems="center">
-            <FontAwesome name="trash" size={20} color={Colors.white} />
-            <Text color={Colors.white}>REMOVE ALL</Text>
-          </HStack>
-        </Buttone>
+      <Buttone
+  bg={Colors.coral}
+  color={Colors.white}
+  mt={2}
+  onPress={handleClearCart}
+ 
+  
+
+>
+  <HStack space={2} alignItems="center">
+    <FontAwesome name="trash" size={20} color={Colors.white} />
+    <Text color={Colors.white}>REMOVE ALL</Text>
+  </HStack>
+</Buttone>
       </Center>
     </Box>
   );
