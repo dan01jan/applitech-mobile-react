@@ -24,14 +24,25 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`${baseURL}products`); // Make GET request to your API
       const products = response.data; // Assuming your API returns an array of products
+      
+      // Sort products by price in ascending order
+      products.sort((a, b) => a.price - b.price);
+      
+      // Extract the two lowest, middle, and two highest prices
+      const lowestPrices = products.slice(0, 2);
+      const highestPrices = products.slice(-2);
+      const middlePrice = products[Math.floor(products.length / 2)]; // Middle price
+      const selectedProducts = [...lowestPrices, middlePrice, ...highestPrices]; // Combine prices
+      
       const chartData = {
-        labels: products.map(product => product.name), // Use product names as labels
+        labels: selectedProducts.map(product => ''), // Empty string to remove names at the bottom
         datasets: [
           {
-            data: products.map(product => product.price), // Use product prices as data
+            data: selectedProducts.map(product => product.price), // Use product prices as data
           },
         ],
       };
+      
       setChartData(chartData); // Set chart data state
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -72,6 +83,7 @@ const Dashboard = () => {
               style: {
                 borderRadius: 16,
               },
+              fromZero: true, // Start the chart from zero on the y-axis
             }}
             bezier
             style={{
