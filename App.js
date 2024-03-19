@@ -8,6 +8,7 @@ import RegisterScreen from './src/Screens/RegisterScreen';
 import BottomNav from './src/Navigations/BottomNav';
 import AdminProduct from './src/Screens/Admin/ProductForm'
 import AdminBrand from './src/Screens/Admin/BrandForm'
+import Dashboard from './src/Screens/Admin/Dashboard';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -17,7 +18,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar hidden={true} />
         <Stack.Navigator
-          initialRouteName="AdminBrand"
+          initialRouteName="Dashboard"
           screenOptions={{
             headerShown: false,
           }}
@@ -29,7 +30,7 @@ export default function App() {
           <Stack.Screen name="Main" component={BottomNav} />
           <Stack.Screen name = "AdminProduct" component = {AdminProduct}/>
           <Stack.Screen name = "AdminBrand" component={AdminBrand}/>
-          
+          <Stack.Screen name = "Dashboard" component = {Dashboard}/>
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
