@@ -10,6 +10,8 @@ import AdminProduct from './src/Screens/Admin/ProductForm'
 import AdminBrand from './src/Screens/Admin/BrandForm'
 import Dashboard from './src/Screens/Admin/Dashboard';
 
+
+
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -18,7 +20,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar hidden={true} />
         <Stack.Navigator
-          initialRouteName="Dashboard"
+          initialRouteName="Login"
           screenOptions={{
             headerShown: false,
           }}

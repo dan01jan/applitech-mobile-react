@@ -24,6 +24,7 @@ function HomeProducts() {
         console.error('Error fetching products:', error);
         setLoading(false);
       });
+      
   }, []); 
 
   // Function to handle infinite scrolling
@@ -86,7 +87,7 @@ function HomeProducts() {
                 {product.name}
               </Text>
               {/* rating */}
-              <Rating value={product.rating}></Rating>
+              <Rating value={product.ratings}></Rating>
             </Box>
           </Pressable>
         ))}
