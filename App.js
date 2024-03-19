@@ -28,7 +28,8 @@ export default function App() {
           {/* Add a Screen for BottomNav */}
           <Stack.Screen name="Main" component={BottomNav} />
           <Stack.Screen name = "AdminProduct" component = {AdminProduct}/>
-         <Stack.Screen name = "AdminBrand" component={AdminBrand}/>
+          <Stack.Screen name = "AdminBrand" component={AdminBrand}/>
+          
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
