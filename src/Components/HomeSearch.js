@@ -48,7 +48,7 @@ function HomeSearch() {
             fontSize: "11px",
           }}
         >
-          5
+          
         </Box>
       </Pressable>
     </HStack>

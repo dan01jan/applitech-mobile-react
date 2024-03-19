@@ -18,13 +18,15 @@ import Buttone from "../Components/Buttone";
 import Review from "../Components/Review";
 import Carousel, { Pagination } from 'react-native-snap-carousel'; 
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../Redux/Actions/cartActions';
 
 function SingleProductScreen({ route }) {
-  const [quantity, setQuantity] = useState(1);
   const navigation = useNavigation();
   const product = route.params;
+  const dispatch = useDispatch();
 
-  const [availability, setAvailability] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const [availabilityText, setAvailabilityText] = useState("");
 
   useEffect(() => {
@@ -45,6 +47,11 @@ function SingleProductScreen({ route }) {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
+  };
+
+  const handleAddToCart = () => {
+    console.log("Adding to cart:", { ...product, quantity });
+    dispatch(addToCart({ ...product, quantity }));
   };
 
   const renderCarouselItem = ({ item }) => {
@@ -72,7 +79,7 @@ function SingleProductScreen({ route }) {
         />
         <Pagination
           dotsLength={product.images.length}
-          activeDotIndex={0} // Set initial active dot index
+          activeDotIndex={0}
           containerStyle={{ marginTop: -20 }}
           dotStyle={{
             width: 10,
@@ -86,12 +93,11 @@ function SingleProductScreen({ route }) {
         <Heading bold fontSize={15} mb={2} lineHeight={22}>
           {product.name}
         </Heading>
-        <Rating value={product.ratings} text={`${product.numReviews} reviews`} />
+        <Rating value={product.rating} text={`${product.numReviews} reviews`} />
         <HStack alignItems="center" my={5}>
           <Button size="sm" colorScheme="pink" onPress={decrement}>-</Button>
           <View
             borderColor="gray.200"
-
             px={2}
             py={1}
             width={20}
@@ -113,10 +119,10 @@ function SingleProductScreen({ route }) {
         <Text>
           <Text bold>Availability: </Text>{availabilityText} {product.countInStock > 0 && `(Stock: ${product.countInStock})`}</Text>
         <Text lineHeight={24} fontSize={12}>
-        <Text bold>Description: </Text>{product.description}
+          <Text bold>Description: </Text>{product.description}
         </Text>
         {product.countInStock > 0 ? (
-          <Buttone bg={colors.main} color={colors.white} mt={10}>
+          <Buttone bg={colors.main} color={colors.white} mt={10} onPress={handleAddToCart}>
             ADD TO CART
           </Buttone>
         ) : (

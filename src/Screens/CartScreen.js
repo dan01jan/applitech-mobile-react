@@ -1,49 +1,58 @@
-import { Box, Text, Center, ScrollView, HStack, Button } from 'native-base'
-import colors from '../color'
-import React from 'react'
-import CartEmpty from '../Components/CartEmpty'
-import CartItems from '../Components/CartItems'
-import Colors from '../color'
-import Buttone from '../Components/Buttone'
+import React from 'react';
+import { Box, Text, Center, ScrollView, HStack, Button } from 'native-base';
+import colors from '../color';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFromCart, clearCart } from '../../Redux/Actions/cartActions'; // Assuming you have these action creators
+import CartItems from '../Components/CartItems';
+import Buttone from '../Components/Buttone';
 
 function CartScreen() {
+  const cartItems = useSelector(state => state.cartItems);
+  const dispatch = useDispatch();
+
+  // Calculate total by considering quantity and price of each item
+  const total = cartItems.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+
+  const handleCheckout = () => {
+    // Dispatch action for checkout
+    // You can handle the checkout logic here
+  };
+
   return (
     <Box flex={1} safeAreaTop bg={colors.lightpink} position="relative">
-      {/* Header */}
+    
       <Center w="full" py={5}>
         <Text color={colors.black} fontSize={20} bold>CART</Text>
       </Center>
-      {/* Empty Cart */}
-      {/* <CartEmpty/> */}
-      
-      {/* Cart Items */}
+
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
-        <CartItems/>
-        {/* Total */}
+        <CartItems cartItems={cartItems} /> 
+
         <Center mt={5}>
           <HStack rounded={50} 
             justifyContent="space-between"
-            bg={Colors.white} shadow={2} w='90%' pl={5} h={45} alignItems="center">
+            bg={colors.white} shadow={2} w='90%' pl={5} h={45} alignItems="center">
             <Text>Total</Text>
-            <Button px={10} h={45} rounded={50} bg={Colors.main} _text={{
-              color: Colors.white,
+            <Button px={10} h={45} rounded={50} bg={colors.main} _text={{
+              color: colors.white,
               fontWeight: "semibold"
             }}
             _pressed={{
-              bg:Colors.main,
-            }}>200</Button>
+              bg: colors.main,
+            }}>
+              {total.toFixed(2)} {/* Display the total here */}
+            </Button>
           </HStack>
         </Center>
       </ScrollView>
-      
-      {/* Checkout */}
-      <Center px={5} position="absolute" bottom={0} left={0} right={0} zIndex={1}>
-        <Buttone bg={Colors.main} color={Colors.white} mt={10}>
+
+      <Center px={5} position="justify" bottom={0} left={0} right={0} zIndex={1}>
+        <Buttone bg={colors.main} color={colors.white} mt={10} onPress={handleCheckout}>
           CHECKOUT
         </Buttone>
       </Center>
     </Box>
-  )
+  );
 }
 
-export default CartScreen
+export default CartScreen;
