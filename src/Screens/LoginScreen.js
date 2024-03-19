@@ -1,10 +1,34 @@
-import { Box, Image, Input, Heading, Text, Button, VStack } from "native-base";
-import React from "react";
+import { Box, Image, Input, Text, Button, VStack } from "native-base";
+import React, { useState } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import color from "../color";
 import { Pressable } from "react-native";
+import { loginUser } from '../../Context/Actions/Auth.actions'; // Importing login action from old code
 
 function LoginScreen({ navigation }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async () => {
+    if (email === "" || password === "") {
+      setError("Please fill in your credentials");
+    } else {
+    
+      const user = {
+        email,
+        password,
+      };
+      try {
+        loginUser(user);
+        navigation.navigate("Main"); 
+      } catch (error) {
+        setError("Invalid email or password");
+      }
+    }
+  };
+
   return (
     <Box flex={1} bg={color.black} alignItems="center" justifyContent="center">
       <Image
@@ -30,45 +54,6 @@ function LoginScreen({ navigation }) {
           w={300} // Width of the image
         />
 
-        {/* Google Login Button */}
-        <Pressable
-          onPress={() => console.log("Login with Google")} // Handle Google login action
-        >
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between" // Align items to the start and end of the box
-            mt={-2}
-            w="60%"
-            rounded={50}
-            bg="white"
-            py={3} // Adjust padding as needed
-            px={4} // Adjust padding as needed
-          >
-            <Image
-              source={require("../../assets/images/google-icon.png")} // Your Google icon image
-              alt="Google Icon" // Alt text for accessibility
-              size={4} // Size of the image
-            />
-            <Text
-              color={color.main}
-              fontWeight="bold"
-              ml={2} // Adjust margin as needed
-            >
-              Log in with Google
-            </Text>
-          </Box>
-        </Pressable>
-
-        {/* "OR" Text */}
-        <Text
-          mt={4} // Adjust margin as needed
-          color={color.white}
-          fontWeight="bold"
-        >
-          OR
-        </Text>
-
         <VStack space={2} pt="6" alignItems="center">
           {/* Email */}
           <Input
@@ -82,6 +67,8 @@ function LoginScreen({ navigation }) {
             color={color.main}
             borderBottomColor={color.underline}
             fontSize={13} // Adjust the font size as needed
+            value={email}
+            onChangeText={setEmail}
           />
 
           {/* Password */}
@@ -97,8 +84,12 @@ function LoginScreen({ navigation }) {
             color={color.main}
             borderBottomColor={color.underline}
             fontSize={13} // Adjust the font size as needed
+            value={password}
+            onChangeText={setPassword}
           />
         </VStack>
+
+        {error ? <Text color="red.500">{error}</Text> : null}
 
         <Button
           _pressed={{
@@ -108,7 +99,7 @@ function LoginScreen({ navigation }) {
           w="60%"
           rounded={50}
           bg={color.main}
-          onPress={() => navigation.navigate("Main")}
+          onPress={handleSubmit}
         >
           LOGIN
         </Button>
