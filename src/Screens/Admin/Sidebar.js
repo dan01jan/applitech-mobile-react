@@ -26,8 +26,8 @@ const Sidebar = ({ items }) => {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: '25%',
-    backgroundColor: '#f0f0f0',
+    width: '100%',
+    backgroundColor: '#FFEBEE',
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
