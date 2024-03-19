@@ -28,7 +28,7 @@ function CartScreen() {
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
         <CartItems cartItems={cartItems} /> 
 
-        <Center mt={5}>
+        <Center mt={5} marginBottom={5}>
           <HStack rounded={50} 
             justifyContent="space-between"
             bg={colors.white} shadow={2} w='90%' pl={5} h={45} alignItems="center">

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Pressable, Text, VStack, HStack, Center, Image } from 'native-base'; // Import Text component
+import { Box, Pressable, Text, VStack, HStack, Center, Image } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector, useDispatch } from 'react-redux';  
 import Colors from '../color';
 import { FontAwesome } from '@expo/vector-icons';
 import { removeFromCart, clearCart } from '../../Redux/Actions/cartActions';
 import Buttone from './Buttone';
+import CartEmpty from './CartEmpty'; // Import the CartEmpty component
 
 const CartItems = () => {
   const cartItems = useSelector(state => state.cartItems);
@@ -29,7 +30,7 @@ const CartItems = () => {
                 {item.name}
               </Text>
               <Text bold color={Colors.lightblack}>
-                Price: {item.price}
+                Price: ₱{item.price}
               </Text>
               <Text bold color={Colors.lightblack}>
                 Quantity: {item.quantity}
@@ -63,7 +64,7 @@ const CartItems = () => {
                 {item.name}
               </Text>
               <Text bold color={Colors.lightblack}>
-                Price: {item.price}
+                Price: ₱{item.price}
               </Text>
               <Text bold color={Colors.lightblack}>
                 Quantity: {item.quantity}
@@ -81,7 +82,11 @@ const CartItems = () => {
   };
 
   return (
-    <Box>
+<Box>
+  {cartItems.length === 0 ? ( // Conditionally render CartEmpty component if cart is empty
+    <CartEmpty />
+  ) : (
+    <Center>
       <SwipeListView
         rightOpenValue={-50}
         previewRowKey="0"
@@ -92,23 +97,23 @@ const CartItems = () => {
         renderHiddenItem={hiddenItem}
         showsVerticalScrollIndicator={false}
       />
-      <Center px={5} position="justify" bottom={0} left={0} right={0} zIndex={1}>
-      <Buttone
-  bg={Colors.coral}
-  color={Colors.white}
-  mt={2}
-  onPress={handleClearCart}
- 
-  
+    </Center>
+  )}
+  <Center px={5} position="justify" bottom={0} left={0} right={0} zIndex={1} marginTop={1}>
+    <Buttone
+      bg={Colors.coral}
+      color={Colors.white}
+      mt={2}
+      onPress={handleClearCart}
+    >
+      <HStack space={2} alignItems="center">
+        <FontAwesome name="trash" size={20} color={Colors.white} />
+        <Text color={Colors.white}>REMOVE ALL</Text>
+      </HStack>
+    </Buttone>
+  </Center>
+</Box>
 
->
-  <HStack space={2} alignItems="center">
-    <FontAwesome name="trash" size={20} color={Colors.white} />
-    <Text color={Colors.white}>REMOVE ALL</Text>
-  </HStack>
-</Buttone>
-      </Center>
-    </Box>
   );
 }
 

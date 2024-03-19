@@ -10,7 +10,8 @@ import {
   ScrollView,
   Heading,
   HStack,
-  Spacer
+  Spacer,
+  Center
 } from "native-base";
 import colors from "../color";
 import Rating from "../Components/Rating";
@@ -67,32 +68,35 @@ function SingleProductScreen({ route }) {
   };
 
   return (
+    
     <Box safeArea flex={1} bg={colors.white}>
       <ScrollView px={5} showsVerticalScrollIndicator={false}>
-        <Carousel
-          data={product.images}
-          renderItem={renderCarouselItem}
-          sliderWidth={300}
-          itemWidth={300}
-          layout="default"
-          loop={true}
-        />
-        <Pagination
-          dotsLength={product.images.length}
-          activeDotIndex={0}
-          containerStyle={{ marginTop: -20 }}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            backgroundColor: 'rgba(255, 255, 255, 0.92)'
-          }}
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-        />
-        <Heading bold fontSize={15} mb={2} lineHeight={22}>
-          {product.name}
-        </Heading>
+      <Center>
+    <Carousel
+      data={product.images}
+      renderItem={renderCarouselItem}
+      sliderWidth={320}
+      itemWidth={320}
+      layout="default"
+      loop={true}
+    />
+    <Pagination
+      dotsLength={product.images.length}
+      activeDotIndex={0}
+      containerStyle={{ marginTop: -20 }}
+      dotStyle={{
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'rgba(255, 255, 255, 0.92)'
+      }}
+      inactiveDotOpacity={0.4}
+      inactiveDotScale={0.6}
+    />
+  </Center>
+  <Heading bold fontSize={15} mb={2} lineHeight={22}>
+    {product.name}
+  </Heading>
         <Rating value={product.rating} text={`${product.numReviews} reviews`} />
         <HStack alignItems="center" my={5}>
           <Button size="sm" colorScheme="pink" onPress={decrement}>-</Button>
@@ -112,7 +116,7 @@ function SingleProductScreen({ route }) {
           <Spacer />
           <Spacer />
           <Heading bold color={colors.black} fontSize={19}>
-            {product.price}
+           ₱{product.price}
           </Heading>
         </HStack>
         
