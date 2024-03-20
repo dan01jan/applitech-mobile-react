@@ -1,12 +1,12 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { View, Text, ScrollView, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import { Container } from "native-base"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from "axios"
 import baseURL from '../../../assets/common/baseurl';
 import AuthGlobal from '../../../Context/Store/AuthGlobal';
 import { logoutUser } from "../../../Context/Actions/Auth.actions"
-import { Box, FormControl, VStack, Input } from "native-base"
+import { Box, FormControl, VStack, ScrollView,Input } from "native-base"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import Buttone from '../Buttone'
 import Colors from '../../color'
@@ -56,110 +56,90 @@ const UserProfile = (props) => {
         }, [context.stateUser.isAuthenticated, fetchUserData, navigation]) // Add navigation to dependency array
     )
 
-    // Define Inputs array
     const Inputs = [
         {
             label: "USERNAME",
-            type: "text",
+            value: userProfile ? userProfile.name : "",
         },
         {
             label: "EMAIL",
-            type: "text",
+            value: userProfile ? userProfile.email : "",
         },
         {
-            label: "PASSWORD",
-            type: "password",
-        },
-        {
-            label: "CONFIRM PASSWORD",
-            type: "password",
-        },
+            label: "PHONE",
+            value: userProfile ? userProfile.phone : "",
+        }
     ];
 
     return (
-        <Container style={styles.container}>
-            <ScrollView contentContainerStyle={styles.subContainer}>
-                <Text style={{ fontSize: 30 }}>
-                    {userProfile ? userProfile.name : ""}
-                </Text>
-                <View style={{ marginTop: 20 }}>
-                    <Text style={{ margin: 10 }}>
-                        Email: {userProfile ? userProfile.email : ""}
-                    </Text>
-                    <Text style={{ margin: 10 }}>
-                        Phone: {userProfile ? userProfile.phone : ""}
-                    </Text>
-                </View>
-                <View style={{ marginTop: 80 }}>
-                    <Button title={"Sign Out"} onPress={() => [
-                        AsyncStorage.removeItem("jwt"),
-                        logoutUser(context.dispatch)
-                    ]} />
-                    {/* <View style={styles.order}>
-                        <Text style={{ fontSize: 20 }}>My Orders</Text>
-                        <View>
-                            {orders ? (
-                                orders.map((order) => {
-                                    return <OrderCard key={order.id} item={order} select="false" />;
-                                })
-                            ) : (
-                                <View style={styles.order}>
-                                    <Text>You have no orders</Text>
-                                </View>
-                            )}
-                        </View>
-                    </View> */}
-                </View>
-                <VStack space={10} mt={5} pb={10}>
-                    {Inputs.map((i, index) => (
-                        <FormControl key={index}>
-                            <FormControl.Label
-                                _text={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold"
-                                }}
-                            >
-                                {i.label}
-                            </FormControl.Label>
-                            <Input
-                                borderWidth={0}
-                                bg={Colors.lightpink}
-                                borderColor={Colors.main}
-                                py={4}
-                                type={i.type}
-                                color={Colors.main}
-                                fontsize={15}
-                                _focus={{
-                                    bg: Colors.lightpink,
-                                    borderColor: Colors.main,
-                                    borderWidth: 1,
-                                }}
-                            />
-                        </FormControl>
-                    ))}
-                    <Buttone bg={Colors.main} color={Colors.white}>
-                        Update Profile
+        <Box h="full" bg={Colors.white} px={5}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <VStack space={10} mt={5} pb={10}>
+                {Inputs.map((input, index) => (
+                    <FormControl key={index}>
+                        <FormControl.Label
+                            _text={{
+                                fontSize: "12px",
+                                fontWeight: "bold"
+                            }}
+                        >
+                            {input.label}
+                        </FormControl.Label>
+                        <Input
+                            borderWidth={0}
+                            bg={Colors.lightpink}
+                            borderColor={Colors.main}
+                            py={4}
+                            type={input.type}
+                            color={Colors.main}
+                            fontSize={15}
+                            _focus={{
+                                bg: Colors.lightpink,
+                                borderColor: Colors.main,
+                                borderWidth: 1,
+                            }}
+                            value={input.value} // Pass the input value here
+                           
+                            style={{ backgroundColor: '#FAE6E7', padding: 10 }} // Style for read-only input
+                        />
+                    </FormControl>
+                ))}
+                <Buttone bg={Colors.main} color={Colors.white}>
+                    Update Profile
+                </Buttone>
+                <View style={{ marginTop: 5 }}>
+                    <Buttone
+                        bg={Colors.coral}
+                        color={Colors.white}
+                        style={{ width: '100%' }} // Ensure button takes full width
+                        onPress={() => [
+                            AsyncStorage.removeItem("jwt"),
+                            logoutUser(context.dispatch)
+                        ]}
+                    >
+                        Sign Out
                     </Buttone>
-                </VStack>
-            </ScrollView>
-        </Container>
+                </View>
+            </VStack>
+        </ScrollView>
+    </Box>
+    
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center"
+        alignItems: "center",
+
     },
     subContainer: {
-        alignItems: "center",
-        marginTop: 60
-    },
-    order: {
-        marginTop: 20,
-        alignItems: "center",
-        marginBottom: 60
+        width: '90%',
+        alignItems: "justify",
+        marginTop: 60,
+        backgroundColor:'white'
     }
 })
+
 
 export default UserProfile
