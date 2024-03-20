@@ -13,12 +13,14 @@ import AdminProduct from './src/Screens/Admin/ProductForm'
 import AdminBrand from './src/Screens/Admin/BrandForm'
 // import OrderModel from './src/Components/OrderModel'
 import PlaceOrderModel from './src/Components/PlaceOrderModel';
+import Auth from './Context/Store/Auth';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Provider store={store}> 
+    <Auth>
+      <Provider store={store}> 
       <NativeBaseProvider>
         <NavigationContainer>
           <StatusBar hidden={true} />
@@ -41,5 +43,6 @@ export default function App() {
         </NavigationContainer>
       </NativeBaseProvider>
     </Provider>
+    </Auth>
   );
 }

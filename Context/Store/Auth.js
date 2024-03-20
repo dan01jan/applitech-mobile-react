@@ -17,23 +17,14 @@ const Auth = props => {
 
     useEffect(() => {
         setShowChild(true);
-        const loadUser = async () => {
-            try {
-                const jwtToken = await AsyncStorage.getItem('jwt');
-                if (jwtToken) {
-                    const decoded = jwtDecode(jwtToken);
-                    dispatch(setCurrentUser(decoded));
-                }
-            } catch (error) {
-                console.error("Error loading user:", error);
+        if (AsyncStorage.jwt) {
+            const decoded = AsyncStorage.jwt ? AsyncStorage.jwt : "";
+            if (setShowChild) {
+                dispatch(setCurrentUser(jwtDecode(decoded)))
             }
-        };
-    
-        loadUser();
-    
+        }
         return () => setShowChild(false);
-    }, []);
-    
+    }, [])
 
 
     if (!showChild) {
