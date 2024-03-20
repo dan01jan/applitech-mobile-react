@@ -1,3 +1,5 @@
+// PaymentScreen.js
+
 import React, { useState } from 'react';
 import { Box, Center, FormControl, HStack, Image, Input, ScrollView, Spacer, Text, VStack } from 'native-base';
 import Colors from '../color';
@@ -10,25 +12,25 @@ const paymentMethods = [
   {
     id: 1,
     image: require("../../assets/images/paypal.png"),
-    alt: "text",
+    alt: "PayPal",
     icon: "Ionicons"
   },
   {
     id: 2,
     image: require("../../assets/images/discover.png"),
-    alt: "discover",
+    alt: "Discover",
     icon: "fontAwesome"
   },
   {
     id: 3,
     image: require("../../assets/images/googlepay.png"),
-    alt: "googlepay",
+    alt: "Google Pay",
     icon: "fontAwesome"
   },
   {
     id: 4,
     image: require("../../assets/images/cod.png"),
-    alt: "cod",
+    alt: "Cash on Delivery",
     icon: "fontAwesome"
   },
 ];
@@ -41,10 +43,18 @@ function PaymentScreen() {
     setSelectedMethod(id);
   };
 
+  const handleContinue = () => {
+    try {
+      navigation.navigate("Placeorder", { selectedMethod });
+    } catch (error) {
+      console.error("Navigation Error:", error);
+    }
+  };
+
   return (
     <Box flex={1} safeArea bg={Colors.main} py={5}>
       <Center pb={15}>
-        <Text color={Colors.white} fontsize={14} bold>
+        <Text color={Colors.white} fontSize={14} bold>
           Payment Method
         </Text>
       </Center>
@@ -86,11 +96,11 @@ function PaymentScreen() {
                 </HStack>
               </TouchableOpacity>
             ))}
-            <Buttone bg={Colors.main} color={Colors.white} mt={5} onPress={() => navigation.navigate("Placeorder")}>
+            <Buttone bg={Colors.main} color={Colors.white} mt={5} onPress={handleContinue}>
               Continue
             </Buttone>
             <Text italic textAlign="center">
-              Payment method is <Text bold>Paypal</Text> by default
+              Payment method is <Text bold>PayPal</Text> by default
             </Text>
           </VStack>
         </ScrollView>
