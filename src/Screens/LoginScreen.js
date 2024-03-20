@@ -16,12 +16,10 @@ function LoginScreen({ props }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    console.log('Use Effect Triggered');
     if (context.stateUser.isAuthenticated === true) {
-      console.log('Redirecting to Main');
-      navigation.navigate("Main"); // Navigate to "Main" screen
+        navigation.navigate("Main")
     }
-  }, [context.stateUser.isAuthenticated, navigation]);
+}, [context.stateUser.isAuthenticated])
 
   const handleSubmit = async () => {
     const user = {
@@ -43,6 +41,15 @@ function LoginScreen({ props }) {
     }
   };
   
+  // AsyncStorage code from the old code
+  AsyncStorage.getAllKeys((err, keys) => {
+    AsyncStorage.multiGet(keys, (error, stores) => {
+      stores.map((result, i, store) => {
+        console.log({ [store[i][0]]: store[i][1] });
+        return true;
+      });
+    });
+  });
 
   return (
     <Box flex={1} bg={color.black} alignItems="center" justifyContent="center">
