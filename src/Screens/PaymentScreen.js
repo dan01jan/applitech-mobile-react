@@ -99,9 +99,7 @@ function PaymentScreen() {
             <Buttone bg={Colors.main} color={Colors.white} mt={5} onPress={handleContinue}>
               Continue
             </Buttone>
-            <Text italic textAlign="center">
-              Payment method is <Text bold>PayPal</Text> by default
-            </Text>
+            
           </VStack>
         </ScrollView>
       </Box>
