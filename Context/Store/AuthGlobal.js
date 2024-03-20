@@ -1,3 +1,8 @@
 import React from "react";
 
-export default React.createContext();
+const AuthGlobalContext = React.createContext({
+  stateUser: { isAuthenticated: null, user: {} },
+  dispatch: () => {}
+});
+
+export default AuthGlobalContext;

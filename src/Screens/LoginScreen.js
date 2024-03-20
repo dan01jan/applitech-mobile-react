@@ -1,33 +1,48 @@
 import { Box, Image, Input, Text, Button, VStack } from "native-base";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import color from "../color";
+import AuthGlobal from '../../Context/Store/AuthGlobal'
 import { Pressable } from "react-native";
 import { loginUser } from '../../Context/Actions/Auth.actions'; // Importing login action from old code
+import { useNavigation } from '@react-navigation/native';
 
-function LoginScreen({ navigation }) {
+function LoginScreen({ props }) {
+  const context = useContext(AuthGlobal);
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    console.log('Use Effect Triggered');
+    if (context.stateUser.isAuthenticated === true) {
+      console.log('Redirecting to Main');
+      navigation.navigate("Main"); // Navigate to "Main" screen
+    }
+  }, [context.stateUser.isAuthenticated, navigation]);
+
   const handleSubmit = async () => {
+    const user = {
+      email,
+      password,
+    };
+  
     if (email === "" || password === "") {
       setError("Please fill in your credentials");
-    } else {
-    
-      const user = {
-        email,
-        password,
-      };
-      try {
-        loginUser(user);
-        navigation.navigate("Main"); 
-      } catch (error) {
-        setError("Invalid email or password");
-      }
+      return; // Exit the function early if credentials are empty
+    }
+  
+    try {
+      await loginUser(user, context.dispatch, navigation);
+      console.log("Login successful");
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError("An error occurred. Please try again later.");
     }
   };
+  
 
   return (
     <Box flex={1} bg={color.black} alignItems="center" justifyContent="center">
@@ -39,23 +54,17 @@ function LoginScreen({ navigation }) {
         size="lg"
         width="100%"
         height="100%"
-        source={require("../../assets/images/bg.png")}
+        source={require('../../assets/images/bg.png')}
       />
-      <Box
-        w="full"
-        px="6"
-        justifyContent="center"
-        alignItems="center" // Center children horizontally
-      >
+      <Box w="full" px="6" justifyContent="center" alignItems="center">
         <Image
-          source={require("../../assets/images/logoApp.png")} // Your login image
-          alt="Login Image" // Alt text for accessibility
-          h={300} // Height of the image
-          w={300} // Width of the image
+          source={require('../../assets/images/logoApp.png')}
+          alt="Login Image"
+          h={300}
+          w={300}
         />
 
         <VStack space={2} pt="6" alignItems="center">
-          {/* Email */}
           <Input
             InputLeftElement={
               <MaterialIcons name="email" size={20} color={color.main} />
@@ -66,12 +75,11 @@ function LoginScreen({ navigation }) {
             pl={2}
             color={color.main}
             borderBottomColor={color.underline}
-            fontSize={13} // Adjust the font size as needed
+            fontSize={13}
             value={email}
             onChangeText={setEmail}
           />
 
-          {/* Password */}
           <Input
             InputLeftElement={
               <Entypo name="lock" size={24} color={color.main} />
@@ -83,13 +91,13 @@ function LoginScreen({ navigation }) {
             pl={2}
             color={color.main}
             borderBottomColor={color.underline}
-            fontSize={13} // Adjust the font size as needed
+            fontSize={13}
             value={password}
             onChangeText={setPassword}
           />
         </VStack>
 
-        {error ? <Text color="red.500">{error}</Text> : null}
+        {error && <Text color="red.500">{error}</Text>}
 
         <Button
           _pressed={{
@@ -99,12 +107,12 @@ function LoginScreen({ navigation }) {
           w="60%"
           rounded={50}
           bg={color.main}
-          onPress={handleSubmit}
+          onPress={handleSubmit} // Call handleSubmit when button is pressed
         >
           LOGIN
         </Button>
 
-        <Pressable onPress={() => navigation.navigate("Register")}>
+        <Pressable onPress={() => navigation.navigate('Register')}>
           <Text mt={-4} color={color.deepPink} fontWeight="bold">
             Don't have an account? Sign Up
           </Text>

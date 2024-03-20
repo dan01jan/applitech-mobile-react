@@ -6,40 +6,41 @@ import baseURL from "../../assets/common/baseurl"
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
-export const loginUser = (user, dispatch) => {
-    
+export const loginUser = (user, dispatch, navigation) => {
     fetch(`${baseURL}users/login`, {
-        method: "POST",
-        body: JSON.stringify(user),
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
+      method: "POST",
+      body: JSON.stringify(user),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     })
-    .then((res) => res.json())
-    .then((data) => {
-        if (data) {
-            // console.log(data)
-            const token = data.token;
-            AsyncStorage.setItem("jwt", token)
-            const decoded = jwtDecode(token)
-            console.log("token",token)
-            dispatch(setCurrentUser(decoded, user))
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.token) {
+          const token = data.token;
+          AsyncStorage.setItem("jwt", token);
+          const decoded = jwtDecode(token);
+          console.log("token", token);
+          dispatch(setCurrentUser(decoded, user));
+          navigation.navigate("Main"); // Navigate to "Main" screen upon successful login
         } else {
-           logoutUser(dispatch)
+          logoutUser(dispatch);
         }
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         Toast.show({
-            topOffset: 60,
-            type: "error",
-            text1: "Please provide correct credentials",
-            text2: ""
+          topOffset: 60,
+          type: "error",
+          text1: "Please provide correct credentials",
+          text2: "",
         });
-        console.log(err)
-        logoutUser(dispatch)
-    });
-};
+        console.log(err);
+        logoutUser(dispatch);
+      });
+  };
+  
+
 
 export const getUserProfile = (id) => {
     fetch(`${baseURL}users/${id}`, {
