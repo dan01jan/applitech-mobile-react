@@ -11,6 +11,8 @@ import BottomNav from './src/Navigations/BottomNav';
 import Dashboard from './src/Screens/Admin/Dashboard';
 import AdminProduct from './src/Screens/Admin/ProductForm'
 import AdminBrand from './src/Screens/Admin/BrandForm'
+// import OrderModel from './src/Components/OrderModel'
+import PlaceOrderModel from './src/Components/PlaceOrderModel';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -29,6 +31,7 @@ export default function App() {
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Order" component={OrderScreen} />
+            <Stack.Screen name="OrderModel" component={PlaceOrderModel} />
             {/* Add a Screen for BottomNav */}
             <Stack.Screen name="Dashboard" component={Dashboard} />
             <Stack.Screen name="AdminProduct" component={AdminProduct} />
