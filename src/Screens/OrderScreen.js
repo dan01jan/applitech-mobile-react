@@ -37,7 +37,7 @@ function PlaceOrderScreen() {
             </Heading>
             
             <OrderIterm />
-            <OrderModel/>
+            <PlaceOrderModel />
           </Box>
     </Box>
   )
