@@ -5,8 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, clearCart } from '../../Redux/Actions/cartActions'; // Assuming you have these action creators
 import CartItems from '../Components/CartItems';
 import Buttone from '../Components/Buttone';
+import { useNavigation } from "@react-navigation/native";
 
 function CartScreen() {
+  const navigation = useNavigation();
   const cartItems = useSelector(state => state.cartItems);
   const dispatch = useDispatch();
 
@@ -58,7 +60,7 @@ function CartScreen() {
       </ScrollView>
 
       <Center px={5} position="justify" bottom={0} left={0} right={0} zIndex={1}>
-        <Buttone bg={colors.main} color={colors.white} mt={10} onPress={handleCheckout}>
+        <Buttone bg={colors.main} color={colors.white} mt={10} onPress={() => navigation.navigate("Shipping")}>
           CHECKOUT
         </Buttone>
       </Center>
