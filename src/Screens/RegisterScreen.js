@@ -1,22 +1,22 @@
-import { Box, Image, Input, Heading, Text, Button, VStack, View } from "native-base";
 import React, { useState } from "react";
+import { Box, Image, Input, Heading, Text, Button, VStack, View } from "native-base";
 import colors from "../color";
 import { MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
 import { Pressable, StyleSheet } from "react-native";
 import baseURL from "../../assets/common/baseurl";
 import axios from "axios";
-import { Toast } from "native-base"; // Import Toast from native-base
-import SignUp from '../../assets/images/Signup.png'
+import SignUp from '../../assets/images/Signup.png';
+import Toast from 'react-native-toast-message';
 
 function RegisterScreen({ navigation }) {
-  const [formData, setFormData] = useState({ // State for form data
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: ""
   });
 
-  const config = { // Configuration for axios request
+  const config = {
     headers: {
       "Content-Type": "application/json"
     }
@@ -26,23 +26,21 @@ function RegisterScreen({ navigation }) {
     try {
       const response = await axios.post(`${baseURL}users/register`, formData, config);
       if (response.status === 200) {
-        Toast.show({ // Toast notification for successful registration
-          topOffset: 60, 
-          type: "success",
-          text1: "Registration Succeeded",
-          text2: "Please Login into your account",
+        Toast.show({
+          type: 'success',
+          text1: 'Registration Succeeded',
+          text2: 'Please Login into your account',
         });
         setTimeout(() => {
           navigation.navigate("Login");
-        }, 500);
+        }, 2000); // Add a delay of 2000 milliseconds (2 seconds)
       }
     } catch (error) {
       console.error("Error registering:", error);
       // Handle error
     }
   };
-
-  // Function to handle input changes
+  
   const handleInputChange = (key, value) => {
     setFormData({
       ...formData,
@@ -51,7 +49,6 @@ function RegisterScreen({ navigation }) {
   };
 
   return (
-  
     <Box flex={1} bg={colors.black} alignItems="center" justifyContent="center">
       <Image
         flex={1}
@@ -70,15 +67,11 @@ function RegisterScreen({ navigation }) {
         alignItems="center"
         justifyContent="center"
       >
-        {/* Heading */}
         <View style={styles.headerImageContainer}>
-      <Image source={SignUp} style={[styles.headerImage, { width: 200, height: 70 }]} />
-        {/* <Text style={styles.headerText}>{title}</Text> */}
-      </View>
+          <Image source={SignUp} style={[styles.headerImage, { width: 200, height: 70 }]} />
+        </View>
 
-        {/* Form */}
         <VStack space={2} pt="6" alignItems="center" width="70%">
-          {/* Username */}
           <Input
             InputLeftElement={
               <FontAwesome name="user" size={20} color={colors.main} />
@@ -90,9 +83,8 @@ function RegisterScreen({ navigation }) {
             color={colors.main}
             borderBottomColor={colors.underline}
             fontSize={13}
-            onChangeText={(value) => handleInputChange("name", value)} // Handle input change
+            onChangeText={(value) => handleInputChange("name", value)}
           />
-          {/* Email */}
           <Input
             InputLeftElement={
               <MaterialIcons name="email" size={20} color={colors.main} />
@@ -104,9 +96,9 @@ function RegisterScreen({ navigation }) {
             color={colors.main}
             borderBottomColor={colors.underline}
             fontSize={13}
-            onChangeText={(value) => handleInputChange("email", value)} // Handle input change
+            onChangeText={(value) => handleInputChange("email", value)}
           />
-           <Input
+          <Input
             InputLeftElement={
               <MaterialIcons name="phone" size={20} color={colors.main} />
             }
@@ -117,9 +109,8 @@ function RegisterScreen({ navigation }) {
             color={colors.main}
             borderBottomColor={colors.underline}
             fontSize={13}
-            onChangeText={(value) => handleInputChange("phone", value)} // Handle input change
+            onChangeText={(value) => handleInputChange("phone", value)}
           />
-          {/* Password */}
           <Input
             InputLeftElement={
               <Entypo name="lock" size={24} color={colors.main} />
@@ -132,11 +123,10 @@ function RegisterScreen({ navigation }) {
             color={colors.main}
             borderBottomColor={colors.underline}
             fontSize={13}
-            onChangeText={(value) => handleInputChange("password", value)} // Handle input change
+            onChangeText={(value) => handleInputChange("password", value)}
           />
         </VStack>
       
-        {/* Button */}
         <Button 
           _pressed={{
             bg: colors.main
@@ -150,7 +140,6 @@ function RegisterScreen({ navigation }) {
           SIGN UP
         </Button>
         
-        {/* Text */}
         <Pressable 
           onPress={() => navigation.navigate("Login")}
         >
@@ -163,36 +152,20 @@ function RegisterScreen({ navigation }) {
           </Text>
         </Pressable>
       </Box>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </Box>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#F8CDD5',
-    padding: 10,
-  },
   headerImageContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   headerImage: {
     width: 40,
-    height: 40, // Set the height of the image as needed
-    marginRight: 10, // Add spacing between image and text
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  toggleButton: {
-    padding: 10,
-  },
-  placeholder: {
-    width: 40, // Adjust width as needed
+    height: 40,
+    marginRight: 10,
   },
 });
 
