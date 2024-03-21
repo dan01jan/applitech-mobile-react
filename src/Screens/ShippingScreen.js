@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Text, View, Button, SafeAreaView } from 'react-native'
-import { Select, Item, Picker, Toast } from 'native-base'
+import { Text, View, Button, SafeAreaView, StyleSheet } from 'react-native'
+import { Select, Item, Picker, Toast, Input, Box, Center,FormControl, ScrollView, VStack } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import FormContainer from '../../Shared/Form/FormContainer'
-import Input from '../../Shared/Form/Input'
+// import Input from '../../Shared/Form/Input'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
 import AuthGlobal from '../../Context/Store/AuthGlobal'
 import countries from '../../assets/data/countries.json'
 import SelectDropdown from 'react-native-select-dropdown'
-
+import Buttone from '../Components/Buttone'
+import Colors from '../color'
 const Shipping = (props) => {
     const [user, setUser] = useState('')
     const [orderItems, setOrderItems] = useState([])
@@ -65,46 +66,164 @@ const Shipping = (props) => {
 
     return (
 
-        <KeyboardAwareScrollView
-            viewIsInsideTabBar={true}
-            extraHeight={200}
-            enableOnAndroid={true}
-        >
-            <FormContainer title={"Shipping Address"}>
+      
+           
+            <Box flex={1} safeArea bg={Colors.main} py={5}>
+      <Center pb={15}>
+        <Text style={styles.whiteText}>Delivery Address</Text>
+</Center>
+        <Box h="full" bg={Colors.white} px={5}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <VStack space={6} mt={5}>
+          <FormControl.Label
+                  _text={{
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}
+                >
+                PHONE
+                </FormControl.Label>
                 <Input
+                    borderWidth={.2} 
+                    borderColor={Colors.main} 
+                    bg={Colors.lightpink} 
+                    py={4}
+                    mt = {-5}
+                    color={Colors.main}
+                    _focus={{
+                      bg: Colors.lightpink,
+                      borderWidth: 1,
+                      borderColor: Colors.main,
+                    }}
                     placeholder={"Phone"}
                     name={"phone"}
                     value={phone}
                     keyboardType={"numeric"}
+                    
                     onChangeText={(text) => setPhone(text)}
                 />
+                 <FormControl.Label
+                  _text={{
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}
+                >
+                  SHIPPING ADDRESS 1
+                </FormControl.Label>
                 <Input
+                 mt = {-5}
+                 borderWidth={.2} 
+                 borderColor={Colors.main} 
+                 bg={Colors.lightpink} 
+                 py={4}
+                 color={Colors.main}
+                 _focus={{
+                   bg: Colors.lightpink,
+                   borderWidth: 1,
+                   borderColor: Colors.main,
+                 }}
                     placeholder={"Shipping Address 1"}
                     name={"ShippingAddress1"}
                     value={address}
                     onChangeText={(text) => setAddress(text)}
                 />
+                 <FormControl.Label
+                  _text={{
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}
+                >
+                  SHIPPING ADDRESS 2
+                </FormControl.Label>
                 <Input
+                 mt = {-5}
+                 borderWidth={.2} 
+                 borderColor={Colors.main} 
+                 bg={Colors.lightpink} 
+                 py={4}
+                 color={Colors.main}
+                 _focus={{
+                   bg: Colors.lightpink,
+                   borderWidth: 1,
+                   borderColor: Colors.main,
+                 }}
                     placeholder={"Shipping Address 2"}
                     name={"ShippingAddress2"}
                     value={address2}
                     onChangeText={(text) => setAddress2(text)}
                 />
+                 <FormControl.Label
+                  _text={{
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}
+                >
+                  CITY
+                </FormControl.Label>
                 <Input
+                 borderWidth={.2} 
+                 mt = {-5}
+                 borderColor={Colors.main} 
+                 bg={Colors.lightpink} 
+                 py={4}
+                 color={Colors.main}
+                 _focus={{
+                   bg: Colors.lightpink,
+                   borderWidth: 1,
+                   borderColor: Colors.main,
+                 }}
                     placeholder={"City"}
                     name={"city"}
                     value={city}
                     onChangeText={(text) => setCity(text)}
                 />
+                 <FormControl.Label
+                  _text={{
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}
+                >
+                ZIP CODE
+                </FormControl.Label>
                 <Input
+                 borderWidth={.2} 
+                 mt = {-5}
+                 borderColor={Colors.main} 
+                 bg={Colors.lightpink} 
+                 py={4}
+                 color={Colors.main}
+                 _focus={{
+                   bg: Colors.lightpink,
+                   borderWidth: 1,
+                   borderColor: Colors.main,
+                 }}
                     placeholder={"Zip Code"}
                     name={"zip"}
                     value={zip}
                     keyboardType={"numeric"}
                     onChangeText={(text) => setZip(text)}
                 />
+                 <FormControl.Label
+                  _text={{
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}
+                >
+                  COUNTRY
+                </FormControl.Label>
                 <Select
-                    width="80%"
+                  mt = {-5}
+                 borderWidth={.2} 
+                 borderColor={Colors.main} 
+                 bg={Colors.lightpink} 
+                 py={4}
+                 color={Colors.main}
+                 _focus={{
+                   bg: Colors.lightpink,
+                   borderWidth: 1,
+                   borderColor: Colors.main,
+                 }}
+                    width="100%"
                     iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
                     style={{ width: undefined }}
                     selectedValue={country}
@@ -122,13 +241,34 @@ const Shipping = (props) => {
                         />
                     })}
                 </Select>
-               
-                <View style={{ width: '80%', alignItems: "center" }}>
-                    <Button title="Confirm" onPress={() => checkOut()} />
-                </View>
-            </FormContainer>
-        </KeyboardAwareScrollView>
+                <Buttone 
+              bg={Colors.main} 
+              color={Colors.white} 
+              mt={4}
+             
+              onPress={() => checkOut()}
+            >
+              Continue
+            </Buttone>
+                </VStack>
+        </ScrollView>
+      </Box>
+     
+             
+                
+                </Box>
+         
+    
 
     )
 }
+
+const styles = StyleSheet.create({
+  whiteText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+});
+
 export default Shipping;
