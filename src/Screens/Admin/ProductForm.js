@@ -1,80 +1,84 @@
-import React, { useState, useEffect } from "react"
-import {
-    View,
-    Image,
-    StyleSheet,
-    TouchableOpacity,
-    Text,
-} from "react-native"
-import { Box, Select } from "native-base"
-import FormContainer from "../../../Shared/Form/FormContainer"
-import Input from "../../../Shared/Form/Input"
-import EasyButton from "../../../Shared/StyledComponents/EasyButton"
-import Icon from "react-native-vector-icons/FontAwesome"
-import Toast from "react-native-toast-message"
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import baseURL from "../../../assets/common/baseurl"
-import Error from "../../../Shared/Error"
-import axios from "axios"
-import * as ImagePicker from "expo-image-picker"
-import { useNavigation } from "@react-navigation/native"
+import React, { useState, useEffect } from "react";
+import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
+import FormContainer from "../../../Shared/Form/FormContainer";
+import Input from "../../../Shared/Form/Input";
+import EasyButton from "../../../Shared/StyledComponents/EasyButton";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Toast from "react-native-toast-message";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import baseURL from "../../../assets/common/baseurl";
+import Error from "../../../Shared/Error";
+import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import Carousel from 'react-native-snap-carousel';
+import { useNavigation } from "@react-navigation/native";
+import { Box, Select } from "native-base"
 
 const ProductForm = (props) => {
-    const [pickerValue, setPickerValue] = useState('');
     const [brand, setBrand] = useState('');
     const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
     const [category, setCategory] = useState('');
-    const [categories, setCategories] = useState([]);
-    const [token, setToken] = useState();
-    const [error, setError] = useState();
-    const [countInStock, setCountInStock] = useState();
-    const [rating, setRating] = useState(0);
-    const [isFeatured, setIsFeatured] = useState(false);
-    const [richDescription, setRichDescription] = useState();
-    const [numReviews, setNumReviews] = useState(0);
+    const [token, setToken] = useState('');
+    const [error, setError] = useState('');
+    const [countInStock, setCountInStock] = useState('');
     const [item, setItem] = useState(null);
-    const navigation = useNavigation()
+    const [pickerValue, setPickerValue] = useState(''); // Define pickerValue state for category selection
+    const [categories, setCategories] = useState([]); // Define categories state to store available categories
+    const navigation = useNavigation();
 
     useEffect(() => {
-        if (!props.route.params) {
-            setItem(null);
-        } else {
-            setItem(props.route.params.item);
-            setBrand(props.route.params.item.brand);
-            setName(props.route.params.item.name);
-            setPrice(props.route.params.item.price.toString());
-            setDescription(props.route.params.item.description);
-            setCategory(props.route.params.item.category._id);
-            setPickerValue(props.route.params.item.category._id);
-            setCountInStock(props.route.params.item.countInStock.toString());
-            // Populate images state with all image URLs of the product
-            setImages(props.route.params.item.images.map(image => image.url));
-        }
-        AsyncStorage.getItem("jwt")
-            .then((res) => {
-                setToken(res)
-            })
-            .catch((error) => console.log(error))
-        axios
-            .get(`${baseURL}categories`)
-            .then((res) => setCategories(res.data))
-            .catch((error) => alert("Error loading categories"));
+        const retrieveToken = async () => {
+            try {
+                if (!props.route.params) {
+                    setItem(null);
+                } else {
+                    setItem(props.route.params.item);
+                    setBrand(props.route.params.item.brand);
+                    setName(props.route.params.item.name);
+                    setPrice(props.route.params.item.price.toString());
+                    setDescription(props.route.params.item.description);
+                    setCategory(props.route.params.item.category._id);
+                    setCountInStock(props.route.params.item.countInStock.toString());
+                    // Populate images state with all image URLs of the product
+                    setImages(props.route.params.item.images.map(image => image.url));
+                }
+                const token = await AsyncStorage.getItem("jwt");
+                setToken(token);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+    
+        retrieveToken();
+    
         (async () => {
             if (Platform.OS !== "web") {
                 const { status } = await ImagePicker.requestCameraPermissionsAsync();
                 if (status !== "granted") {
-                    alert("Sorry, we need camera roll permissions to make this work!")
+                    alert("Sorry, we need camera roll permissions to make this work!");
                 }
             }
         })();
+
+        // Fetch categories from your API and update the categories state
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(`${baseURL}categories`);
+                setCategories(response.data);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+
+        fetchCategories();
+    
         return () => {
-            setCategories([])
-        }
+            // Cleanup function if necessary
+        };
     }, []);
 
     const pickImages = async () => {
@@ -85,32 +89,28 @@ const ProductForm = (props) => {
                 aspect: [4, 3],
                 quality: 1,
             });
-
-            if (!result.cancelled && result.uri) {
-                // Update the images state with the newly picked image
-                setImages([...images, result.uri]);
+    
+            if (!result.cancelled && result.assets.length > 0) {
+                // Update the images state with the newly picked images
+                const newImages = result.assets.map(asset => asset.uri);
+                setImages([...images, ...newImages]);
             }
         } catch (error) {
             console.log('Error picking image:', error);
         }
     };
 
-    // const removeImage = (indexToRemove) => {
-    //     const filteredImages = images.filter((_, index) => index !== indexToRemove);
-    //     setImages(filteredImages);
-    // }
+    const removeImage = (image) => {
+        const newImages = images.filter((img) => img !== image);
+        setImages(newImages);
+    };
 
     const renderImage = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => removeImage(index)}>
+            <TouchableOpacity onPress={() => removeImage(item)}>
                 <Image style={styles.image} source={{ uri: item }} />
             </TouchableOpacity>
         );
-    };
-
-    const removeImage = (image) => {
-        const newImages = images.filter((img) => img !== image);
-        onImageAdded(newImages);
     };
 
     const onSnapToItem = (index) => {
@@ -118,8 +118,6 @@ const ProductForm = (props) => {
 
         }
     };
-
-
 
     const addProduct = () => {
         if (
@@ -141,10 +139,10 @@ const ProductForm = (props) => {
         formData.append("description", description);
         formData.append("category", category);
         formData.append("countInStock", countInStock);
-        formData.append("richDescription", richDescription);
-        formData.append("rating", rating);
-        formData.append("numReviews", numReviews);
-        formData.append("isFeatured", isFeatured);
+        // formData.append("richDescription", richDescription);
+        // formData.append("rating", rating);
+        // formData.append("numReviews", numReviews);
+        // formData.append("isFeatured", isFeatured);
         images.forEach((image, index) => {
             if (image) {
                 let newImageUri = "file:///" + image.split("file:/").join("");
@@ -216,102 +214,6 @@ const ProductForm = (props) => {
         }
 
     }
-    // const updateProduct = () => {
-    //     if (
-    //         name === "" ||
-    //         brand === "" ||
-    //         price === "" ||
-    //         description === "" ||
-    //         category === "" ||
-    //         countInStock === ""
-    //     ) {
-    //         setError("Please fill in the form correctly");
-    //         return; // Stop execution if form fields are not filled correctly
-    //     }
-
-    //     let formData = new FormData();
-
-    //     formData.append("name", name);
-    //     formData.append("brand", brand);
-    //     formData.append("price", price);
-    //     formData.append("description", description);
-    //     formData.append("category", category);
-    //     formData.append("countInStock", countInStock);
-    //     formData.append("richDescription", richDescription);
-    //     formData.append("rating", rating);
-    //     formData.append("numReviews", numReviews);
-    //     formData.append("isFeatured", isFeatured);
-
-    //     // Append new images
-    //     images.forEach((image, index) => {
-    //         if (image) {
-    //             let newImageUri = image.startsWith("file://") ? image : "file:///" + image;
-    //             formData.append("images", {
-    //                 uri: newImageUri,
-    //                 type: mime.getType(newImageUri),
-    //                 name: newImageUri.split("/").pop()
-    //             });
-    //         }
-    //     });
-
-    //     const config = {
-    //         headers: {
-    //             "Content-Type": "multipart/form-data",
-    //             "Authorization": `Bearer ${token}`
-    //         }
-    //     };
-
-    //     if (item !== null) {
-    //         axios
-    //             .put(`${baseURL}products/${item.id}`, formData, config)
-    //             .then((res) => {
-    //                 if (res.status === 200 || res.status === 201) {
-    //                     Toast.show({
-    //                         topOffset: 60,
-    //                         type: "success",
-    //                         text1: "Product successfully updated",
-    //                         text2: ""
-    //                     });
-    //                     setTimeout(() => {
-    //                         navigation.navigate("Products");
-    //                     }, 500);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 Toast.show({
-    //                     topOffset: 60,
-    //                     type: "error",
-    //                     text1: "Something went wrong",
-    //                     text2: "Please try again"
-    //                 });
-    //             });
-    //     } else {
-    //         axios
-    //             .post(`${baseURL}products`, formData, config)
-    //             .then((res) => {
-    //                 if (res.status === 200 || res.status === 201) {
-    //                     Toast.show({
-    //                         topOffset: 60,
-    //                         type: "success",
-    //                         text1: "New Product added",
-    //                         text2: ""
-    //                     });
-    //                     setTimeout(() => {
-    //                         navigation.navigate("Products");
-    //                     }, 500);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.log(error);
-    //                 Toast.show({
-    //                     topOffset: 60,
-    //                     type: "error",
-    //                     text1: "Something went wrong",
-    //                     text2: "Please try again"
-    //                 });
-    //             });
-    //     }
-    // };
 
     const updateProduct = () => {
         if (
@@ -408,7 +310,6 @@ const ProductForm = (props) => {
         }
 
     }
-
 
     return (
         <FormContainer title={item ? "Update Product" : "Add Product"}>
@@ -519,9 +420,7 @@ const ProductForm = (props) => {
 
 
     )
-
 }
-
 
 const styles = StyleSheet.create({
     carouselContainer: {
@@ -529,30 +428,6 @@ const styles = StyleSheet.create({
         height: 200,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    label: {
-        width: "80%",
-        marginTop: 10
-    },
-    buttonContainer: {
-        width: "80%",
-        marginBottom: 80,
-        marginTop: 20,
-        alignItems: "center"
-    },
-    buttonText: {
-        color: "white"
-    },
-    imageContainer: {
-        width: "100%",
-        height: "100%",
-        borderStyle: "solid",
-        borderWidth: 20,
-        padding: 0,
-        justifyContent: "center",
-        borderRadius: 100,
-        borderColor: "#E0E0E0",
-        elevation: 10
     },
     image: {
         width: "100%",
@@ -567,8 +442,16 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 100,
         elevation: 20
+    },
+    buttonContainer: {
+        width: "80%",
+        marginBottom: 80,
+        marginTop: 20,
+        alignItems: "center"
+    },
+    buttonText: {
+        color: "white"
     }
-})
-
+});
 
 export default ProductForm;
