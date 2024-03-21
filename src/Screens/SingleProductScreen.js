@@ -1,32 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Image,
-  Input,
-  View,
-  Text,
-  Button,
-  VStack,
-  ScrollView,
-  Heading,
-  HStack,
-  Spacer,
-  Center
-} from "native-base";
+import { ScrollView, Center, Image, Input, View, Text, Button, HStack, Spacer, Heading, Box } from "native-base";
 import colors from "../color";
 import Rating from "../Components/Rating";
 import Buttone from "../Components/Buttone";
 import Review from "../Components/Review";
 import Carousel, { Pagination } from 'react-native-snap-carousel'; 
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../Redux/Actions/cartActions';
+import Toast from 'react-native-toast-message';
 
 function SingleProductScreen({ route }) {
   const navigation = useNavigation();
-  const product = route.params;
   const dispatch = useDispatch();
-
+  const product = route.params;
   const [quantity, setQuantity] = useState(1);
   const [availabilityText, setAvailabilityText] = useState("");
 
@@ -51,8 +38,14 @@ function SingleProductScreen({ route }) {
   };
 
   const handleAddToCart = () => {
-    console.log("Adding to cart:", { ...product, quantity });
     dispatch(addToCart({ ...product, quantity }));
+
+    // Show toast message
+    Toast.show({
+      type: 'success',
+      text1: 'Product added to cart!',
+      text2: 'Product added to cart!'
+    });
   };
 
   const renderCarouselItem = ({ item }) => {
@@ -68,35 +61,34 @@ function SingleProductScreen({ route }) {
   };
 
   return (
-    
     <Box safeArea flex={1} bg={colors.white}>
       <ScrollView px={5} showsVerticalScrollIndicator={false}>
-      <Center>
-    <Carousel
-      data={product.images}
-      renderItem={renderCarouselItem}
-      sliderWidth={320}
-      itemWidth={320}
-      layout="default"
-      loop={true}
-    />
-    <Pagination
-      dotsLength={product.images.length}
-      activeDotIndex={0}
-      containerStyle={{ marginTop: -20 }}
-      dotStyle={{
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: 'rgba(255, 255, 255, 0.92)'
-      }}
-      inactiveDotOpacity={0.4}
-      inactiveDotScale={0.6}
-    />
-  </Center>
-  <Heading bold fontSize={15} mb={2} lineHeight={22}>
-    {product.name}
-  </Heading>
+        <Center>
+          <Carousel
+            data={product.images}
+            renderItem={renderCarouselItem}
+            sliderWidth={320}
+            itemWidth={320}
+            layout="default"
+            loop={true}
+          />
+          <Pagination
+            dotsLength={product.images.length}
+            activeDotIndex={0}
+            containerStyle={{ marginTop: -20 }}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: 'rgba(255, 255, 255, 0.92)'
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+          />
+        </Center>
+        <Heading bold fontSize={15} mb={2} lineHeight={22}>
+          {product.name}
+        </Heading>
         <Rating value={product.rating} text={`${product.numReviews} reviews`} />
         <HStack alignItems="center" my={5}>
           <Button size="sm" colorScheme="pink" onPress={decrement}>-</Button>
@@ -121,7 +113,8 @@ function SingleProductScreen({ route }) {
         </HStack>
         
         <Text>
-          <Text bold>Availability: </Text>{availabilityText} {product.countInStock > 0 && `(Stock: ${product.countInStock})`}</Text>
+          <Text bold>Availability: </Text>{availabilityText} {product.countInStock > 0 && `(Stock: ${product.countInStock})`}
+        </Text>
         <Text lineHeight={24} fontSize={12}>
           <Text bold>Description: </Text>{product.description}
         </Text>
@@ -133,6 +126,7 @@ function SingleProductScreen({ route }) {
           <Text style={{ marginTop: 20 }}>Currently Unavailable</Text>
         )}
         <Review />
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </ScrollView>
     </Box>
   );
