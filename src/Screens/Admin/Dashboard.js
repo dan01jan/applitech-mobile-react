@@ -17,7 +17,7 @@ const Dashboard = () => {
 
   const sidebarItems = [
     { id: 1, title: 'Home', screen: 'Main' },
-    { id: 2, title: 'Product', screen: 'AdminProduct' },
+    { id: 2, title: 'Product', screen: 'ProductForm' },
     { id: 3, title: 'Brand', screen: 'BrandForm' },
   ];
 

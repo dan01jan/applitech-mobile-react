@@ -11,6 +11,7 @@ import BottomNav from './src/Navigations/BottomNav';
 import Dashboard from './src/Screens/Admin/Dashboard';
 import AdminProduct from './src/Screens/Admin/ProductForm'
 import BrandForm from './src/Screens/Admin/BrandForm'
+import ProductForm from './src/Screens/Admin/ProductForm'
 // import OrderModel from './src/Components/OrderModel'
 import PlaceOrderModel from './src/Components/PlaceOrderModel';
 import Auth from './Context/Store/Auth';
@@ -38,6 +39,7 @@ export default function App() {
             <Stack.Screen name="Dashboard" component={Dashboard} />
             <Stack.Screen name="AdminProduct" component={AdminProduct} />
             <Stack.Screen name="BrandForm" component={BrandForm} />
+            <Stack.Screen name="ProductForm" component={ProductForm} />
             <Stack.Screen name="Main" component={BottomNav} />
           </Stack.Navigator>
         </NavigationContainer>
