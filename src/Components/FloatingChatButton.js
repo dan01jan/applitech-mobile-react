@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         zIndex: 9998,
         backgroundColor: 'white',
         borderRadius: 10,
-        width: 300,
+        width: 350,
         height: 400,
     },
     closeButton: {

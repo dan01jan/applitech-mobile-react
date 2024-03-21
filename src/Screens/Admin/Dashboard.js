@@ -3,10 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { LineChart } from 'react-native-chart-kit';
+import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'; // Import BarChart
 import axios from 'axios';
 import baseURL from '../../../assets/common/baseurl';
-import { PieChart } from 'react-native-chart-kit';
 import { ScrollView } from 'native-base';
 
 const Dashboard = () => {
@@ -83,7 +82,7 @@ const Dashboard = () => {
       setOrderChartData(labels.map((label, index) => ({
         name: label,
         data: data[index],
-        color: getRandomColor(),
+        color: getRandomColor(), // Add random color
       })));
     } catch (error) {
       console.error('Error fetching order data:', error);
@@ -107,7 +106,7 @@ const Dashboard = () => {
       setCountryChartData(labels.map((label, index) => ({
         name: label,
         data: data[index],
-        color: getRandomColor(),
+        color: getRandomColor(), // Add random color
       })));
     } catch (error) {
       console.error('Error fetching country data:', error);
@@ -143,7 +142,7 @@ const Dashboard = () => {
       marginBottom: 20,
     },
   });
-
+  const colors = ['#FF5733', '#FFC300', '#36A2EB', '#4BC0C0', '#9966FF', '#FF6384', '#FFCE56'];
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
@@ -179,22 +178,29 @@ const Dashboard = () => {
           <View style={styles.chartContainer}>
             <Text style={styles.chartTitle}>Orders by Month</Text>
             {orderChartData && (
-              <PieChart
-                data={orderChartData}
-                width={300}
-                height={200}
-                chartConfig={{
-                  backgroundColor: '#ffffff',
-                  backgroundGradientFrom: '#ffffff',
-                  backgroundGradientTo: '#ffffff',
-                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                }}
-                accessor="data"
-                backgroundColor="transparent"
-                paddingLeft="15"
-                absolute
-              />
-            )}
+  <BarChart
+    data={{
+      labels: orderChartData.map(data => data.name),
+      datasets: [{
+        data: orderChartData.map(data => data.data),
+        color: (opacity = 1) => colors,
+      }]
+    }}
+    width={300}
+    height={200}
+    yAxisLabel=""
+    chartConfig={{
+      backgroundColor: '#ffffff',
+      backgroundGradientFrom: '#ffffff',
+      backgroundGradientTo: '#ffffff',
+      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    }}
+    style={{
+      borderRadius: 16,
+    }}
+  />
+)}
+
           </View>
           <View style={styles.chartContainer}>
             <Text style={styles.chartTitle}>Orders by Country</Text>
@@ -204,7 +210,8 @@ const Dashboard = () => {
                 width={300}
                 height={200}
                 chartConfig={{
-                  backgroundColor: '#ffffff',
+                  backgroundColor:
+'#ffffff',
                   backgroundGradientFrom: '#ffffff',
                   backgroundGradientTo: '#ffffff',
                   color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
@@ -219,9 +226,7 @@ const Dashboard = () => {
         </View>
       </View>
     </ScrollView>
-
   );
-  
 };
 
 export default Dashboard;
