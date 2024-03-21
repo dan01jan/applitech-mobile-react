@@ -25,7 +25,7 @@ export default function App() {
         <NavigationContainer>
           <StatusBar hidden={true} />
           <Stack.Navigator
-            initialRouteName="Dashboard"
+            initialRouteName="Login"
             screenOptions={{
               headerShown: false,
             }}

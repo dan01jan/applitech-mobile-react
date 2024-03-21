@@ -1,14 +1,13 @@
-import { Box, Image, Input, Text, Button, VStack } from "native-base";
 import React, { useState, useContext, useEffect } from "react";
+import { Box, Image, Input, Text, Button, VStack } from "native-base";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import color from "../color";
-import AuthGlobal from '../../Context/Store/AuthGlobal'
-import { Pressable } from "react-native";
-import { loginUser } from '../../Context/Actions/Auth.actions'; // Importing login action from old code
+import AuthGlobal from '../../Context/Store/AuthGlobal';
+import { loginUser } from '../../Context/Actions/Auth.actions';
 import { useNavigation } from '@react-navigation/native';
 
-function LoginScreen({ props }) {
+function LoginScreen() {
   const context = useContext(AuthGlobal);
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
@@ -17,39 +16,32 @@ function LoginScreen({ props }) {
 
   useEffect(() => {
     if (context.stateUser.isAuthenticated === true) {
-        navigation.navigate("Main")
+      if (context.stateUser.user.isAdmin) {
+        navigation.navigate("Dashboard");
+      } else {
+        navigation.navigate("Main");
+      }
     }
-}, [context.stateUser.isAuthenticated])
+  }, [context.stateUser.isAuthenticated, context.stateUser.user.isAdmin, navigation]);
 
   const handleSubmit = async () => {
     const user = {
       email,
       password,
     };
-  
+
     if (email === "" || password === "") {
       setError("Please fill in your credentials");
-      return; // Exit the function early if credentials are empty
+      return;
     }
-  
+
     try {
       await loginUser(user, context.dispatch, navigation);
-      console.log("Login successful");
     } catch (error) {
       console.error("Login Error:", error);
       setError("An error occurred. Please try again later.");
     }
   };
-  
-  // AsyncStorage code from the old code
-  AsyncStorage.getAllKeys((err, keys) => {
-    AsyncStorage.multiGet(keys, (error, stores) => {
-      stores.map((result, i, store) => {
-        console.log({ [store[i][0]]: store[i][1] });
-        return true;
-      });
-    });
-  });
 
   return (
     <Box flex={1} bg={color.black} alignItems="center" justifyContent="center">
@@ -114,16 +106,19 @@ function LoginScreen({ props }) {
           w="60%"
           rounded={50}
           bg={color.main}
-          onPress={handleSubmit} // Call handleSubmit when button is pressed
+          onPress={handleSubmit}
         >
           LOGIN
         </Button>
 
-        <Pressable onPress={() => navigation.navigate('Register')}>
-          <Text mt={-4} color={color.deepPink} fontWeight="bold">
-            Don't have an account? Sign Up
-          </Text>
-        </Pressable>
+        <Text
+          mt={-4}
+          color={color.deepPink}
+          fontWeight="bold"
+          onPress={() => navigation.navigate('Register')}
+        >
+          Don't have an account? Sign Up
+        </Text>
       </Box>
     </Box>
   );
