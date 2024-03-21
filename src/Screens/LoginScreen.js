@@ -6,6 +6,7 @@ import color from "../color";
 import AuthGlobal from '../../Context/Store/AuthGlobal';
 import { loginUser } from '../../Context/Actions/Auth.actions';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 function LoginScreen() {
   const context = useContext(AuthGlobal);
@@ -37,6 +38,13 @@ function LoginScreen() {
 
     try {
       await loginUser(user, context.dispatch, navigation);
+      // Show Toast upon successful login
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+        visibilityTime: 3000,
+        autoHide: true,
+      });
     } catch (error) {
       console.error("Login Error:", error);
       setError("An error occurred. Please try again later.");
@@ -120,6 +128,7 @@ function LoginScreen() {
           Don't have an account? Sign Up
         </Text>
       </Box>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </Box>
   );
 }
