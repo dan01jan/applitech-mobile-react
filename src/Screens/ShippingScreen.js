@@ -1,130 +1,134 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Box, Center, FormControl, Input, ScrollView, Text, VStack } from 'native-base';
-import Colors from '../color';
-import Buttone from '../Components/Buttone';
-import { useNavigation } from "@react-navigation/native";
-// import SelectDropdown from 'react-native-select-dropdown';
-import { Select, Item, Picker, Toast } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-// import AuthGlobal from "../../../Context/Store/AuthGlobal";
-import AuthGlobalContext from '../../Context/Store/AuthGlobal';
+import React, { useEffect, useState, useContext } from 'react'
+import { Text, View, Button, SafeAreaView } from 'react-native'
+import { Select, Item, Picker, Toast } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import FormContainer from '../../Shared/Form/FormContainer'
+import Input from '../../Shared/Form/Input'
+import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native';
+import AuthGlobal from '../../Context/Store/AuthGlobal'
+import countries from '../../assets/data/countries.json'
+import SelectDropdown from 'react-native-select-dropdown'
 
-// const countries = require("../../../assets/data/countries.json");
+const Shipping = (props) => {
+    const [user, setUser] = useState('')
+    const [orderItems, setOrderItems] = useState([])
+    const [address, setAddress] = useState('')
+    const [address2, setAddress2] = useState('')
+    const [city, setCity] = useState('')
+    const [zip, setZip] = useState('')
+    const [country, setCountry] = useState('Philippines')
+    const [phone, setPhone] = useState('')
 
-const ShippingInputs = [
-  {
-    label: "ENTER PHONE NUMBER",
-    type: "text"
-  },
-  {
-    label: "ENTER ADDRESS",
-    type: "text"
-  },
-  {
-    label: "ENTER ADDRESS 2",
-    type: "text"
-  },
-  {
-    label: "CITY",
-    type: "text"
-  },
-  {
-    label: "ZIPCODE",
-    type: "text"
-  },
-  {
-    label: "COUNTRY",
-    type: "text"
-  }
-];
+    const navigation = useNavigation()
+    const cartItems = useSelector(state => state.cartItems)
+    const context = useContext(AuthGlobal);
 
-function ShippingScreen() {
-  const navigation = useNavigation();
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [address2, setAddress2] = useState('');
-  const [city, setCity] = useState('');
-  const [zip, setZip] = useState('');
-  const [country, setCountry] = useState('Philippines');
-  const context = useContext(AuthGlobalContext);
+    useEffect(() => {
+        setOrderItems(cartItems)
+        if(context.stateUser.isAuthenticated) {
+            setUser(context.stateUser.user.userId)
+        } else {
+            navigation.navigate("User",{ screen: 'Login' });
+            Toast.show({
+                topOffset: 60,
+                type: "error",
+                text1: "Please Login to Checkout",
+                text2: ""
+            });
+        }
+        return () => {
+            setOrderItems();
+        }
+    }, [])
 
-  useEffect(() => {
-    // if (!context.stateUser.isAuthenticated) {
-    //   navigation.navigate("User",{ screen: 'Login' });
-    //   Toast.show({
-    //     topOffset: 60,
-    //     type: "error",
-    //     text1: "Please Login to Checkout",
-    //     text2: ""
-    //   });
-    // }
-  }, []);
+    const checkOut = () => {
+      let order = {
+          city,
+          country,
+          dateOrdered: Date.now(),
+          orderItems,
+          phone,
+          shippingAddress1: address,
+          shippingAddress2: address2,
+          status: '3',
+          user,
+          zip,
+      };
+      navigation.navigate('Payment', { address, city, country });
 
-  const checkOut = () => {
-    const order = {
-      city,
-      country,
-      dateOrdered: Date.now(),
-      orderItems: [],
-      phone,
-      shippingAddress1: address,
-      shippingAddress2: address2,
-      status: "3",
-      user: context.stateUser.user.userId,
-      zip,
-    };
-    navigation.navigate("Payment", { order });
+
   };
 
-  return (
-    <Box flex={1} safeArea bg={Colors.main} py={5}>
-      <Center pb={15}>
-        <Text color={Colors.white} fontSize={14} bold>
-          Delivery Address
-        </Text>
-      </Center>
-      <Box h="full" bg={Colors.white} px={5}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <VStack space={6} mt={5}>
-            {ShippingInputs.map((i, index) => (
-              <FormControl key={index}>
-                <FormControl.Label
-                  _text={{
-                    fontSize: "12px",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {i.label}
-                </FormControl.Label>
-                <Input 
-                  borderWidth={.2} 
-                  borderColor={Colors.main} 
-                  bg={Colors.lightpink} 
-                  py={4}
-                  type={i.type}
-                  color={Colors.main}
-                  _focus={{
-                    bg: Colors.lightpink,
-                    borderWidth: 1,
-                    borderColor: Colors.main,
-                  }}
-                />
-              </FormControl>
-            ))}
-            <Buttone 
-              bg={Colors.main} 
-              color={Colors.white} 
-              mt={5}
-              onPress={() => checkOut()}
-            >
-              Continue
-            </Buttone>
-          </VStack>
-        </ScrollView>
-      </Box>
-    </Box>
-  );
-}
 
-export default ShippingScreen;
+
+    return (
+
+        <KeyboardAwareScrollView
+            viewIsInsideTabBar={true}
+            extraHeight={200}
+            enableOnAndroid={true}
+        >
+            <FormContainer title={"Shipping Address"}>
+                <Input
+                    placeholder={"Phone"}
+                    name={"phone"}
+                    value={phone}
+                    keyboardType={"numeric"}
+                    onChangeText={(text) => setPhone(text)}
+                />
+                <Input
+                    placeholder={"Shipping Address 1"}
+                    name={"ShippingAddress1"}
+                    value={address}
+                    onChangeText={(text) => setAddress(text)}
+                />
+                <Input
+                    placeholder={"Shipping Address 2"}
+                    name={"ShippingAddress2"}
+                    value={address2}
+                    onChangeText={(text) => setAddress2(text)}
+                />
+                <Input
+                    placeholder={"City"}
+                    name={"city"}
+                    value={city}
+                    onChangeText={(text) => setCity(text)}
+                />
+                <Input
+                    placeholder={"Zip Code"}
+                    name={"zip"}
+                    value={zip}
+                    keyboardType={"numeric"}
+                    onChangeText={(text) => setZip(text)}
+                />
+                <Select
+                    width="80%"
+                    iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+                    style={{ width: undefined }}
+                    selectedValue={country}
+                    placeholder="Select your country"
+                    placeholderStyle={{ color: '#007aff' }}
+                    placeholderIconColor="#007aff"
+                    onValueChange={(e) => setCountry(e)}
+
+                >
+                    {countries.map((c) => {
+                        return <Select.Item
+                            key={c.code}
+                            label={c.name}
+                            value={c.name}
+                        />
+                    })}
+                </Select>
+               
+                <View style={{ width: '80%', alignItems: "center" }}>
+                    <Button title="Confirm" onPress={() => checkOut()} />
+                </View>
+            </FormContainer>
+        </KeyboardAwareScrollView>
+
+    )
+}
+export default Shipping;

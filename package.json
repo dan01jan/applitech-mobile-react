@@ -29,6 +29,7 @@
     "react-native-floating-action": "^1.22.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-ionicons": "^4.6.5",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-numeric-input": "^1.9.1",
     "react-native-pager-view": "^6.2.3",
     "react-native-paper": "^5.12.3",

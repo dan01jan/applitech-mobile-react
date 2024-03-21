@@ -1,110 +1,102 @@
-// PaymentScreen.js
-
 import React, { useState } from 'react';
-import { Box, Center, FormControl, HStack, Image, Input, ScrollView, Spacer, Text, VStack } from 'native-base';
-import Colors from '../color';
-import Buttone from '../Components/Buttone';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from 'react-native';
+import {
+  Container,
+  Text,
+  Radio,
+  Right,
+  Left,
+  Picker,
+  Box,
+  HStack,
+  VStack,
+  Heading,
+  Divider,
+  CheckCircleIcon,
+  Select,
+  CheckIcon,
+  Center,
+  View,
+  Button
 
-const paymentMethods = [
-  {
-    id: 1,
-    image: require("../../assets/images/paypal.png"),
-    alt: "PayPal",
-    icon: "Ionicons"
-  },
-  {
-    id: 2,
-    image: require("../../assets/images/discover.png"),
-    alt: "Discover",
-    icon: "fontAwesome"
-  },
-  {
-    id: 3,
-    image: require("../../assets/images/googlepay.png"),
-    alt: "Google Pay",
-    icon: "fontAwesome"
-  },
-  {
-    id: 4,
-    image: require("../../assets/images/cod.png"),
-    alt: "Cash on Delivery",
-    icon: "fontAwesome"
-  },
-];
+} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
-function PaymentScreen() {
-  const navigation = useNavigation();
-  const [selectedMethod, setSelectedMethod] = useState(null);
+const methods = [
+    { name: 'Cash on Delivery', value: 1 },
+    { name: 'Bank Transfer', value: 2 },
+    { name: 'Card Payment', value: 3 }
+]
 
-  const handleMethodSelection = (id) => {
-    setSelectedMethod(id);
-  };
+const paymentCards = [
+    { name: 'Wallet', value: 1 },
+    { name: 'Visa', value: 2 },
+    { name: 'MasterCard', value: 3 },
+    { name: 'Other', value: 4 }
+]
 
-  const handleContinue = () => {
-    try {
-      navigation.navigate("Placeorder", { selectedMethod });
-    } catch (error) {
-      console.error("Navigation Error:", error);
-    }
-  };
+const Payment = ({ route }) => {
+    const order = route.params;
+    const [selected, setSelected] = useState('');
+    const [card, setCard] = useState('');
+    const navigation = useNavigation();
 
-  return (
-    <Box flex={1} safeArea bg={Colors.main} py={5}>
-      <Center pb={15}>
-        <Text color={Colors.white} fontSize={14} bold>
-          Payment Method
-        </Text>
-      </Center>
-      <Box h="full" bg={Colors.white} px={5}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <VStack space={6} mt={5}>
-            {paymentMethods.map((method) => (
-              <TouchableOpacity key={method.id} onPress={() => handleMethodSelection(method.id)}>
-                <HStack
-                  alignItems='center'
-                  bg={Colors.white}
-                  px={3}
-                  py={1}
-                  justifyContent="space-between"
-                  rounded={10}
+    const handleConfirm = () => {
+        // Navigate to PlaceOrder screen with both order details and payment method
+        navigation.navigate('Placeorder', { ...order, selectedMethod: selected });
+    };
+
+    return (
+        <View>
+            <Heading>
+                <Text>Choose your payment method</Text>
+            </Heading>
+            <Radio.Group
+                name="myRadioGroup"
+                value={selected}
+                onChange={(value) => setSelected(value)}
+            >
+                {methods.map((item, index) => (
+                    <Radio
+                        key={index}
+                        value={item.value}
+                        my="1"
+                        colorScheme="green"
+                        size="22"
+                        style={{ float: 'right' }}
+                        icon={<CheckCircleIcon size="22" mt="0.5" color="emerald.500" />}
+                    >
+                        {item.name}
+                    </Radio>
+                ))}
+            </Radio.Group>
+            {selected === 3 && (
+                <Select
+                    minWidth="100%"
+                    placeholder="Choose Service"
+                    selectedValue={card}
+                    onValueChange={(x) => setCard(x)}
+                    _selectedItem={{
+                        bg: "teal.600",
+                        endIcon: <CheckIcon size="5" />
+                    }}
                 >
-                  <Box>
-                    <Image
-                      source={method.image}
-                      alt={method.alt}
-                      resizeMode="contain"
-                      w={60}
-                      h={50}
-                    />
-                  </Box>
-                  {selectedMethod === method.id ? (
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={30}
-                      color={Colors.main}
-                    />
-                  ) : (
-                    <FontAwesome
-                      name="circle-thin"
-                      size={30}
-                      color={Colors.main}
-                    />
-                  )}
-                </HStack>
-              </TouchableOpacity>
-            ))}
-            <Buttone bg={Colors.main} color={Colors.white} mt={5} onPress={handleContinue}>
-              Continue
-            </Buttone>
-            
-          </VStack>
-        </ScrollView>
-      </Box>
-    </Box>
-  );
-}
+                    {paymentCards.map((c, index) => (
+                        <Select.Item
+                            key={c.name}
+                            label={c.name}
+                            value={c.name}
+                        />
+                    ))}
+                </Select>
+            )}
+            <View style={{ marginTop: 60, alignSelf: 'center' }}>
+                <Button
+                    title={"Confirm"}
+                    onPress={handleConfirm}
+                />
+            </View>
+        </View>
+    );
+};
 
-export default PaymentScreen;
+export default Payment;
