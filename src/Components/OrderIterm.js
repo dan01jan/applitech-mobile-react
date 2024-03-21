@@ -20,12 +20,12 @@ const OrderItems = () => {
   const renderItems = ({ item }) => {
     return (
       <Pressable onPress={() => handleDeleteItem(item)}>
-        <Box ml={6} mb={3}>
+        <Box  mb={3}>
           <HStack alignItems="center" bg={Colors.white} shadow={1} rounded={10} overflow="hidden">
             <Center w="25%" bg={Colors.deepGray}>
               <Image source={{ uri: item.images[0] }} alt={item.name} w="full" h={24} resizeMode="contain" />
             </Center>
-            <VStack w='60%' px={2} space={2}>
+            <VStack w='80%' px={2} space={2} >
               <Text isTruncated color={Colors.black} bold fontSize={10}>
                 {item.name}
               </Text>
