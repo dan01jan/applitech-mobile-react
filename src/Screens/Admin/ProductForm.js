@@ -138,12 +138,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     imageContainer: {
-        width: 350,
-        height: 200,
+        width: '85%',
+        height: '20%',
         marginLeft: 'auto',
         marginRight: 'auto',
-        marginTop: 'auto',
-        marginBottom: 'auto',
+        marginTop: -20,
+        marginBottom: 8,
         borderStyle: "solid",
         borderWidth: 8,
         borderRadius: 20, // Changed from 100 to 20 for a square shape
