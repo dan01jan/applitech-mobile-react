@@ -10,7 +10,7 @@ import RegisterScreen from './src/Screens/RegisterScreen';
 import BottomNav from './src/Navigations/BottomNav';
 import Dashboard from './src/Screens/Admin/Dashboard';
 import AdminProduct from './src/Screens/Admin/ProductForm'
-import AdminBrand from './src/Screens/Admin/BrandForm'
+import BrandForm from './src/Screens/Admin/BrandForm'
 // import OrderModel from './src/Components/OrderModel'
 import PlaceOrderModel from './src/Components/PlaceOrderModel';
 import Auth from './Context/Store/Auth';
@@ -37,7 +37,7 @@ export default function App() {
             {/* Add a Screen for BottomNav */}
             <Stack.Screen name="Dashboard" component={Dashboard} />
             <Stack.Screen name="AdminProduct" component={AdminProduct} />
-            <Stack.Screen name="AdminBrand" component={AdminBrand} />
+            <Stack.Screen name="BrandForm" component={BrandForm} />
             <Stack.Screen name="Main" component={BottomNav} />
           </Stack.Navigator>
         </NavigationContainer>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Box, ScrollView, FormControl, VStack, Input, Select, View } from 'native-base';
 import Colors from '../../color';
 import Buttone from '../../Components/Buttone';
-import {StyleSheet, Image, Text, TouchableOpacity} from 'react-native'
+import { StyleSheet, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from "react-native-vector-icons/FontAwesome"
 
 const Inputs = [
@@ -52,27 +52,26 @@ const ProductForm = (props) => {
         }
     }
 
-
     return (
-        <Box h="full" bg={Colors.white} px={5}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <VStack space={10} mt={5} pb={10}>
-                <Text style={styles.headerText}> Create Product </Text>
+        <Box flex={1} bg={Colors.white} px={5}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+                <VStack space={10} mt={2} pb={10}>
+                    <Text style={styles.headerText}> Create Product </Text>
 
-                <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{ uri: mainImage }} />
-                <TouchableOpacity
-                    onPress={pickImage}
-                    style={styles.imagePicker}>
-                    <Icon style={{ color: "white" }} name="camera" />
-                </TouchableOpacity>
-            </View>
+                    <View style={styles.imageContainer}>
+                        <Image style={styles.image} source={{ uri: mainImage }} />
+                        <TouchableOpacity
+                            onPress={pickImage}
+                            style={styles.imagePicker}>
+                            <Icon style={{ color: "white" }} name="camera" />
+                        </TouchableOpacity>
+                    </View>
                     {Inputs.map((input, index) => (
                         <FormControl key={index}>
                             <FormControl.Label _text={{ fontSize: '12px', fontWeight: 'bold' }}>
                                 {input.label}
                             </FormControl.Label>
-                            {input.type === 'dropdown' ? ( // Render dropdown if type is dropdown
+                            {input.type === 'dropdown' ? (
                                 <Select
                                     placeholder="Select"
                                     borderWidth={0}
@@ -108,7 +107,7 @@ const ProductForm = (props) => {
                             )}
                         </FormControl>
                     ))}
-                    <Buttone bg={Colors.main} color={Colors.white}>
+                    <Buttone bg={Colors.main} color={Colors.white} style={styles.buttonContainer}>
                         Create Product
                     </Buttone>
                 </VStack>
@@ -118,28 +117,20 @@ const ProductForm = (props) => {
 };
 
 const styles = StyleSheet.create({
-    label: {
-        width: "80%",
-        marginTop: 10
-    },
     buttonContainer: {
         width: "80%",
         marginBottom: 80,
         marginTop: 20,
-        alignItems: "center"
-    },
-    buttonText: {
-        color: "white"
+        alignSelf: "center"
     },
     headerText: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
     },
     imageContainer: {
         width: '85%',
-        height: '20%',
+        height: 220,
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: -20,
@@ -148,24 +139,20 @@ const styles = StyleSheet.create({
         borderWidth: 8,
         borderRadius: 20, // Changed from 100 to 20 for a square shape
         borderColor: "#E0E0E0",
-        // Removed elevation to remove shadow
     },
     image: {
         width: "100%",
         height: "100%",
-        // Removed borderRadius to make the image square
     },
     imagePicker: {
-        alignSelf: "center", // Align the image picker horizontally
-        justifyContent: "center", // Align the image picker vertically
+        position: "absolute",
+        right: 0,
+        bottom: 0,
         backgroundColor: "grey",
         padding: 8,
         borderRadius: 100,
         elevation: 20
     }
 })
-
-
-
 
 export default ProductForm;
