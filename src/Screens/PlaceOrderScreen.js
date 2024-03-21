@@ -13,10 +13,10 @@ function PlaceOrderScreen() {
   const { address, city, country } = route.params || {}; // Fetch address details from route params
 
   const paymentMethods = {
-    1: "PayPal",
-    2: "Discover",
-    3: "Google Pay",
-    4: "Cash on Delivery",
+    1: "Cash on Delivery",
+    2: "GCASH",
+    3: "PayMaya",
+  
   };
 
   return (
