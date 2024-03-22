@@ -15,6 +15,7 @@ function RegisterScreen({ navigation }) {
     phone: "",
     password: ""
   });
+  const [validationError, setValidationError] = useState("");
 
   const config = {
     headers: {
@@ -24,6 +25,25 @@ function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     try {
+      // Perform form validation
+      if (formData.name.length < 4) {
+        setValidationError("Name must be at least 4 characters");
+        return;
+      }
+      if (!formData.email.includes("@")) {
+        setValidationError("Invalid email address");
+        return;
+      }
+      if (formData.phone.length < 11 || isNaN(formData.phone)) {
+        setValidationError("Invalid phone number");
+        return;
+      }
+      if (formData.password.length < 8) {
+        setValidationError("Password must be at least 8 characters");
+        return;
+      }
+
+      // If form is valid, proceed with registration
       const response = await axios.post(`${baseURL}users/register`, formData, config);
       if (response.status === 200) {
         Toast.show({
@@ -42,6 +62,7 @@ function RegisterScreen({ navigation }) {
   };
   
   const handleInputChange = (key, value) => {
+    setValidationError(""); // Clear validation error on input change
     setFormData({
       ...formData,
       [key]: value
@@ -127,6 +148,10 @@ function RegisterScreen({ navigation }) {
           />
         </VStack>
       
+        {validationError ? (
+          <Text color={colors.red}>{validationError}</Text>
+        ) : null}
+
         <Button 
           _pressed={{
             bg: colors.main
@@ -158,7 +183,8 @@ function RegisterScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  headerImageContainer: {
+  headerImageContainer:
+  {
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -170,3 +196,4 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
+

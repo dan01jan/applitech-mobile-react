@@ -26,16 +26,25 @@ function LoginScreen() {
   }, [context.stateUser.isAuthenticated, context.stateUser.user.isAdmin, navigation]);
 
   const handleSubmit = async () => {
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+  
+    // Validate password length
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+  
+    // All validations passed, proceed with login
     const user = {
       email,
       password,
     };
-
-    if (email === "" || password === "") {
-      setError("Please fill in your credentials");
-      return;
-    }
-
+  
     try {
       await loginUser(user, context.dispatch, navigation);
       // Show Toast upon successful login
@@ -50,6 +59,7 @@ function LoginScreen() {
       setError("An error occurred. Please try again later.");
     }
   };
+  
 
   return (
     <Box flex={1} bg={color.black} alignItems="center" justifyContent="center">
