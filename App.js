@@ -20,6 +20,8 @@ import PlaceOrderScreen from './src/Screens/PlaceOrderScreen';
 import Order from './src/Screens/Admin/Order';
 import Auth from './Context/Store/Auth';
 import AppreciationScreen from './src/Screens/AppreciationScreen';
+import Brands from './src/Screens/Admin/Brands';
+import Products from './src/Screens/Admin/Products';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -31,7 +33,7 @@ export default function App() {
         <NavigationContainer>
           <StatusBar hidden={true} />
           <Stack.Navigator
-            initialRouteName="Dashboard"
+            initialRouteName="Login"
             screenOptions={{
               
               headerShown: false,
@@ -49,6 +51,8 @@ export default function App() {
             <Stack.Screen name="BrandForm" component={BrandForm} />
             <Stack.Screen name="ProductForm" component={ProductForm} />
             <Stack.Screen name="OrderAdmin" component={Order} />
+            <Stack.Screen name="Brands" component={Brands} />
+            <Stack.Screen name="Products" component={Products} />
             <Stack.Screen name="Main" component={BottomNav} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="AppreciationScreen" component={AppreciationScreen} />

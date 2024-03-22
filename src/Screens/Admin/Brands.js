@@ -86,7 +86,7 @@ const Brands = (props) => {
                     onPress={() => navigation.navigate("BrandForm")}
                 >
                     <Icon name="plus" size={18} color="white" />
-                    <Text style={styles.buttonText}>Brands</Text>
+                    <Text style={styles.buttonText}>Add Brand</Text>
                 </EasyButton>
             </View>
 
@@ -111,12 +111,24 @@ const Brands = (props) => {
                             <View style={[styles.itemColumn, { flex: 4 }]}>
                                 <Text>{item.description}</Text>
                             </View>
-                            <TouchableOpacity onPress={() => {
-                                console.log("Item id:", item.id);
-                                deleteBrand(item.id);
-                            }} style={styles.deleteButton}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    console.log("Item id:", item.id);
+                                    deleteBrand(item.id);
+                                }}
+                                style={styles.deleteButton}
+                            >
                                 <Icon name="trash" size={20} color="red" />
                             </TouchableOpacity>
+                            <TouchableOpacity
+                            style={[styles.deleteButton, { right: 40 }]}
+                            onPress={() => {
+                                console.log("Edit item with id:", item.id);
+                                navigation.navigate("BrandForm", { item });
+                            }}
+                        >
+                            <Icon name="pencil" size={20} color="blue" />
+                        </TouchableOpacity>
 
                         </View>
                     )}
