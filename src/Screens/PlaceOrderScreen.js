@@ -48,7 +48,7 @@ const Confirm = (props) => {
   
                           setTimeout(() => {
                               dispatch(clearCart());
-                              navigation.navigate("Cart");
+                              navigation.navigate("AppreciationScreen");
                           }, 500);
                       } else {
                           // Handle other response statuses if needed
