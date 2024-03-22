@@ -1,91 +1,113 @@
-import { View, Text, Pressable } from 'react-native'
-import React from 'react'
-import { Box, Button, HStack, ScrollView } from 'native-base'
-import Colors from '../../color'
-import Buttone from '../Buttone'
+import React, { useContext, useState, useCallback } from 'react';
+import { View, Text, ScrollView, Button, StyleSheet } from 'react-native';
+import { Container } from "native-base"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Orders = () => {
-  return (
-   <Box h="full" bg = {Colors.white} pt = {5}>
-    <ScrollView showsVerticalScrollIndicator = {false}>
-       {/* Paid Order */}
-        <Pressable>
-            
-            <HStack
-                space = {4}
-                justifyContent="space-between"
-                alignItems="center"
-                bg = {Colors.lightpink}
-                py = {5}
-                px = {2}
-            >
-                <Text fontsize= {9} color = {Colors.lightpink} isTruncated>
-                   00099009
-                </Text>
-                <Text fontsize= {12} color = {Colors.lightpink} isTruncated>
-                    Paid
-                </Text>
-                <Text fontsize= {12} color = {Colors.lightpink} isTruncated>
-                    3-14-24
-                </Text>
-                <Button
-                px = {7}
-                py = {1.5} 
-                rounded = {50} 
-                bg = {Colors.main}
-                _text = {{
-                    color:Colors.white
-                }}
-                _pressed = {{
-                    bg:Colors.main
-                }}
-                >
-                ₱314  
+import axios from "axios"
+import baseURL from '../../../assets/common/baseurl';
+import AuthGlobal from '../../../Context/Store/AuthGlobal';
+// import OrderCard from '../../Shared/OrderCard';
+import OrderCard from '../../../Shared/OrderCard'
 
-                </Button>               
-            </HStack>
-        </Pressable>
-        {/* Not Paid */}
-        <Pressable>
-            
-            <HStack
-                space = {4}
-                justifyContent="space-between"
-                alignItems="center"
-                // bg = {Colors.lightpink}
-                py = {5}
-                px = {2}
-            >
-                <Text fontsize= {9} color = {Colors.lightpink} isTruncated>
-                   000990092
-                </Text>
-                <Text fontsize= {12} color = {Colors.lightpink} isTruncated>
-                    Not Paid
-                </Text>
-                <Text fontsize= {12} color = {Colors.lightpink} isTruncated>
-                    3-13-24
-                </Text>
-                <Button
-                px = {7}
-                py = {1.5} 
-                rounded = {50} 
-                bg = {Colors.salmon}
-                _text = {{
-                    color:Colors.white
-                }}
-                _pressed = {{
-                    bg:Colors.main
-                }}
-                >
-                ₱314  
+const UserProfile = (props) => {
+    const context = useContext(AuthGlobal)
+    const [userProfile, setUserProfile] = useState('')
+    const [orders, setOrders] = useState([])
+    const navigation = useNavigation()
+    
 
-                </Button>               
-            </HStack>
-        </Pressable>
-    </ScrollView>
-   </Box>
-  )
+    useFocusEffect(
+        useCallback(() => {
+            if (
+                context.stateUser.isAuthenticated === false ||
+                context.stateUser.isAuthenticated === null
+            ) {
+                navigation.navigate("Login")
+            }
+            console.log("context", context.stateUser.user)
+            AsyncStorage.getItem("jwt")
+                .then((res) => {
+                    axios
+                        .get(`${baseURL}users/${context.stateUser.user.userId}`, {
+                            headers: { Authorization: `Bearer ${res}` },
+                        })
+                        .then((user) => setUserProfile(user.data))
+                })
+                .catch((error) => console.log(error))
+            axios
+                .get(`${baseURL}orders`)
+                .then((x) => {
+                    const data = x.data;
+                    console.log(data)
+                    const userOrders = data.filter(
+                        (order) =>
+                            // console.log(order)
+                            order.user ? (order.user._id === context.stateUser.user.userId) : false
+
+                    );
+                    setOrders(userOrders);
+                })
+                .catch((error) => console.log(error))
+            return () => {
+                setUserProfile();
+                setOrders()
+            }
+
+        }, [context.stateUser.isAuthenticated]))
+
+    return (
+        <Container style={styles.container}>
+            <ScrollView contentContainerStyle={styles.subContainer}>
+                <Text style={{ fontSize: 30 }}>
+                    {userProfile ? userProfile.name : ""}
+                </Text>
+                <View style={{ marginTop: 20 }}>
+                    <Text style={{ margin: 10 }}>
+                        Email: {userProfile ? userProfile.email : ""}
+                    </Text>
+                    <Text style={{ margin: 10 }}>
+                        Phone: {userProfile ? userProfile.phone : ""}
+                    </Text>
+                </View>
+                <View style={{ marginTop: 80 }}>
+                   
+                    <View style={styles.order}>
+                        <Text style={{ fontSize: 20 }}>My Orders</Text>
+                        <View>
+                            {orders ? (
+                                orders.map((order) => {
+                                    return <OrderCard key={order.id} item={order} select="false" />;
+                                })
+                            ) : (
+                                <View style={styles.order}>
+                                    <Text>You have no orders</Text>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+                </View>
+
+            </ScrollView>
+        </Container>
+    )
 }
 
-export default Orders
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: "center"
+    },
+    subContainer: {
+        alignItems: "center",
+        marginTop: 60
+    },
+    order: {
+        marginTop: 20,
+        alignItems: "center",
+        marginBottom: 60
+    }
+})
+
+export default UserProfile

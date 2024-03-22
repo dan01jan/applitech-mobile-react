@@ -6,10 +6,10 @@ import TrafficLight from "./StyledComponents/TrafficLight";
 import EasyButton from "./StyledComponents/EasyButton";
 import Toast from "react-native-toast-message";
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import baseURL from "../assets/common/baseurl";
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
 
 const codes = [
   { name: "pending", code: "3" },
@@ -18,11 +18,11 @@ const codes = [
 ];
 const OrderCard = ({ item, select }) => {
   const [orderStatus, setOrderStatus] = useState();
-  const [statusText, setStatusText] = useState('');
-  const [statusChange, setStatusChange] = useState('');
-  const [token, setToken] = useState('');
-  const [cardColor, setCardColor] = useState('');
-  const navigation = useNavigation()
+  const [statusText, setStatusText] = useState("");
+  const [statusChange, setStatusChange] = useState("");
+  const [token, setToken] = useState("");
+  const [cardColor, setCardColor] = useState("");
+  const navigation = useNavigation();
 
   const updateOrder = () => {
     AsyncStorage.getItem("jwt")
@@ -72,7 +72,7 @@ const OrderCard = ({ item, select }) => {
           text2: "Please try again",
         });
       });
-  }
+  };
   useEffect(() => {
     if (item.status === "3") {
       setOrderStatus(<TrafficLight unavailable></TrafficLight>);
@@ -121,43 +121,38 @@ const OrderCard = ({ item, select }) => {
         </View>
         {/* {item.editMode ? ( */}
         <View>
-{select ? null : <><Select
-            width="80%"
-            iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
-            style={{ width: undefined }}
-            selectedValue={statusChange}
-            color="white"
-            placeholder="Change Status"
-            placeholderTextColor="white"
-            placeholderStyle={{ color: '#FFFFFF' }}
-            placeholderIconColor="#007aff"
-            onValueChange={(e) => setStatusChange(e)}
-          >
-            {codes.map((c) => {
-              return <Select.Item
-                key={c.code}
-                label={c.name}
-                value={c.code}
-              />
-            })}
-          </Select>
+          {select ? null : (
+            <>
+              <Select
+                width="80%"
+                iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+                style={{ width: undefined }}
+                selectedValue={statusChange}
+                color="white"
+                placeholder="Change Status"
+                placeholderTextColor="white"
+                placeholderStyle={{ color: "#FFFFFF" }}
+                placeholderIconColor="#007aff"
+                onValueChange={(e) => setStatusChange(e)}
+              >
+                {codes.map((c) => {
+                  return (
+                    <Select.Item key={c.code} label={c.name} value={c.code} />
+                  );
+                })}
+              </Select>
 
-          <EasyButton
-            secondary
-            large
-            onPress={() => updateOrder()}
-          >
-            <Text style={{ color: "white" }}>Update</Text>
-          </EasyButton></> }
-          
+              <EasyButton secondary large onPress={() => updateOrder()}>
+                <Text style={{ color: "white" }}>Update</Text>
+              </EasyButton>
+            </>
+          )}
         </View>
         {/* //   ) : null} */}
       </View>
     </View>
-
-
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
