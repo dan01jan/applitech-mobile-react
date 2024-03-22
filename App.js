@@ -14,6 +14,8 @@ import BrandForm from './src/Screens/Admin/BrandForm'
 import ProductForm from './src/Screens/Admin/ProductForm'
 // import OrderModel from './src/Components/OrderModel'
 import PlaceOrderModel from './src/Components/PlaceOrderModel';
+import PlaceOrderScreen from './src/Screens/PlaceOrderScreen';
+import PlaceOrderScreenOLD from './src/Screens/PlaceOrderScreenOLD';
 import Auth from './Context/Store/Auth';
 
 export default function App() {
@@ -26,7 +28,7 @@ export default function App() {
         <NavigationContainer>
           <StatusBar hidden={true} />
           <Stack.Navigator
-            initialRouteName="Shipping"
+            initialRouteName="Login"
             screenOptions={{
               headerShown: false,
             }}
@@ -35,6 +37,8 @@ export default function App() {
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Order" component={OrderScreen} />
             <Stack.Screen name="OrderModel" component={PlaceOrderModel} />
+            <Stack.Screen name="PlaceOrderScreen" component={PlaceOrderScreen} />
+            {/* <Stack.Screen name="PlaceOrderScreenOLD" component={PlaceOrderScreenOLD} /> */}
             {/* Add a Screen for BottomNav */}
             <Stack.Screen name="Dashboard" component={Dashboard} />
             <Stack.Screen name="AdminProduct" component={AdminProduct} />
