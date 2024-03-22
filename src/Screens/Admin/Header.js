@@ -16,7 +16,7 @@ const Header = ({ title, onPress }) => {
       <View style={styles.placeholder} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   header: {
