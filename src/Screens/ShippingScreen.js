@@ -64,7 +64,69 @@ const Checkout = (props) => {
     console.log(orderItems)
     return (
 
-    
+        // <KeyboardAwareScrollView
+        //     viewIsInsideTabBar={true}
+        //     extraHeight={200}
+        //     enableOnAndroid={true}
+        // >
+        //     <FormContainer title={"Shipping Address"}>
+        //         <Input
+        //             placeholder={"Phone"}
+        //             name={"phone"}
+        //             value={phone}
+        //             keyboardType={"numeric"}
+        //             onChangeText={(text) => setPhone(text)}
+        //         />
+        //         <Input
+        //             placeholder={"Shipping Address 1"}
+        //             name={"ShippingAddress1"}
+        //             value={address}
+        //             onChangeText={(text) => setAddress(text)}
+        //         />
+        //         <Input
+        //             placeholder={"Shipping Address 2"}
+        //             name={"ShippingAddress2"}
+        //             value={address2}
+        //             onChangeText={(text) => setAddress2(text)}
+        //         />
+        //         <Input
+        //             placeholder={"City"}
+        //             name={"city"}
+        //             value={city}
+        //             onChangeText={(text) => setCity(text)}
+        //         />
+        //         <Input
+        //             placeholder={"Zip Code"}
+        //             name={"zip"}
+        //             value={zip}
+        //             keyboardType={"numeric"}
+        //             onChangeText={(text) => setZip(text)}
+        //         />
+        //         <Select
+        //             width="80%"
+        //             iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+        //             style={{ width: undefined }}
+        //             selectedValue={country}
+        //             placeholder="Select your country"
+        //             placeholderStyle={{ color: '#007aff' }}
+        //             placeholderIconColor="#007aff"
+        //             onValueChange={(e) => setCountry(e)}
+
+        //         >
+        //             {countries.map((c) => {
+        //                 return <Select.Item
+        //                     key={c.code}
+        //                     label={c.name}
+        //                     value={c.name}
+        //                 />
+        //             })}
+        //         </Select>
+               
+        //         <View style={{ width: '80%', alignItems: "center" }}>
+        //             <Button title="Confirm" onPress={() => checkOut()} />
+        //         </View>
+        //     </FormContainer>
+        // </KeyboardAwareScrollView>
 <Box flex={1} safeArea bg={Colors.main} py={5}>
       <Center pb={15}>
         <Text style={styles.whiteText}>Delivery Address</Text>
@@ -265,6 +327,5 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
     },
   });
-  
 export default Checkout;
 

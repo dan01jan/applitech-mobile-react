@@ -3,10 +3,12 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { LineChart, BarChart, PieChart } from 'react-native-chart-kit'; // Import BarChart
+import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import axios from 'axios';
 import baseURL from '../../../assets/common/baseurl';
-import { ScrollView } from 'native-base';
+import { Heading, ScrollView } from 'native-base';
+import Colors from '../../color';
+import { Center } from 'native-base';
 
 const Dashboard = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -140,7 +142,18 @@ const Dashboard = () => {
       alignItems: 'center',
     },
     chartContainer: {
-      marginBottom: 20,
+      marginBottom: 50,
+      backgroundColor: '#fff',
+      borderRadius: 20,
+      padding: 15,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
   });
   const colors = ['#FF5733', '#FFC300', '#36A2EB', '#4BC0C0', '#9966FF', '#FF6384', '#FFCE56'];
@@ -150,8 +163,12 @@ const Dashboard = () => {
         <Header title="Dashboard" onPress={toggleSidebar} />
         {sidebarVisible && <Sidebar items={sidebarItems} />}
         <View style={styles.mainContent}>
+       
+          
           <View style={styles.chartContainer}>
-            <Text style={styles.chartTitle}>Products and Prices Chart</Text>
+          <Center>
+    <Text style={[styles.chartTitle, {textAlign: 'center'}]}>Products and Prices</Text>
+</Center>
             {chartData && (
               <LineChart
                 data={chartData}
@@ -177,34 +194,37 @@ const Dashboard = () => {
             )}
           </View>
           <View style={styles.chartContainer}>
-            <Text style={styles.chartTitle}>Orders by Month</Text>
+          <Center>
+    <Text style={[styles.chartTitle, {textAlign: 'center'}]}>Orders By Month</Text>
+</Center>
             {orderChartData && (
-  <BarChart
-    data={{
-      labels: orderChartData.map(data => data.name),
-      datasets: [{
-        data: orderChartData.map(data => data.data),
-        color: (opacity = 1) => colors,
-      }]
-    }}
-    width={300}
-    height={200}
-    yAxisLabel=""
-    chartConfig={{
-      backgroundColor: '#ffffff',
-      backgroundGradientFrom: '#ffffff',
-      backgroundGradientTo: '#ffffff',
-      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    }}
-    style={{
-      borderRadius: 16,
-    }}
-  />
-)}
-
+              <BarChart
+                data={{
+                  labels: orderChartData.map(data => data.name),
+                  datasets: [{
+                    data: orderChartData.map(data => data.data),
+                    color: (opacity = 1) => colors,
+                  }]
+                }}
+                width={300}
+                height={200}
+                yAxisLabel=""
+                chartConfig={{
+                  backgroundColor: '#ffffff',
+                  backgroundGradientFrom: '#ffffff',
+                  backgroundGradientTo: '#ffffff',
+                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                }}
+                style={{
+                  borderRadius: 16,
+                }}
+              />
+            )}
           </View>
           <View style={styles.chartContainer}>
-            <Text style={styles.chartTitle}>Orders by Country</Text>
+          <Center>
+    <Text style={[styles.chartTitle, {textAlign: 'center'}]}>Orders By Country</Text>
+</Center>
             {countryChartData && (
               <PieChart
                 data={countryChartData}
@@ -231,3 +251,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+                 
