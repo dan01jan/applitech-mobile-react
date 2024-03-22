@@ -1,10 +1,10 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { View, Text, ScrollView, Button, StyleSheet } from 'react-native';
-import { Container } from "native-base"
+import { Center, Container, Box} from "native-base"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import Colors from '../../color';
 import axios from "axios"
 import baseURL from '../../../assets/common/baseurl';
 import AuthGlobal from '../../../Context/Store/AuthGlobal';
@@ -58,30 +58,22 @@ const UserProfile = (props) => {
         }, [context.stateUser.isAuthenticated]))
 
     return (
-        <Container style={styles.container}>
-            <ScrollView contentContainerStyle={styles.subContainer}>
-                <Text style={{ fontSize: 30 }}>
-                    {userProfile ? userProfile.name : ""}
-                </Text>
-                <View style={{ marginTop: 20 }}>
-                    <Text style={{ margin: 10 }}>
-                        Email: {userProfile ? userProfile.email : ""}
-                    </Text>
-                    <Text style={{ margin: 10 }}>
-                        Phone: {userProfile ? userProfile.phone : ""}
-                    </Text>
-                </View>
-                <View style={{ marginTop: 80 }}>
-                   
-                    <View style={styles.order}>
-                        <Text style={{ fontSize: 20 }}>My Orders</Text>
+        <Box flex={1} py={5}>
+            <ScrollView showsVerticalScrollIndicator={false} >
+               
+                <View>
+                  
+                    <View >
+                    <Center pb={15}>
+        <Text>Order List</Text>
+</Center>
                         <View>
                             {orders ? (
                                 orders.map((order) => {
                                     return <OrderCard key={order.id} item={order} select="false" />;
                                 })
                             ) : (
-                                <View style={styles.order}>
+                                <View >
                                     <Text>You have no orders</Text>
                                 </View>
                             )}
@@ -90,24 +82,8 @@ const UserProfile = (props) => {
                 </View>
 
             </ScrollView>
-        </Container>
+      </Box>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center"
-    },
-    subContainer: {
-        alignItems: "center",
-        marginTop: 60
-    },
-    order: {
-        marginTop: 20,
-        alignItems: "center",
-        marginBottom: 60
-    }
-})
 
 export default UserProfile

@@ -24,6 +24,8 @@ const OrderCard = ({ item, select }) => {
   const [cardColor, setCardColor] = useState("");
   const navigation = useNavigation();
 
+  console.log("Item Data:", item);
+
   const updateOrder = () => {
     AsyncStorage.getItem("jwt")
       .then((res) => {
@@ -77,17 +79,19 @@ const OrderCard = ({ item, select }) => {
     if (item.status === "3") {
       setOrderStatus(<TrafficLight unavailable></TrafficLight>);
       setStatusText("pending");
-      setCardColor("#E74C3C");
+      setCardColor("#FFDEDE");
     } else if (item.status === "2") {
       setOrderStatus(<TrafficLight limited></TrafficLight>);
       setStatusText("shipped");
-      setCardColor("#F1C40F");
+      setCardColor("#FFF8C7");
     } else {
       setOrderStatus(<TrafficLight available></TrafficLight>);
       setStatusText("delivered");
-      setCardColor("#2ECC71");
+      setCardColor("#DEFFCB");
     }
-
+  
+    // console.log("Item Total Price:", item.totalPrice); // Add this console.log statement
+  
     return () => {
       setOrderStatus();
       setStatusText();
@@ -115,10 +119,10 @@ const OrderCard = ({ item, select }) => {
         <Text>City: {item.city}</Text>
         <Text>Country: {item.country}</Text>
         <Text>Date Ordered: {item.dateOrdered.split("T")[0]}</Text>
-        <View style={styles.priceContainer}>
+        {/* <View style={styles.priceContainer}>
           <Text>Price: </Text>
           <Text style={styles.price}>$ {item.totalPrice}</Text>
-        </View>
+        </View> */}
         {/* {item.editMode ? ( */}
         <View>
           {select ? null : (
@@ -158,7 +162,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     margin: 10,
-    borderRadius: 10,
+    borderRadius: 30, // Adjust the value to change the roundness of the card
+    overflow: "hidden", // Ensure content stays within rounded border
   },
   title: {
     backgroundColor: "#62B1F6",
@@ -174,5 +179,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
 
 export default OrderCard;
