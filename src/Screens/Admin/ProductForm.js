@@ -21,13 +21,12 @@ const ProductForm = (props) => {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
-    const [category, setCategory] = useState('');
     const [token, setToken] = useState('');
     const [error, setError] = useState('');
     const [countInStock, setCountInStock] = useState('');
     const [item, setItem] = useState(null);
-    const [pickerValue, setPickerValue] = useState(''); // Define pickerValue state for category selection
-    const [categories, setCategories] = useState([]); // Define categories state to store available categories
+    const [pickerValue, setPickerValue] = useState('');
+    const [brands, setBrands] = useState([]);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -37,11 +36,10 @@ const ProductForm = (props) => {
                     setItem(null);
                 } else {
                     setItem(props.route.params.item);
-                    setBrand(props.route.params.item.brand);
+                    setBrand(props.route.params.item.brand._id);
                     setName(props.route.params.item.name);
                     setPrice(props.route.params.item.price.toString());
                     setDescription(props.route.params.item.description);
-                    setCategory(props.route.params.item.category._id);
                     setCountInStock(props.route.params.item.countInStock.toString());
                     // Populate images state with all image URLs of the product
                     setImages(props.route.params.item.images.map(image => image.url));
@@ -65,16 +63,16 @@ const ProductForm = (props) => {
         })();
 
         // Fetch categories from your API and update the categories state
-        const fetchCategories = async () => {
+        const fetchBrands = async () => {
             try {
-                const response = await axios.get(`${baseURL}categories`);
-                setCategories(response.data);
+                const response = await axios.get(`${baseURL}brands`);
+                setBrands(response.data);
             } catch (error) {
-                console.error("Error fetching categories:", error);
+                console.error("Error fetching brands:", error);
             }
         };
 
-        fetchCategories();
+        fetchBrands();
     
         return () => {
             // Cleanup function if necessary
@@ -125,7 +123,6 @@ const ProductForm = (props) => {
             brand === "" ||
             price === "" ||
             description === "" ||
-            category === "" ||
             countInStock === ""
         ) {
             setError("Please fill in the form correctly")
@@ -137,7 +134,6 @@ const ProductForm = (props) => {
         formData.append("brand", brand);
         formData.append("price", price);
         formData.append("description", description);
-        formData.append("category", category);
         formData.append("countInStock", countInStock);
         // formData.append("richDescription", richDescription);
         // formData.append("rating", rating);
@@ -221,7 +217,6 @@ const ProductForm = (props) => {
             brand === "" ||
             price === "" ||
             description === "" ||
-            category === "" ||
             countInStock === ""
         ) {
             setError("Please fill in the form correctly")
@@ -233,7 +228,6 @@ const ProductForm = (props) => {
         formData.append("brand", brand);
         formData.append("price", price);
         formData.append("description", description);
-        formData.append("category", category);
         formData.append("countInStock", countInStock);
         formData.append("richDescription", richDescription);
         formData.append("rating", rating);
@@ -333,16 +327,6 @@ const ProductForm = (props) => {
             </View>
             {/* Brand input field */}
             <View style={styles.label}>
-                <Text style={{ textDecorationLine: "underline" }}>Brand</Text>
-            </View>
-            <Input
-                placeholder="Brand"
-                name="brand"
-                id="brand"
-                value={brand}
-                onChangeText={(text) => setBrand(text)}
-            />
-            <View style={styles.label}>
                 <Text style={{ textDecorationLine: "underline" }}>Name</Text>
             </View>
             <Input
@@ -386,16 +370,16 @@ const ProductForm = (props) => {
             />
             <Box>
                 <Select
-                    minWidth="90%" placeholder="Select your Category"
+                    minWidth="90%" placeholder="Select your Brand"
                     selectedValue={pickerValue}
-                    onValueChange={(e) => [setPickerValue(e), setCategory(e)]}
+                    onValueChange={(e) => [setPickerValue(e), setBrand(e)]}
                 >
-                    {categories.map((c, index) => {
+                    {brands.map((b, index) => {
                         return (
                             <Select.Item
-                                key={c.id}
-                                label={c.name}
-                                value={c.id} />
+                                key={b.id}
+                                label={b.name}
+                                value={b.id} />
                         )
                     })}
 
