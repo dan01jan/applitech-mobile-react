@@ -23,6 +23,9 @@ function CartScreen() {
     // You can handle the checkout logic here
   };
 
+  // Determine if the cart is empty
+  const isCartEmpty = cartItems.length === 0;
+
   return (
     <Box flex={1} safeAreaTop bg={colors.lightpink} position="relative">
       <Center w="full" py={5}>
@@ -74,23 +77,44 @@ function CartScreen() {
         </Center>
       </ScrollView>
 
-      <Center
-        px={5}
-        position="justify"
-        bottom={0}
-        left={0}
-        right={0}
-        zIndex={1}
-      >
-        <Buttone
-          bg={colors.main}
-          color={colors.white}
-          mt={10}
-          onPress={() => navigation.navigate("Shipping")}
+      {isCartEmpty ? (
+        <Center
+          px={5}
+          position="justify"
+          bottom={0}
+          left={0}
+          right={0}
+          zIndex={1}
         >
-          CHECKOUT
-        </Buttone>
-      </Center>
+          <Buttone
+            bg={colors.main}
+            color={colors.white}
+            mt={10}
+            disabled={true}
+            // Button is disabled when cart is empty
+          >
+            CHECKOUT
+          </Buttone>
+        </Center>
+      ) : (
+        <Center
+          px={5}
+          position="justify"
+          bottom={0}
+          left={0}
+          right={0}
+          zIndex={1}
+        >
+          <Buttone
+            bg={colors.main}
+            color={colors.white}
+            mt={10}
+            onPress={() => navigation.navigate("Shipping")}
+          >
+            CHECKOUT
+          </Buttone>
+        </Center>
+      )}
     </Box>
   );
 }
