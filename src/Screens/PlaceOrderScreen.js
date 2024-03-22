@@ -1,3 +1,4 @@
+//PLACE ORDER SCREEN
 import React, { useState } from 'react'
 import { View, StyleSheet, Dimensions, ScrollView, Button,Image } from "react-native";
 import { Text, HStack, VStack, Avatar, Spacer, Center } from "native-base";
@@ -11,13 +12,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 
-<<<<<<< Updated upstream
-  const paymentMethods = {
-    1: "Cash on Delivery",
-    2: "GCASH",
-    3: "PayMaya",
-  
-=======
 var { width, height } = Dimensions.get("window");
 
 const Confirm = (props) => {
@@ -69,7 +63,6 @@ const Confirm = (props) => {
                   });
           })
           .catch((error) => console.log(error));
->>>>>>> Stashed changes
   };
   const calculateTotalAmount = () => {
     let totalAmount = 0;
