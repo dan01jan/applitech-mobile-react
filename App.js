@@ -15,7 +15,8 @@ import ProductForm from './src/Screens/Admin/ProductForm'
 // import OrderModel from './src/Components/OrderModel'
 import PlaceOrderModel from './src/Components/PlaceOrderModel';
 import PlaceOrderScreen from './src/Screens/PlaceOrderScreen';
-import PlaceOrderScreenOLD from './src/Screens/PlaceOrderScreenOLD';
+// import PlaceOrderScreenOLD from './src/Screens/PlaceOrderScreenOLD';
+import Order from './src/Screens/Admin/Order';
 import Auth from './Context/Store/Auth';
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
         <NavigationContainer>
           <StatusBar hidden={true} />
           <Stack.Navigator
-            initialRouteName="Login"
+            initialRouteName="Dashboard"
             screenOptions={{
               headerShown: false,
             }}
@@ -44,6 +45,7 @@ export default function App() {
             <Stack.Screen name="AdminProduct" component={AdminProduct} />
             <Stack.Screen name="BrandForm" component={BrandForm} />
             <Stack.Screen name="ProductForm" component={ProductForm} />
+            <Stack.Screen name="OrderAdmin" component={Order} />
             <Stack.Screen name="Main" component={BottomNav} />
           </Stack.Navigator>
         </NavigationContainer>

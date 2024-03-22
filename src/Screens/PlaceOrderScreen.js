@@ -224,6 +224,11 @@ const Confirm = (props) => {
                                         }} color="coolGray.800" alignSelf="flex-start">
                                             ₱{item.price}
                                         </Text>
+                                        <Text fontSize="xs" _dark={{
+                                            color: "warmGray.50"
+                                        }} color="coolGray.800" alignSelf="flex-start">
+                                            {item.quantity}
+                                        </Text>
                                     </HStack>
                                 )
                             })}
