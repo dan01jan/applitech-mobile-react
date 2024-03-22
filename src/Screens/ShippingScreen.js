@@ -10,9 +10,14 @@ import { useNavigation } from '@react-navigation/native';
 import AuthGlobal from '../../Context/Store/AuthGlobal'
 import countries from '../../assets/data/countries.json'
 import SelectDropdown from 'react-native-select-dropdown'
+<<<<<<< Updated upstream
 import Buttone from '../Components/Buttone'
 import Colors from '../color'
 const Shipping = (props) => {
+=======
+
+const Checkout = (props) => {
+>>>>>>> Stashed changes
     const [user, setUser] = useState('')
     const [orderItems, setOrderItems] = useState([])
     const [address, setAddress] = useState('')
@@ -45,25 +50,23 @@ const Shipping = (props) => {
     }, [])
 
     const checkOut = () => {
-      let order = {
-          city,
-          country,
-          dateOrdered: Date.now(),
-          orderItems,
-          phone,
-          shippingAddress1: address,
-          shippingAddress2: address2,
-          status: '3',
-          user,
-          zip,
-      };
-      navigation.navigate('Payment', { address, city, country });
-
-
-  };
-
-
-
+        console.log("orders", orderItems)
+        let order = {
+            city,
+            country,
+            dateOrdered: Date.now(),
+            orderItems,
+            phone,
+            shippingAddress1: address,
+            shippingAddress2: address2,
+            status: "3",
+            user,
+            zip,
+        }
+        console.log("ship", order)
+        navigation.navigate("Payment", { order: order })
+    }
+    console.log(orderItems)
     return (
 
       
@@ -262,6 +265,7 @@ const Shipping = (props) => {
 
     )
 }
+<<<<<<< Updated upstream
 
 const styles = StyleSheet.create({
   whiteText: {
@@ -272,3 +276,6 @@ const styles = StyleSheet.create({
 });
 
 export default Shipping;
+=======
+export default Checkout;
+>>>>>>> Stashed changes

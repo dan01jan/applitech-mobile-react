@@ -21,7 +21,7 @@ const StackNav = () => {
                 <Stack.Screen name="Single" component={SingleProductScreen} />
                 <Stack.Screen name="Shipping" component={ShippingScreen}/>
                 <Stack.Screen name="Payment" component={PaymentScreen} />
-                <Stack.Screen name="Placeorder" component={PlaceOrderScreen} />
+               <Stack.Screen name="PlaceOrder" component={PlaceOrderScreen} />
                 <Stack.Screen name="User Profile" component={ProfileScreen} />
             </Stack.Navigator>
     );
