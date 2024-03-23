@@ -10,10 +10,10 @@ const cartItems = (state = [], action) => {
             const existingItemIndex = state.findIndex(item => item.id === action.payload.id);
             if (existingItemIndex !== -1) {
                 const updatedState = [...state];
-                updatedState[existingItemIndex].quantity += 1;
+                updatedState[existingItemIndex].quantity += action.payload.quantity;
                 return updatedState;
             } else {
-                return [...state, { ...action.payload, quantity: 1 }];
+                return [...state, { ...action.payload }];
             }
         case REMOVE_FROM_CART:
             return state.filter(cartItem => cartItem !== action.payload);
