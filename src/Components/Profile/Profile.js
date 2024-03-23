@@ -14,6 +14,9 @@ import Colors from '../../color'
 const UserProfile = (props) => {
     const context = useContext(AuthGlobal)
     const [userProfile, setUserProfile] = useState('')
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [orders, setOrders] = useState([])
     const navigation = useNavigation(); // Add this line
 
@@ -24,9 +27,14 @@ const UserProfile = (props) => {
                     .get(`${baseURL}users/${context.stateUser.user.userId}`, {
                         headers: { Authorization: `Bearer ${res}` },
                     })
-                    .then((user) => setUserProfile(user.data))
+                    .then((user) => {
+                        setUserProfile(user.data);
+                        setUsername(user.data.name);
+                        setEmail(user.data.email);
+                        setPhone(user.data.phone);
+                    });
             })
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(error));
         axios
             .get(`${baseURL}orders`)
             .then((x) => {
@@ -37,8 +45,8 @@ const UserProfile = (props) => {
                 );
                 setOrders(userOrders);
             })
-            .catch((error) => console.log(error))
-    }, [context.stateUser.user.userId])
+            .catch((error) => console.log(error));
+    }, [context.stateUser.user.userId]);
 
     useFocusEffect(
         useCallback(() => {
@@ -46,51 +54,56 @@ const UserProfile = (props) => {
                 context.stateUser.isAuthenticated === false ||
                 context.stateUser.isAuthenticated === null
             ) {
-                navigation.navigate("Login")
+                navigation.navigate("Login");
             }
             fetchUserData();
             return () => {
                 setUserProfile();
                 setOrders();
-            }
+            };
         }, [context.stateUser.isAuthenticated, fetchUserData, navigation]) // Add navigation to dependency array
-    )
+    );
 
-    const Inputs = [
-        {
-            label: "USERNAME",
-            value: userProfile ? userProfile.name : "",
-        },
-        {
-            label: "EMAIL",
-            value: userProfile ? userProfile.email : "",
-        },
-        {
-            label: "PHONE",
-            value: userProfile ? userProfile.phone : "",
-        }
-    ];
+    const handleUpdateProfile = () => {
+        const updatedUserData = {
+            name: username,
+            email: email,
+            phone: phone
+        };
+
+        AsyncStorage.getItem("jwt")
+            .then((res) => {
+                axios
+                    .put(`${baseURL}users/${context.stateUser.user.userId}`, updatedUserData, {
+                        headers: { Authorization: `Bearer ${res}` },
+                    })
+                    .then((response) => {
+                        console.log("Profile updated successfully:", response.data);
+                        // Optionally, you can update local state or display a success message here
+                    })
+                    .catch((error) => console.log("Error updating profile:", error));
+            })
+            .catch((error) => console.log(error));
+    };
 
     return (
         <Box h="full" bg={Colors.white} px={5}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <VStack space={10} mt={5} pb={10}>
-                {Inputs.map((input, index) => (
-                    <FormControl key={index}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <VStack space={10} mt={5} pb={10}>
+                    <FormControl>
                         <FormControl.Label
                             _text={{
                                 fontSize: "12px",
                                 fontWeight: "bold"
                             }}
                         >
-                            {input.label}
+                            USERNAME
                         </FormControl.Label>
                         <Input
                             borderWidth={0}
                             bg={Colors.lightpink}
                             borderColor={Colors.main}
                             py={4}
-                            type={input.type}
                             color={Colors.main}
                             fontSize={15}
                             _focus={{
@@ -98,48 +111,83 @@ const UserProfile = (props) => {
                                 borderColor: Colors.main,
                                 borderWidth: 1,
                             }}
-                            value={input.value} // Pass the input value here
-                           
-                            style={{ backgroundColor: '#FAE6E7', padding: 10 }} // Style for read-only input
+                            value={username}
+                            onChangeText={text => setUsername(text)}
+                            style={{ backgroundColor: '#FAE6E7', padding: 10 }}
                         />
                     </FormControl>
-                ))}
-                <Buttone bg={Colors.main} color={Colors.white}>
-                    Update Profile
-                </Buttone>
-                <View style={{ marginTop: 5 }}>
-                    <Buttone
-                        bg={Colors.coral}
-                        color={Colors.white}
-                        style={{ width: '100%' }} // Ensure button takes full width
-                        onPress={() => [
-                            AsyncStorage.removeItem("jwt"),
-                            logoutUser(context.dispatch)
-                        ]}
-                    >
-                        Sign Out
+                    <FormControl>
+                        <FormControl.Label
+                            _text={{
+                                fontSize: "12px",
+                                fontWeight: "bold"
+                            }}
+                        >
+                            EMAIL
+                        </FormControl.Label>
+                        <Input
+                            borderWidth={0}
+                            bg={Colors.lightpink}
+                            borderColor={Colors.main}
+                            py={4}
+                            color={Colors.main}
+                            fontSize={15}
+                            _focus={{
+                                bg: Colors.lightpink,
+                                borderColor: Colors.main,
+                                borderWidth: 1,
+                            }}
+                            value={email}
+                            onChangeText={text => setEmail(text)}
+                            style={{ backgroundColor: '#FAE6E7', padding: 10 }}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormControl.Label
+                            _text={{
+                                fontSize: "12px",
+                                fontWeight: "bold"
+                            }}
+                        >
+                            PHONE
+                        </FormControl.Label>
+                        <Input
+                            borderWidth={0}
+                            bg={Colors.lightpink}
+                            borderColor={Colors.main}
+                            py={4}
+                            color={Colors.main}
+                            fontSize={15}
+                            _focus={{
+                                bg: Colors.lightpink,
+                                borderColor: Colors.main,
+                                borderWidth: 1,
+                            }}
+                            value={phone}
+                            onChangeText={text => setPhone(text)}
+                            style={{ backgroundColor: '#FAE6E7', padding: 10 }}
+                        />
+                    </FormControl>
+                    <Buttone bg={Colors.main} color={Colors.white} onPress={handleUpdateProfile}>
+                        Update Profile
                     </Buttone>
-                </View>
-            </VStack>
-        </ScrollView>
-    </Box>
-    
-    )
-}
+                    <View style={{ marginTop: 5 }}>
+                        <Buttone
+                            bg={Colors.coral}
+                            color={Colors.white}
+                            style={{ width: '100%' }}
+                            onPress={() => [
+                                AsyncStorage.removeItem("jwt"),
+                                logoutUser(context.dispatch)
+                            ]}
+                        >
+                            Sign Out
+                        </Buttone>
+                    </View>
+                </VStack>
+            </ScrollView>
+        </Box>
+    );
+};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-
-    },
-    subContainer: {
-        width: '90%',
-        alignItems: "justify",
-        marginTop: 60,
-        backgroundColor:'white'
-    }
-})
-
-
-export default UserProfile
+export default UserProfile;

@@ -20,6 +20,7 @@ const Dashboard = () => {
     { id: 2, title: 'Product', screen: 'ProductForm' },
     { id: 3, title: 'Brand', screen: 'BrandForm' },
     { id: 4, title: 'Order', screen: 'OrderAdmin' },
+    { id: 5, title: 'User', screen: 'UserAdmin' }
   ];
 
   useEffect(() => {

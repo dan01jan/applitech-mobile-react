@@ -17,6 +17,7 @@ import PlaceOrderModel from './src/Components/PlaceOrderModel';
 import PlaceOrderScreen from './src/Screens/PlaceOrderScreen';
 // import PlaceOrderScreenOLD from './src/Screens/PlaceOrderScreenOLD';
 import Order from './src/Screens/Admin/Order';
+import User from  './src/Screens/Admin/User';
 import Auth from './Context/Store/Auth';
 
 export default function App() {
@@ -46,6 +47,8 @@ export default function App() {
             <Stack.Screen name="BrandForm" component={BrandForm} />
             <Stack.Screen name="ProductForm" component={ProductForm} />
             <Stack.Screen name="OrderAdmin" component={Order} />
+            <Stack.Screen name="UserAdmin" component={User} />
+
             <Stack.Screen name="Main" component={BottomNav} />
           </Stack.Navigator>
         </NavigationContainer>
