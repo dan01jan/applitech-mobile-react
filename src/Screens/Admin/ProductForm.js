@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity, Text, Platform } from "react-native";
 import FormContainer from "../../../Shared/Form/FormContainer";
 import Input from "../../../Shared/Form/Input";
 import EasyButton from "../../../Shared/StyledComponents/EasyButton";
@@ -55,14 +55,14 @@ const ProductForm = (props) => {
     
         (async () => {
             if (Platform.OS !== "web") {
-                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 if (status !== "granted") {
                     alert("Sorry, we need camera roll permissions to make this work!");
                 }
             }
         })();
 
-        // Fetch categories from your API and update the categories state
+        // Fetch brands from your API and update the brands state
         const fetchBrands = async () => {
             try {
                 const response = await axios.get(`${baseURL}brands`);
@@ -97,19 +97,21 @@ const ProductForm = (props) => {
             console.log('Error picking image:', error);
         }
     };
+    
 
-    const removeImage = (image) => {
-        const newImages = images.filter((img) => img !== image);
-        setImages(newImages);
+    const removeImage = (indexToRemove) => {
+        const filteredImages = images.filter((_, index) => index !== indexToRemove);
+        setImages(filteredImages);
     };
 
     const renderImage = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => removeImage(item)}>
-                <Image style={styles.image} source={{ uri: item }} />
+                <Image style={styles.image} source={{ uri: typeof item === 'string' ? item : item.uri }} />
             </TouchableOpacity>
         );
     };
+    
 
     const onSnapToItem = (index) => {
         if (index >= (item?.images || []).length) {
@@ -117,7 +119,7 @@ const ProductForm = (props) => {
         }
     };
 
-    const addProduct = () => {
+    const addOrUpdateProduct = () => {
         if (
             name === "" ||
             brand === "" ||
@@ -126,19 +128,17 @@ const ProductForm = (props) => {
             countInStock === ""
         ) {
             setError("Please fill in the form correctly")
+            return;
         }
-
+    
         let formData = new FormData();
-
+    
         formData.append("name", name);
         formData.append("brand", brand);
         formData.append("price", price);
         formData.append("description", description);
         formData.append("countInStock", countInStock);
-        // formData.append("richDescription", richDescription);
-        // formData.append("rating", rating);
-        // formData.append("numReviews", numReviews);
-        // formData.append("isFeatured", isFeatured);
+        
         images.forEach((image, index) => {
             if (image) {
                 let newImageUri = "file:///" + image.split("file:/").join("");
@@ -149,183 +149,60 @@ const ProductForm = (props) => {
                 });
             }
         });
-
+    
         const config = {
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Authorization": `Bearer ${token}`
             }
         }
-        if (item !== null) {
-            console.log(item)
-            axios
-                .put(`${baseURL}products/${item.id}`, formData, config)
-                .then((res) => {
-                    if (res.status === 200 || res.status === 201) {
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: "Product successfuly updated",
-                            text2: ""
-                        });
-                        setTimeout(() => {
-                            navigation.navigate("Products");
-                        }, 500)
-                    }
-                })
-                .catch((error) => {
+    
+        const url = item ? `${baseURL}products/${item.id}` : `${baseURL}products`;
+    
+        const request = item ? axios.put : axios.post;
+    
+        request(url, formData, config)
+            .then((res) => {
+                if (res.status === 200 || res.status === 201) {
                     Toast.show({
                         topOffset: 60,
-                        type: "error",
-                        text1: "Something went wrong",
-                        text2: "Please try again"
-                    })
+                        type: "success",
+                        text1: item ? "Product successfully updated" : "New Product added",
+                        text2: ""
+                    });
+                    setTimeout(() => {
+                        navigation.navigate("Products");
+                    }, 500)
+                }
+            })
+            .catch((error) => {
+                Toast.show({
+                    topOffset: 60,
+                    type: "error",
+                    text1: "Something went wrong",
+                    text2: "Please try again"
                 })
-        } else {
-            axios
-                .post(`${baseURL}products`, formData, config)
-                .then((res) => {
-                    if (res.status === 200 || res.status === 201) {
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: "New Product added",
-                            text2: ""
-                        });
-                        setTimeout(() => {
-                            navigation.navigate("Main");
-                        }, 500)
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                    Toast.show({
-                        topOffset: 60,
-                        type: "error",
-                        text1: "Something went wrong",
-                        text2: "Please try again"
-                    })
-                })
-
-        }
-
+            });
     }
-
-    const updateProduct = () => {
-        if (
-            name === "" ||
-            brand === "" ||
-            price === "" ||
-            description === "" ||
-            countInStock === ""
-        ) {
-            setError("Please fill in the form correctly")
-        }
-
-        let formData = new FormData();
-
-        formData.append("name", name);
-        formData.append("brand", brand);
-        formData.append("price", price);
-        formData.append("description", description);
-        formData.append("countInStock", countInStock);
-        formData.append("richDescription", richDescription);
-        formData.append("rating", rating);
-        formData.append("numReviews", numReviews);
-        formData.append("isFeatured", isFeatured);
-        images.forEach((image, index) => {
-            if (image) {
-                let newImageUri = "file:///" + image.split("file:/").join("");
-                formData.append("images", {
-                    uri: newImageUri,
-                    type: mime.getType(newImageUri),
-                    name: newImageUri.split("/").pop()
-                });
-            }
-        });
-
-        const config = {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "Authorization": `Bearer ${token}`
-            }
-        }
-        if (item !== null) {
-            console.log(item)
-            axios
-                .put(`${baseURL}products/${item.id}`, formData, config)
-                .then((res) => {
-                    if (res.status === 200 || res.status === 201) {
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: "Product successfuly updated",
-                            text2: ""
-                        });
-                        setTimeout(() => {
-                            navigation.navigate("Products");
-                        }, 500)
-                    }
-                })
-                .catch((error) => {
-                    Toast.show({
-                        topOffset: 60,
-                        type: "error",
-                        text1: "Something went wrong",
-                        text2: "Please try again"
-                    })
-                })
-        } else {
-            axios
-                .post(`${baseURL}products`, formData, config)
-                .then((res) => {
-                    if (res.status === 200 || res.status === 201) {
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: "New Product added",
-                            text2: ""
-                        });
-                        setTimeout(() => {
-                            navigation.navigate("Products");
-                        }, 500)
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                    Toast.show({
-                        topOffset: 60,
-                        type: "error",
-                        text1: "Something went wrong",
-                        text2: "Please try again"
-                    })
-                })
-
-        }
-
-    }
-
+    
     return (
         <FormContainer title={item ? "Update Product" : "Add Product"}>
             <View style={styles.carouselContainer}>
                 <Carousel
-                   //data={(item?.images || []).concat(images)}
-                    // Concatenate existing images with new images
                     data={item ? item.images : images}
                     renderItem={renderImage}
                     sliderWidth={300}
                     itemWidth={300}
                     loop={true}
                     onSnapToItem={onSnapToItem}
-                    activeSlideAlignment="start" // Ensures newly added image is visible
-                    activeSlideOffset={10} // Adjust the offset based on your preference
+                    activeSlideAlignment="start"
+                    activeSlideOffset={10}
                 />
-
+    
                 <TouchableOpacity onPress={pickImages} style={styles.imagePicker}>
                     <Icon style={{ color: "white" }} name="camera" />
                 </TouchableOpacity>
             </View>
-            {/* Brand input field */}
             <View style={styles.label}>
                 <Text style={{ textDecorationLine: "underline" }}>Name</Text>
             </View>
@@ -382,28 +259,26 @@ const ProductForm = (props) => {
                                 value={b.id} />
                         )
                     })}
-
                 </Select>
-
             </Box>
             {/* Display error message if there's an error */}
             {error && <Error message={error} />}
             {/* Button to add/update product */}
             <View style={styles.buttonContainer}>
-                <EasyButton
-                    large
-                    primary
-                    onPress={item ? updateProduct : addProduct}
-                >
-                    <Text style={styles.buttonText}>
-                        {item ? "Update" : "Confirm"}
-                    </Text>
-                </EasyButton>
+            <EasyButton
+    large
+    primary
+    onPress={addOrUpdateProduct}
+>
+    <Text style={styles.buttonText}>
+        {item ? "Update" : "Confirm"}
+    </Text>
+</EasyButton>
+
             </View>
         </FormContainer>
-
-
-    )
+    );
+    
 }
 
 const styles = StyleSheet.create({

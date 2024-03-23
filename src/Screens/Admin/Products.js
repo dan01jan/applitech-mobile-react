@@ -45,6 +45,7 @@ const Products = (props) => {
                 <View style={styles.headerItem}>
                     <Text style={{ fontWeight: '600' }}>Price</Text>
                 </View>
+
             </View>
         )
     }
@@ -118,34 +119,10 @@ const Products = (props) => {
                 <EasyButton
                     secondary
                     medium
-                    onPress={() => navigation.navigate("Orders")}
-                >
-                    <Icon name="shopping-bag" size={18} color="white" />
-                    <Text style={styles.buttonText}>Orders</Text>
-                </EasyButton>
-                <EasyButton
-                    secondary
-                    medium
                     onPress={() => navigation.navigate("ProductForm")}
                 >
                     <Icon name="plus" size={18} color="white" />
                     <Text style={styles.buttonText}>Products</Text>
-                </EasyButton>
-                <EasyButton
-                    secondary
-                    medium
-                    onPress={() => navigation.navigate("Brands")}
-                >
-                    <Icon name="plus" size={18} color="white" />
-                    <Text style={styles.buttonText}>Brands</Text>
-                </EasyButton>
-                <EasyButton
-                    secondary
-                    medium
-                    onPress={() => navigation.navigate("Categories")}
-                >
-                    <Icon name="plus" size={18} color="white" />
-                    <Text style={styles.buttonText}>Categories</Text>
                 </EasyButton>
             </View>
             <Searchbar width="80%"
