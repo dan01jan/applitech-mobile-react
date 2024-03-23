@@ -17,7 +17,7 @@ import axios from "axios";
 import baseURL from "../../../assets/common/baseurl";
 import EasyButton from "../../../Shared/StyledComponents/EasyButton";
 import { useNavigation } from "@react-navigation/native"
-import { Center, ScrollView } from "native-base";
+import { Center, HStack, ScrollView } from "native-base";
 import Buttone from "../../Components/Buttone";
 import Colors from "../../color";
 
@@ -169,7 +169,10 @@ const Brands = (props) => {
              
               onPress={() => navigation.navigate("BrandForm")}
             >
-              + New Brand
+             <HStack>
+                  <Icon name="plus" size={20} color={Colors.white} style={styles.icon} />
+                  <Text style = {{color: 'white', fontSize: 15}}> Create Brand</Text>
+                  </HStack>
             </Buttone>
             </View>
         </View>

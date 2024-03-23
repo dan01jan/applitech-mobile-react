@@ -19,11 +19,12 @@ const Dashboard = () => {
 
   const sidebarItems = [
     { id: 1, title: 'Home', screen: 'Main' },
-    { id: 2, title: 'Product', screen: 'Products' },
-    { id: 3, title: 'Brand', screen: 'Brands' },
-    { id: 4, title: 'Order', screen: 'OrderAdmin' },
-    { id: 5, title: 'User', screen: 'UserAdmin' }
+    { id: 2, title: 'Dashboard', screen: 'Dashboard' },
+    { id: 3, title: 'Product', screen: 'Products' },
+    { id: 4, title: 'Brand', screen: 'Brands' },
+    { id: 5, title: 'Order', screen: 'OrderAdmin' },
   ];
+
 
   useEffect(() => {
     fetchData();

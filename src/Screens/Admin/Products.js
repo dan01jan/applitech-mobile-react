@@ -9,7 +9,7 @@ import {
     RefreshControl,
 
 } from "react-native";
-import { Input, VStack, Heading, Box, ScrollView, Center } from "native-base"
+import { Input, VStack, Heading, Box, ScrollView, Center, HStack } from "native-base"
 import Icon from "react-native-vector-icons/FontAwesome"
 import { useFocusEffect } from "@react-navigation/native"
 import { Searchbar } from 'react-native-paper';
@@ -23,7 +23,7 @@ var { height, width } = Dimensions.get("window")
 import EasyButton from "../../../Shared/StyledComponents/EasyButton";
 import { useNavigation } from "@react-navigation/native"
 import Buttone from "../../Components/Buttone";
-import Colors from "../../color";
+import Colors from "../../color";   
 const Products = (props) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [productList, setProductList] = useState([]);
@@ -184,7 +184,10 @@ const Products = (props) => {
              
               onPress={() => navigation.navigate("ProductForm")}
             >
-              + New Brand
+                <HStack>
+                  <Icon name="plus" size={20} color={Colors.white} style={styles.icon} />
+                  <Text style = {{color: 'white', fontSize: 15}}> Create Product</Text>
+                  </HStack>
             </Buttone>
             </View>
        </View>

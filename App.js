@@ -53,7 +53,8 @@ export default function App() {
             <Stack.Screen name="ProductForm" component={ProductForm} />
             <Stack.Screen name="OrderAdmin" component={Order} />
             <Stack.Screen name="UserAdmin" component={User} />
-
+            <Stack.Screen name="Products" component={Products} />
+            <Stack.Screen name="Brands" component={Brands} />
             <Stack.Screen name="Main" component={BottomNav} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="AppreciationScreen" component={AppreciationScreen} />
