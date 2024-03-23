@@ -9,16 +9,23 @@ import {
     RefreshControl,
     TouchableOpacity
 } from "react-native";
+import Header from './Header';
+import Sidebar from './Sidebar';
 import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import baseURL from "../../../assets/common/baseurl";
 import EasyButton from "../../../Shared/StyledComponents/EasyButton";
 import { useNavigation } from "@react-navigation/native"
+import { Center, ScrollView } from "native-base";
+import Buttone from "../../Components/Buttone";
+import Colors from "../../color";
+
 
 const { height, width } = Dimensions.get("window");
 
 const Brands = (props) => {
+    const [sidebarVisible, setSidebarVisible] = useState(false);
     const [brandList, setBrandList] = useState([]);
     const [brandFilter, setBrandFilter] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -26,18 +33,27 @@ const Brands = (props) => {
     const [refreshing, setRefreshing] = useState(false);
     const navigation = useNavigation()
 
+    const sidebarItems = [
+        { id: 1, title: 'Home', screen: 'Main' },
+        { id: 2, title: 'Dashboard', screen: 'Dashboard' },
+        { id: 3, title: 'Product', screen: 'Products' },
+        { id: 4, title: 'Brand', screen: 'Brands' },
+        { id: 5, title: 'Order', screen: 'OrderAdmin' },
+      ];
+
     const ListHeader = () => {
         return (
             <View style={styles.listHeader}>
-                <View style={styles.headerItem}></View>
-              
-                <View style={styles.headerItem}>
-                    <Text style={{ fontWeight: '600' }}>Name</Text>
-                </View>
-                <View style={styles.headerItem}>
-                    <Text style={{ fontWeight: '600' }}>Description</Text>
-                </View>
+            <View style={styles.headerItem}>
+                <Text style={styles.headerText}>Name</Text>
             </View>
+            <View style={styles.headerItem2}>
+                <Text style={styles.headerText}>Description</Text>
+            </View>
+            <View>
+                <Text style={styles.headerText}>Action</Text>
+            </View>
+        </View>
         )
     }
 
@@ -71,83 +87,131 @@ const Brands = (props) => {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+      };
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         fetchData().then(() => setRefreshing(false));
     }, [fetchData]);
 
     return (
-        <View style={{ flex: 1 }}>
-            <View style={styles.buttonContainer}>
-                <EasyButton
-                    secondary
-                    medium
-                    onPress={() => navigation.navigate("BrandForm")}
-                >
-                    <Icon name="plus" size={18} color="white" />
-                    <Text style={styles.buttonText}>Add Brand</Text>
-                </EasyButton>
+       
+        <ScrollView style={styles.scrollContainer}>
+      <View style={styles.container}>
+        
+        <Header title="Dashboard" onPress={toggleSidebar} />
+        {sidebarVisible && <Sidebar items={sidebarItems} />}
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ECECEC' }}>
+            <View style={styles.flatListContainer}>
+                <Center>
+                    <View style = {styles.brandlistText}>
+            <Text style = {styles.brandlist}>Brand List</Text>
             </View>
-
-            {loading ? (
-                <View style={styles.spinner}>
-                    <ActivityIndicator size="large" color="red" />
-                </View>
-            ) : (
-                <FlatList
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
-                    ListHeaderComponent={ListHeader}
-                    data={brandFilter}
-                    renderItem={({ item }) => (
-                        <View style={styles.listItem}>
-                            <View style={[styles.itemColumn, { flex: 1 }]}></View>
-                            <View style={[styles.itemColumn, { flex: 1 }]}></View>
-                            <View style={[styles.itemColumn, { flex: 2 }]}>
-                                <Text>{item.name}</Text>
-                            </View>
-                            <View style={[styles.itemColumn, { flex: 4 }]}>
-                                <Text>{item.description}</Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    console.log("Item id:", item.id);
-                                    deleteBrand(item.id);
-                                }}
-                                style={styles.deleteButton}
-                            >
-                                <Icon name="trash" size={20} color="red" />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                            style={[styles.deleteButton, { right: 40 }]}
-                            onPress={() => {
-                                console.log("Edit item with id:", item.id);
-                                navigation.navigate("BrandForm", { item });
-                            }}
-                        >
-                            <Icon name="pencil" size={20} color="blue" />
-                        </TouchableOpacity>
-
-                        </View>
-                    )}
-                    keyExtractor={(item) => item.id.toString()}
-                />
-            )}
+            </Center>
+                
+    
+                {loading ? (
+                    <View style={styles.spinner}>
+                        <ActivityIndicator size="large" color="red" />
+                    </View>
+                ) : (
+                    <View style={[styles.tableContainer, { backgroundColor: '#FFDEDE' }]}>
+                        <FlatList
+    style={styles.flatList}
+    refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    ListHeaderComponent={ListHeader}
+    data={brandFilter}
+    renderItem={({ item }) => (
+        <View style={styles.listItem}>
+            <View style={[styles.itemColumn, { flex: 1.5 }]}>
+                <Text style={styles.itemText}>{item.name}</Text>
+            </View>
+            <View style={[styles.itemColumn, { flex: 3 }]}>
+                <Text style={styles.itemText}>{item.description}</Text>
+            </View>
+            <TouchableOpacity
+                onPress={() => {
+                    console.log("Item id:", item.id);
+                    deleteBrand(item.id);
+                }}
+                style={styles.deleteButton}
+            >
+                <Icon name="trash" size={20} color="#FF3131" />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.deleteButton, { right: 40 }]}
+                onPress={() => {
+                    console.log("Edit item with id:", item.id);
+                    navigation.navigate("BrandForm", { item });
+                }}
+            >
+                <Icon name="pencil" size={20} color="#545454" />
+            </TouchableOpacity>
         </View>
+    )}
+    keyExtractor={(item) => item.id.toString()}
+/>
+
+
+                    </View>
+                )}
+            </View>
+        </View>
+        <View style = {styles.buttonContainer}>
+        <Buttone 
+              bg={Colors.main} 
+              color={Colors.white} 
+              mt={4}
+              
+             
+              onPress={() => navigation.navigate("BrandForm")}
+            >
+              + New Brand
+            </Buttone>
+            </View>
+        </View>
+    </ScrollView>
     );
+    
+    
 }
 
 const styles = StyleSheet.create({
+    brandlist:{
+        fontSize: 30 // Change '30' to 30
+    },
+    itemText: {
+        fontSize: 15,  // Change '15' to 15
+       
+    },
+    flatListContainer: {
+        flex: 1,
+        width: '90%',
+        margin: 5,
+       
+    },
+    tableContainer: {
+        borderRadius: 10,
+        marginTop: 20,
+        overflow: 'hidden', // Ensure contents do not overflow rounded borders
+        // flex: 1,
+    },
     listHeader: {
         flexDirection: 'row',
         padding: 5,
-        backgroundColor: 'gainsboro',
+        fontSize: 10,  // Change '10' to 10
+        backgroundColor: '#F46868', // Background color added here
     },
     headerItem: {
-        margin: 3,
+        // margin: 3,
         flex: 1,
+    },
+    headerItem2: {
+        // margin: 3,
+        flex: 1.5,
     },
     listItem: {
         flexDirection: 'row',
@@ -156,13 +220,10 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
         position: 'relative',
     },
-    itemColumn: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     deleteButton: {
         position: 'absolute',
         right: 10,
+        marginTop: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -172,14 +233,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonContainer: {
-        margin: 20,
+        // margin: 20,
         alignSelf: 'center',
-        flexDirection: 'row',
+        // flexDirection: 'row',
+        width: '50%'
     },
     buttonText: {
         marginLeft: 4,
         color: 'white',
     },
+    headerText: {
+        fontSize: 18, // Adjust the font size as needed
+        fontWeight: 'bold', // Optional: You can also make the header text bold
+    },
+      flatList: {
+        // Add your styles for FlatList here
+    },
+    brandlistText: {
+        marginTop: '50'
+    }
 });
+
 
 export default Brands;

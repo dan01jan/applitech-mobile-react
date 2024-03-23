@@ -1,121 +1,56 @@
-import React, { useState } from "react";
-import {
-    View,
-    StyleSheet,
-    Text,
-    Image,
-    TouchableOpacity,
-    Dimensions,
-    Modal,
-    Alert
-} from "react-native";
+import React from "react";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useNavigation } from "@react-navigation/native";
-import EasyButton from "../../../Shared/StyledComponents/EasyButton";
+import { TouchableOpacity } from "react-native";
 
 var { width } = Dimensions.get("window");
 
-const ListItem = ({ item, index, deleteProduct }) => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const navigation = useNavigation();
-
-    const handleDelete = () => {
-        setModalVisible(false);
-        Alert.alert(
-            "Delete Product",
-            "Are you sure you want to delete this product?",
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                },
-                { text: "OK", onPress: confirmDelete }
-            ],
-            { cancelable: false }
-        );
-    };
-
-    const confirmDelete = async () => {
-        setIsDeleting(true);
-        try {
-            await deleteProduct(item._id);
-            setIsDeleting(false);
-            Alert.alert("Success", "Product was deleted successfully");
-        } catch (error) {
-            setIsDeleting(false);
-            Alert.alert("Error", "Failed to delete the product");
-            console.error("Failed to delete product:", error);
-        }
-    };
-
+const ListItem = ({ item, deleteProduct, navigation }) => {
     return (
-        <View>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <TouchableOpacity
-                            onPress={() => setModalVisible(false)}
-                            style={{
-                                alignSelf: "flex-end",
-                                position: "absolute",
-                                top: 5,
-                                right: 10
-                            }}
-                        >
-                            <Icon name="close" size={20} />
-                        </TouchableOpacity>
-
-                        <EasyButton
-                            medium
-                            secondary
-                            onPress={() => {
-                                navigation.navigate("ProductForm", { item });
-                                setModalVisible(false);
-                            }}
-                            title="Edit"
-                        >
-                            <Text style={styles.textStyle}>Edit</Text>
-                        </EasyButton>
-                        <EasyButton
-                            medium
-                            danger
-                            onPress={handleDelete}
-                            title="Delete"
-                        >
-                            <Text style={styles.textStyle}>Delete</Text>
-                        </EasyButton>
-                    </View>
-                </View>
-            </Modal>
-            <TouchableOpacity
-                onPress={() => navigation.navigate("Product Detail", { item })}
-                onLongPress={() => setModalVisible(true)}
-                style={[
-                    styles.container,
-                    {
-                        backgroundColor: index % 2 == 0 ? "white" : "gainsboro"
-                    }
-                ]}
-            >
-                <Image
-                    source={{ uri: item.image }}
-                    resizeMode="contain"
-                    style={styles.image}
+        <View style={styles.listItem}>
+            <Text style={styles.itemText}>{item.name}</Text>
+            <Text style={styles.itemText2}>₱ {item.price}</Text>
+          
+            {/* <View style={styles.actionButtons}>
+            <Icon
+                    name="pencil"
+                    size={20}
+                    color="#545454"
+                    onPress={() => {
+                        navigation.navigate("ProductForm", { item });
+                        // setModalVisible(false);
+                    }}
+                    style={styles.actionButton}
                 />
-                <Text style={styles.item} numberOfLines={1} ellipsizeMode="tail">
-                    {item.name}
-                </Text>
-                <Text style={styles.item} numberOfLines={1} ellipsizeMode="tail">
-                    {item.brand ? item.brand.name : ""}
-                </Text>
-                <Text style={styles.item}>$ {item.price}</Text>
+                <Icon
+                    name="trash"
+                    size={20}
+                    color="#FF3131"
+                    onPress={() => {
+                        console.log("Item id:", item._id);
+                        deleteProduct(item._id);
+                    }}
+                    style={styles.actionButton1}
+                />
+               
+            </View> */}
+            <TouchableOpacity
+                onPress={() => {
+                        navigation.navigate("ProductForm", { item });
+                        // setModalVisible(false);
+                    }}
+                style={styles.deleteButton}
+            >
+                <Icon name="trash" size={20} color="#FF3131" />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.deleteButton, { right: 40 }]}
+                onPress={() => {
+                    console.log("Edit item with id:", item.id);
+                    navigation.navigate("BrandForm", { item });
+                }}
+            >
+                <Icon name="pencil" size={20} color="#545454" />
             </TouchableOpacity>
         </View>
     );
@@ -124,45 +59,43 @@ const ListItem = ({ item, index, deleteProduct }) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        padding: 5,
-        width: width
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
     },
-    image: {
-        borderRadius: 50,
-        width: width / 6,
-        height: 20,
-        margin: 2
+    itemText: {
+        fontSize: 15,
+        flex: 0.52,
     },
-    item: {
-        flexWrap: "wrap",
-        margin: 3,
-        width: width / 6
+    itemText2: {
+        fontSize: 15,
+        flex: 0.3,
     },
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
+    actionButtons: {
+        flexDirection: "row",
     },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
+    actionButton: {
+       
+        marginRight: 5
     },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold"
-    }
+    actionButton1: {
+       
+    //   marginRight: 5
+    },
+    listItem: {
+        flexDirection: 'row',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        position: 'relative',
+    },
+    deleteButton: {
+        position: 'absolute',
+        right: 10,
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
 
 export default ListItem;
