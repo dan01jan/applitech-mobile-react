@@ -7,7 +7,12 @@ import Header from './Header';
 import Sidebar from './Sidebar'
 import SelectDropdown from 'react-native-select-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView } from 'native-base';
+import { Center, HStack, ScrollView } from 'native-base';
+import Buttone from '../../Components/Buttone';
+import { Picker } from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Colors from '../../color';
+
 const UserList = () => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [users, setUsers] = useState([]);
@@ -131,25 +136,42 @@ const UserList = () => {
         { id: 6, title: 'User', screen: 'UserAdmin' },
       ];
 
-    const renderUserItem = ({ item }) => (
-
-       
-        <TouchableOpacity style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: Colors.lightgray }}>
-            <Text>{item.name}</Text>
-            <Text>Email: {item.email}</Text>
-            <Text>Role: {item.isAdmin ? 'admin' : 'user'}</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                <SelectDropdown
-                    data={['admin', 'user']}
-                    defaultValue={item.isAdmin ? 'admin' : 'user'}
-                    onSelect={(selectedItem) => updateUserRole(item._id, selectedItem === 'admin')}
-                />
-                <Button title="Delete User" color={Colors.red} onPress={() => deleteUser(item._id)} />
-            </View>
-        </TouchableOpacity>
-
-       
+      const renderUserItem = ({ item }) => (
+        <View style={styles.container1}>
+            <TouchableOpacity style={{ padding: 10 }}>
+                <Center>
+                    <Text style={styles.roleText}>{item.name}</Text>
+                    <Text style={styles.roleText2}>Email: {item.email}</Text>
+                    <Text style={styles.roleText2}>Role: {`${item.isAdmin ? 'Admin' : 'User'}`}</Text>
+                </Center>
+                
+                <Buttone 
+                    bg={Colors.main} 
+                    color={Colors.white} 
+                    mt={4}
+                    onPress={() => updateUserRole(item._id, !item.isAdmin)}
+                >
+                    <Text style={styles.buttonText}>
+                        {item.isAdmin ? 'Make User' : 'Make Admin'}
+                    </Text>
+                </Buttone>
+                
+                <Buttone 
+                    bg={Colors.coral} 
+                    color={Colors.white} 
+                    onPress={() => deleteUser(item._id)}
+                >
+                    <HStack>
+                        <Icon name="delete" color={Colors.white} size={20} />
+                        <Text style={[styles.buttonText, { marginLeft: 5 }]}>Delete User</Text>
+                    </HStack>
+                </Buttone>
+            </TouchableOpacity>
+        </View>
     );
+    
+    
+    
 
     return (
         <ScrollView style={styles.scrollContainer}>
@@ -170,35 +192,32 @@ const UserList = () => {
 };
 
 const styles = StyleSheet.create({
-    chartTitle: {
-      fontSize: 34,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      color: '#333',
-    },
     container: {
-      flex: 1,
+        flex: 1,
     },
-    mainContent: {
-      flex: 1,
-      backgroundColor: '#ffffff',
-      padding: 20,
-      alignItems: 'center',
+    container1: {
+        padding: 20,
+        margin: 10,
+        borderRadius: 30,
+        overflow: "hidden",
+        backgroundColor: '#FFDEDE'
     },
-    chartContainer: {
-      marginBottom: 50,
-      backgroundColor: '#fff',
-      borderRadius: 20,
-      padding: 15,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
+    roleText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
-  });
+    roleText2: {
+        fontSize: 16,
+        // fontWeight: 'bold',
+        // marginBottom: 5,
+    },
+    buttonText: {
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+});
+
 
 export default UserList;
