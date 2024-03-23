@@ -113,7 +113,7 @@ function SingleProductScreen({ route }) {
         </HStack>
         
         <Text>
-          <Text bold>Availability: </Text>{availabilityText} {product.countInStock > 0 && `(Stock: ${product.countInStock})`}
+          <Text bold>Availability: </Text><Text>{availabilityText} {product.countInStock > 0 && `(Stock: ${product.countInStock})`}</Text>
         </Text>
         <Text lineHeight={24} fontSize={12}>
           <Text bold>Description: </Text>{product.description}
@@ -125,7 +125,8 @@ function SingleProductScreen({ route }) {
         ) : (
           <Text style={{ marginTop: 20 }}>Currently Unavailable</Text>
         )}
-        <Review />
+        {/* Pass the product ID to the Review component */}
+        <Review productId={product._id} />
         <Toast ref={(ref) => Toast.setRef(ref)} />
       </ScrollView>
     </Box>

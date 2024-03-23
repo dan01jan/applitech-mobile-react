@@ -41,18 +41,24 @@ export const loginUser = (user, dispatch) => {
     });
 };
 
-export const getUserProfile = (id) => {
-    fetch(`${baseURL}users/${id}`, {
+// Auth.Actions.js
+
+export const getUserProfile = (userId) => {
+    return fetch(`${baseURL}users/${userId}`, {
         method: "GET",
-        body: JSON.stringify(user),
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json"
         },
     })
-    .then((res) => res.json())
-    .then((data) => console.log(data));
-}
+    .then((res) => {
+        if (!res.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+        return res.json();
+    });
+};
+
 
 export const logoutUser = (dispatch) => {
     AsyncStorage.removeItem("jwt");
