@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Alert } from 'react-native';
 import axios from "axios";
 import baseURL from '../../../assets/common/baseurl';
 import Colors from '../../color';
+import Header from './Header';
+import Sidebar from './Sidebar'
 import SelectDropdown from 'react-native-select-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'native-base';
 const UserList = () => {
+    const [sidebarVisible, setSidebarVisible] = useState(false);
     const [users, setUsers] = useState([]);
     const [token, setToken] = useState('');
 
@@ -20,6 +24,10 @@ const UserList = () => {
         const fetchedToken = await AsyncStorage.getItem('authToken'); // Use AsyncStorage to get token
         setToken(fetchedToken);
     };
+
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+      };
 
     const fetchUsers = async () => {
         try {
@@ -114,7 +122,18 @@ const UserList = () => {
         );
     };
     
+    const sidebarItems = [
+        { id: 1, title: 'Home', screen: 'Main' },
+        { id: 2, title: 'Dashboard', screen: 'Dashboard' },
+        { id: 3, title: 'Product', screen: 'Products' },
+        { id: 4, title: 'Brand', screen: 'Brands' },
+        { id: 5, title: 'Order', screen: 'OrderAdmin' },
+        { id: 6, title: 'User', screen: 'UserAdmin' },
+      ];
+
     const renderUserItem = ({ item }) => (
+
+       
         <TouchableOpacity style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: Colors.lightgray }}>
             <Text>{item.name}</Text>
             <Text>Email: {item.email}</Text>
@@ -128,9 +147,16 @@ const UserList = () => {
                 <Button title="Delete User" color={Colors.red} onPress={() => deleteUser(item._id)} />
             </View>
         </TouchableOpacity>
+
+       
     );
 
     return (
+        <ScrollView style={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Header title="Dashboard" onPress={toggleSidebar} />
+          {sidebarVisible && <Sidebar items={sidebarItems} />}
+  
         <View style={{ flex: 1, padding: 10 }}>
             <FlatList
                 data={users}
@@ -138,7 +164,41 @@ const UserList = () => {
                 keyExtractor={item => item._id}
             />
         </View>
+        </View>
+    </ScrollView>
     );
 };
+
+const styles = StyleSheet.create({
+    chartTitle: {
+      fontSize: 34,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      color: '#333',
+    },
+    container: {
+      flex: 1,
+    },
+    mainContent: {
+      flex: 1,
+      backgroundColor: '#ffffff',
+      padding: 20,
+      alignItems: 'center',
+    },
+    chartContainer: {
+      marginBottom: 50,
+      backgroundColor: '#fff',
+      borderRadius: 20,
+      padding: 15,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+  });
 
 export default UserList;

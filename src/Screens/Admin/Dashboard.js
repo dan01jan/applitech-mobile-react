@@ -23,6 +23,7 @@ const Dashboard = () => {
     { id: 3, title: 'Product', screen: 'Products' },
     { id: 4, title: 'Brand', screen: 'Brands' },
     { id: 5, title: 'Order', screen: 'OrderAdmin' },
+    { id: 6, title: 'User', screen: 'UserAdmin' },
   ];
 
 
@@ -164,6 +165,8 @@ const Dashboard = () => {
       <View style={styles.container}>
         <Header title="Dashboard" onPress={toggleSidebar} />
         {sidebarVisible && <Sidebar items={sidebarItems} />}
+
+        
         <View style={styles.mainContent}>
        
           
