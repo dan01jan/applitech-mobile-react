@@ -64,9 +64,7 @@ const UserProfile = (props) => {
                 <View>
                   
                     <View >
-                    <Center pb={15}>
-        <Text>Order List</Text>
-</Center>
+                   
                         <View>
                             {orders ? (
                                 orders.map((order) => {

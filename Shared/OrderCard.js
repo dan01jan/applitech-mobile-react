@@ -5,18 +5,20 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import TrafficLight from "./StyledComponents/TrafficLight";
 import EasyButton from "./StyledComponents/EasyButton";
 import Toast from "react-native-toast-message";
-
+import cardbg from "../assets/images/logoApp.png"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import baseURL from "../assets/common/baseurl";
 import { useNavigation } from "@react-navigation/native";
-
+import Buttone from "../src/Components/Buttone";
+import Colors from "../src/color";
 const codes = [
   { name: "pending", code: "3" },
   { name: "shipped", code: "2" },
   { name: "delivered", code: "1" },
 ];
 const OrderCard = ({ item, select }) => {
+  
   const [orderStatus, setOrderStatus] = useState();
   const [statusText, setStatusText] = useState("");
   const [statusChange, setStatusChange] = useState("");
@@ -24,7 +26,7 @@ const OrderCard = ({ item, select }) => {
   const [cardColor, setCardColor] = useState("");
   const navigation = useNavigation();
 
-  console.log("Item Data:", item);
+ 
 
   const updateOrder = () => {
     AsyncStorage.getItem("jwt")
@@ -62,7 +64,7 @@ const OrderCard = ({ item, select }) => {
             text2: "",
           });
           setTimeout(() => {
-            navigation.navigate("Products");
+            navigation.navigate("OrderAdmin");
           }, 500);
         }
       })
@@ -78,15 +80,15 @@ const OrderCard = ({ item, select }) => {
   useEffect(() => {
     if (item.status === "3") {
       setOrderStatus(<TrafficLight unavailable></TrafficLight>);
-      setStatusText("pending");
+      setStatusText("PENDING");
       setCardColor("#FFDEDE");
     } else if (item.status === "2") {
       setOrderStatus(<TrafficLight limited></TrafficLight>);
-      setStatusText("shipped");
+      setStatusText("SHIPPED");
       setCardColor("#FFF8C7");
     } else {
       setOrderStatus(<TrafficLight available></TrafficLight>);
-      setStatusText("delivered");
+      setStatusText("DELIVERED");
       setCardColor("#DEFFCB");
     }
   
@@ -106,77 +108,95 @@ const OrderCard = ({ item, select }) => {
     //   </View>
     // </View>
     <View style={[{ backgroundColor: cardColor }, styles.container]}>
-      <View style={styles.container}>
-        <Text>Order Number: #{item.id}</Text>
+    <View style={styles.rowContainer}>
+      <View style={styles.statusContainer}>
+        <Text>Status: {statusText} {orderStatus}</Text>
       </View>
-      <View style={{ marginTop: 10 }}>
-        <Text>
-          Status: {statusText} {orderStatus}
-        </Text>
-        <Text>
-          Address: {item.shippingAddress1} {item.shippingAddress2}
-        </Text>
-        <Text>City: {item.city}</Text>
-        <Text>Country: {item.country}</Text>
-        <Text>Date Ordered: {item.dateOrdered.split("T")[0]}</Text>
-        {/* <View style={styles.priceContainer}>
-          <Text>Price: </Text>
-          <Text style={styles.price}>$ {item.totalPrice}</Text>
-        </View> */}
-        {/* {item.editMode ? ( */}
-        <View>
-          {select ? null : (
-            <>
-              <Select
-                width="80%"
-                iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
-                style={{ width: undefined }}
-                selectedValue={statusChange}
-                color="white"
-                placeholder="Change Status"
-                placeholderTextColor="white"
-                placeholderStyle={{ color: "#FFFFFF" }}
-                placeholderIconColor="#007aff"
-                onValueChange={(e) => setStatusChange(e)}
-              >
-                {codes.map((c) => {
-                  return (
-                    <Select.Item key={c.code} label={c.name} value={c.code} />
-                  );
-                })}
-              </Select>
-
-              <EasyButton secondary large onPress={() => updateOrder()}>
-                <Text style={{ color: "white" }}>Update</Text>
-              </EasyButton>
-            </>
-          )}
-        </View>
-        {/* //   ) : null} */}
+      <View style={styles.dateContainer}>
+        <Text style={styles.dateOrdered}>{item.dateOrdered.split("T")[0]}</Text>
       </View>
     </View>
-  );
+    <View style={styles.orderNumberContainer}>
+      <Text style={styles.orderNumber}>Order Number: #{item.id}</Text>
+    </View>
+    <View style={{ marginTop: 10 }}>
+      <Text>Address: {item.shippingAddress1} {item.shippingAddress2}</Text>
+      <Text>City: {item.city}</Text>
+      <Text>Country: {item.country}</Text>
+      <View>
+        {select ? null : (
+          <>
+            <Select
+              width="100%"
+              mt={5}
+              iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+              style={{ width: undefined }}
+              selectedValue={statusChange}
+              color="black"
+              placeholder="Change Status"
+              placeholderTextColor="black"
+              placeholderStyle={{ color: "black" }}
+              placeholderIconColor="#007aff"
+              onValueChange={(e) => setStatusChange(e)}
+              fontWeight={"bold"}
+            >
+              {codes.map((c) => (
+                <Select.Item key={c.code} label={c.name} value={c.code} />
+              ))}
+            </Select>
+            <Buttone 
+              bg={Colors.main} 
+              color={Colors.white} 
+              mt={4}
+             
+              onPress={() => updateOrder()}
+            >
+              Continue
+            </Buttone>
+            {/* <EasyButton secondary large onPress={() => updateOrder()}>
+              <Text style={{ color: "white" }}>Update</Text>
+            </EasyButton> */}
+          </>
+        )}
+      </View>
+    </View>
+  </View>
+  
+);
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
     margin: 10,
-    borderRadius: 30, // Adjust the value to change the roundness of the card
-    overflow: "hidden", // Ensure content stays within rounded border
+    borderRadius: 30,
+    overflow: "hidden",
   },
-  title: {
-    backgroundColor: "#62B1F6",
-    padding: 5,
-  },
-  priceContainer: {
-    marginTop: 10,
-    alignSelf: "flex-end",
+  rowContainer: {
     flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  price: {
-    color: "white",
+  statusContainer: {
+    flex: 1,
+  },
+  dateContainer: {
+    marginLeft: 10,
+  },
+  orderNumberContainer: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  orderNumber: {
+    color: "black",
     fontWeight: "bold",
+  },
+  dateOrdered: {
+    textAlign: "right",
+    fontWeight: "bold"
+    // marginBottom: 15,
   },
 });
 

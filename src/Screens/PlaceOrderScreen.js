@@ -48,7 +48,7 @@ const Confirm = (props) => {
   
                           setTimeout(() => {
                               dispatch(clearCart());
-                              navigation.navigate("Cart");
+                              navigation.navigate("AppreciationScreen");
                           }, 500);
                       } else {
                           // Handle other response statuses if needed
@@ -227,16 +227,18 @@ const Confirm = (props) => {
                                         <Text fontSize="xs" _dark={{
                                             color: "warmGray.50"
                                         }} color="coolGray.800" alignSelf="flex-start">
-                                            {item.quantity}
+                                            x {item.quantity}
                                         </Text>
                                     </HStack>
                                 )
                             })}
+                            <Center mt={10}>
                             <Text style={styles.title}>Total Amount</Text>
                             
-                            <Text>
+                            <Text style={styles.title}>
                             ₱{calculateTotalAmount().toFixed(2)}
                             </Text>
+                            </Center>
                         </View>
                     ) : null}
                     </VStack>
@@ -275,12 +277,12 @@ const styles = StyleSheet.create({
     //     alignItems: "center",
     //     margin: 8,
     // },
-    // title: {
-    //     alignSelf: "center",
-    //     margin: 8,
-    //     fontSize: 16,
-    //     fontWeight: "bold",
-    // },
+    title: {
+        alignSelf: "center",
+       
+        fontSize: 16,
+        fontWeight: "bold",
+    },
     // listItem: {
     //     alignItems: "center",
     //     backgroundColor: "white",

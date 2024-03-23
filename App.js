@@ -8,6 +8,7 @@ import LoginScreen from './src/Screens/LoginScreen';
 import OrderScreen from './src/Screens/OrderScreen';
 import RegisterScreen from './src/Screens/RegisterScreen';
 import BottomNav from './src/Navigations/BottomNav';
+import Home from './src/Screens/HomeScreen';
 import Dashboard from './src/Screens/Admin/Dashboard';
 import AdminProduct from './src/Screens/Admin/ProductForm'
 import BrandForm from './src/Screens/Admin/BrandForm'
@@ -19,6 +20,9 @@ import PlaceOrderScreen from './src/Screens/PlaceOrderScreen';
 import Order from './src/Screens/Admin/Order';
 import User from  './src/Screens/Admin/User';
 import Auth from './Context/Store/Auth';
+import AppreciationScreen from './src/Screens/AppreciationScreen';
+import Brands from './src/Screens/Admin/Brands';
+import Products from './src/Screens/Admin/Products';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -30,8 +34,9 @@ export default function App() {
         <NavigationContainer>
           <StatusBar hidden={true} />
           <Stack.Navigator
-            initialRouteName="Dashboard"
+            initialRouteName="Login"
             screenOptions={{
+              
               headerShown: false,
             }}
           >
@@ -50,6 +55,8 @@ export default function App() {
             <Stack.Screen name="UserAdmin" component={User} />
 
             <Stack.Screen name="Main" component={BottomNav} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="AppreciationScreen" component={AppreciationScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

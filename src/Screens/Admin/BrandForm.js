@@ -35,6 +35,7 @@ const BrandForm = (props) => {
             try {
                 if (!props.route.params) {
                     setItem(null);
+                    setImages([]); // Set images to an empty array if params are not defined
                 } else {
                     setItem(props.route.params.item);
                     setName(props.route.params.item.name);
@@ -60,9 +61,10 @@ const BrandForm = (props) => {
         })();
     
         return () => {
-
+    
         };
-    }, []);
+    }, [props.route.params]); // Make sure to include props.route.params in the dependency array
+    
 
     const pickImages = async () => {
         try {
@@ -97,10 +99,11 @@ const BrandForm = (props) => {
         );
     };
 
-    const removeImage = (image) => {
-        const newImages = images.filter((img) => img !== image);
-        setImages(newImages);
+    const removeImage = (indexToRemove) => {
+        const filteredImages = images.filter((_, index) => index !== indexToRemove);
+        setImages(filteredImages);
     };
+    
     
 
     const onSnapToItem = (index) => {
@@ -177,7 +180,7 @@ const BrandForm = (props) => {
                             text2: ""
                         });
                         setTimeout(() => {
-                            navigation.navigate("Main");
+                            navigation.navigate("Brands");
                         }, 500)
                     }
                 })
@@ -196,15 +199,13 @@ const BrandForm = (props) => {
     }
 
     const updateBrand = () => {
-        if (
-            name === "" ||
-            description === ""
-        ) {
-            setError("Please fill in the form correctly")
+        if (name === "" || description === "") {
+            setError("Please fill in the form correctly");
+            return;
         }
-
+    
         let formData = new FormData();
-
+    
         formData.append("name", name);
         formData.append("description", description);
         images.forEach((image, index) => {
@@ -213,89 +214,59 @@ const BrandForm = (props) => {
                 formData.append("images", {
                     uri: newImageUri,
                     type: mime.getType(newImageUri),
-                    name: newImageUri.split("/").pop()
+                    name: newImageUri.split("/").pop(),
                 });
             }
         });
-
+    
         const config = {
             headers: {
                 "Content-Type": "multipart/form-data",
-                "Authorization": `Bearer ${token}`
-            }
-        }
-        if (item !== null) {
-            console.log(item)
-            axios
-                .put(`${baseURL}brands/${item.id}`, formData, config)
-                .then((res) => {
-                    if (res.status === 200 || res.status === 201) {
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: "Brand successfuly updated",
-                            text2: ""
-                        });
-                        setTimeout(() => {
-                            navigation.navigate("Brands");
-                        }, 500)
-                    }
-                })
-                .catch((error) => {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    
+        axios
+            .put(`${baseURL}brands/${item.id}`, formData, config)
+            .then((res) => {
+                if (res.status === 200 || res.status === 201) {
                     Toast.show({
                         topOffset: 60,
-                        type: "error",
-                        text1: "Something went wrong",
-                        text2: "Please try again"
-                    })
-                })
-        } else {
-            axios
-                .post(`${baseURL}brands`, formData, config)
-                .then((res) => {
-                    if (res.status === 200 || res.status === 201) {
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: "New Brand added",
-                            text2: ""
-                        });
-                        setTimeout(() => {
-                            navigation.navigate("Main");
-                        }, 500)
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                    Toast.show({
-                        topOffset: 60,
-                        type: "error",
-                        text1: "Something went wrong",
-                        text2: "Please try again"
-                    })
-                })
-
-        }
-
-    }
+                        type: "success",
+                        text1: "Brand successfully updated",
+                        text2: "",
+                    });
+                    setTimeout(() => {
+                        navigation.navigate("Brands");
+                    }, 500);
+                }
+            })
+            .catch((error) => {
+                Toast.show({
+                    topOffset: 60,
+                    type: "error",
+                    text1: "Something went wrong",
+                    text2: "Please try again",
+                });
+            });
+    };
+    
+    
 
 
     return (
         <FormContainer title={item ? "Update Brand" : "Add Brand"}>
             <View style={styles.carouselContainer}>
-                <Carousel
-                   //data={(item?.images || []).concat(images)}
-                    // Concatenate existing images with new images
-                    data={item ? item.images : images}
+            <Carousel
+                    data={(item?.images || []).concat(images)}
                     renderItem={renderImage}
                     sliderWidth={300}
                     itemWidth={300}
                     loop={true}
                     onSnapToItem={onSnapToItem}
-                    activeSlideAlignment="start" // Ensures newly added image is visible
-                    activeSlideOffset={10} // Adjust the offset based on your preference
-                />
-
+                    activeSlideAlignment="start"
+                    activeSlideOffset={10}
+             />
                 <TouchableOpacity onPress={pickImages} style={styles.imagePicker}>
                     <Icon style={{ color: "white" }} name="camera" />
                 </TouchableOpacity>
