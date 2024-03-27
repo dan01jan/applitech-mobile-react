@@ -202,9 +202,9 @@ const ProductForm = (props) => {
     }
     
     return (
-      
-        <ScrollView style={styles.scrollContainer}>
-        <View style={styles.container}>
+        <ScrollView  style = {styles.windowheight}>
+      <View style = {styles.windowheight}>
+  
           <Header title="Dashboard" onPress={toggleSidebar} />
           {sidebarVisible && <Sidebar items={sidebarItems} />}
             
@@ -240,24 +240,24 @@ const ProductForm = (props) => {
                 </FormControl.Label>
                 
                 <Input
-  // Example width value, adjust as needed
-  borderWidth={0.2} 
-  borderColor={Colors.main} 
-  bg={Colors.lightpink} 
-  py={4}
-  mt={-5}
-  color={Colors.main}
-  _focus={{
-    bg: Colors.lightpink,
-    borderWidth: 1,
-    borderColor: Colors.main,
-  }}
-  placeholder="Name"
-  name="name"
-  id="name"
-  value={name}
-  onChangeText={(text) => setName(text)}
-/>
+ 
+                    borderWidth={0.2} 
+                    borderColor={Colors.main} 
+                    bg={Colors.lightpink} 
+                    py={4}
+                    mt={-5}
+                    color={Colors.main}
+                    _focus={{
+                        bg: Colors.lightpink,
+                        borderWidth: 1,
+                        borderColor: Colors.main,
+                    }}
+                    placeholder="Name"
+                    name="name"
+                    id="name"
+                    value={name}
+                    onChangeText={(text) => setName(text)}
+                    />
 
                    <FormControl.Label
                   _text={{
@@ -405,15 +405,23 @@ const ProductForm = (props) => {
               </FormContainer>
           </Center>
           
-        </View>
+        {/* </View> */}
+      {/* </ScrollView> */}
+     
+      </View>
       </ScrollView>
-      
         
     );
     
 }
 
 const styles = StyleSheet.create({
+    // scrollContainer: {
+    //     height: 00, // Set the desired fixed height
+    //   },
+    windowheight:{
+        height: 1100
+    },
     carouselContainer: {
         width: '100%',
         height: 200,
@@ -434,12 +442,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         elevation: 20
     },
-    buttonContainer: {
-        width: "80%",
-        marginBottom: 80,
-        marginTop: 20,
-        alignItems: "center"
-    },
+    
     buttonText: {
         color: "white"
     }
