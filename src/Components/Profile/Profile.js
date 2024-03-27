@@ -6,7 +6,7 @@ import axios from "axios"
 import baseURL from '../../../assets/common/baseurl';
 import AuthGlobal from '../../../Context/Store/AuthGlobal';
 import { logoutUser } from "../../../Context/Actions/Auth.actions"
-import { Box, FormControl, VStack, ScrollView,Input } from "native-base"
+import { Box, FormControl, VStack, ScrollView, Input, NativeBaseProvider, Button as NativeBaseButton } from "native-base"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import Buttone from '../Buttone'
 import Colors from '../../color'
@@ -17,6 +17,7 @@ const UserProfile = (props) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false); // State to store isAdmin
     const [orders, setOrders] = useState([])
     const navigation = useNavigation(); // Add this line
 
@@ -32,6 +33,7 @@ const UserProfile = (props) => {
                         setUsername(user.data.name);
                         setEmail(user.data.email);
                         setPhone(user.data.phone);
+                        setIsAdmin(user.data.isAdmin); // Set isAdmin state
                     });
             })
             .catch((error) => console.log(error));
@@ -171,7 +173,29 @@ const UserProfile = (props) => {
                     <Buttone bg={Colors.main} color={Colors.white} onPress={handleUpdateProfile}>
                         Update Profile
                     </Buttone>
-                    <View style={{ marginTop: 5 }}>
+                    {isAdmin && ( // Render button if user is admin
+                        // <NativeBaseButton
+                        //     bg={Colors.main}
+                        //     color={Colors.white}
+                        //     style={{ width: '100%' }}
+                        //     onPress={() => {
+                        //         navigation.navigate("Dashboard"); // Navigate to AdminScreen
+                        //     }}
+                        // >
+                        //     Admin Button
+                        // </NativeBaseButton>
+                        <Buttone
+                            bg={Colors.brightpink}
+                            color={Colors.white}
+                            style={{ width: '100%' }}
+                            onPress={() => {
+                                navigation.navigate("Dashboard"); // Navigate to AdminScreen
+                            }}
+                        >
+                            Dashboard
+                        </Buttone>
+                    )}
+                    
                         <Buttone
                             bg={Colors.coral}
                             color={Colors.white}
@@ -183,7 +207,7 @@ const UserProfile = (props) => {
                         >
                             Sign Out
                         </Buttone>
-                    </View>
+                   
                 </VStack>
             </ScrollView>
         </Box>
