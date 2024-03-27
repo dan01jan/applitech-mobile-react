@@ -38,8 +38,8 @@ const AppreciationScreen = () => {
           bg={color.main} 
           color={color.white} 
           mt={4}
-          onPress={navigateToHome} // Call navigateToHome function when button is pressed
-        >
+          onPress={() => navigation.navigate('Home')}
+          >
           Back to Shopping
         </Buttone>
       </Box>

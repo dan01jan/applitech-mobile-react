@@ -7,6 +7,7 @@ import AuthGlobal from '../../Context/Store/AuthGlobal';
 import { loginUser } from '../../Context/Actions/Auth.actions';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { Pressable } from "react-native";
 
 function LoginScreen() {
   const context = useContext(AuthGlobal);
@@ -73,6 +74,7 @@ function LoginScreen() {
         height="100%"
         source={require('../../assets/images/bg.png')}
       />
+
       <Box w="full" px="6" justifyContent="center" alignItems="center">
         <Image
           source={require('../../assets/images/logoApp.png')}
@@ -80,8 +82,49 @@ function LoginScreen() {
           h={300}
           w={300}
         />
+  
+        {/* Google Login Button */}
+        {/* <Pressable 
+          onPress={() => console.log("Login with Google")} // Handle Google login action
+        >
+          <Box
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between" // Align items to the start and end of the box
+            mt={10} 
+            w="60%" 
+            rounded={50}
+            bg="white"
+            py={3} // Adjust padding as needed
+            px={4} // Adjust padding as needed
+          >
+            <Image 
+              source={require("../../assets/images/google-icon.png")} // Your Google icon image
+              alt="Google Icon" // Alt text for accessibility
+              size={4} // Size of the image
+            />
+            <Text 
+              color={color.main} 
+              fontWeight="bold" 
+              ml={2} // Adjust margin as needed
+             
+            >
+              Log in with Google
+            </Text>
+          </Box>
+        </Pressable> */}
+        
+        {/* "OR" Text */}
+        {/* <Text 
+          mt={4} // Adjust margin as needed
+          color={color.white}
+          fontWeight="bold"
+        >
+          OR
+        </Text> */}
 
         <VStack space={2} pt="6" alignItems="center">
+
           <Input
             InputLeftElement={
               <MaterialIcons name="email" size={20} color={color.main} />

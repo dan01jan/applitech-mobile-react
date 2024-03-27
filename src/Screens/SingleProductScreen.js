@@ -48,6 +48,14 @@ function SingleProductScreen({ route }) {
     });
   };
 
+  const calculateAvgRating = (reviews) => {
+    if (reviews.length === 0) return 0;
+
+    const sumRatings = reviews.reduce((sum, review) => sum + review.ratings, 0);
+    return sumRatings / reviews.length;
+};
+
+
   const renderCarouselItem = ({ item }) => {
     return (
       <Image
@@ -89,7 +97,7 @@ function SingleProductScreen({ route }) {
         <Heading bold fontSize={15} mb={2} lineHeight={22}>
           {product.name}
         </Heading>
-        <Rating value={product.rating} text={`${product.numReviews} reviews`} />
+        <Rating value={calculateAvgRating(product.reviews)} text={`${product.numReviews} reviews`} />
         <HStack alignItems="center" my={5}>
           <Button size="sm" colorScheme="pink" onPress={decrement}>-</Button>
           <View

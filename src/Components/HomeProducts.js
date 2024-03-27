@@ -13,6 +13,13 @@ function HomeProducts() {
   const [loadedProducts, setLoadedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const calculateAvgRating = (reviews) => {
+    if (reviews.length === 0) return 0;
+
+    const sumRatings = reviews.reduce((sum, review) => sum + review.ratings, 0);
+    return sumRatings / reviews.length;
+};
+
   const steps = [
     {
       id: '1',
@@ -102,7 +109,7 @@ function HomeProducts() {
                 {product.name}
               </Text>
               {/* rating */}
-              <Rating value={product.ratings}></Rating>
+              <Rating value={calculateAvgRating(product.reviews)}></Rating>
             </Box>
           </Pressable>
         ))}
