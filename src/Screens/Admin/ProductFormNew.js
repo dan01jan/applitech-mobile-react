@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text, Platform } from "react-native";
 import FormContainer from "../../../Shared/Form/FormContainer";
-// import Input from "../../../Shared/Form/Input";
+import Input from "../../../Shared/Form/Input";
 import EasyButton from "../../../Shared/StyledComponents/EasyButton";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Toast from "react-native-toast-message";
@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 import Carousel from 'react-native-snap-carousel';
 import { useNavigation } from "@react-navigation/native";
-import { Box, Center, Select, ScrollView, VStack, FormControl, Input } from "native-base"
+import { Box, Center, Select, ScrollView, VStack, FormControl } from "native-base"
 import Colors from "../../color";
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -209,12 +209,11 @@ const ProductForm = (props) => {
           {sidebarVisible && <Sidebar items={sidebarItems} />}
             
        
-          
-          <Center>   
+            <Box h="full" bg={Colors.white} px={5}>
+                
             <FormContainer title={item ? "Update Product" : "Add Product"}>
               <ScrollView showsVerticalScrollIndicator={false}>
                 <VStack space={6} mt={5}>
-                   
                   <View style={styles.carouselContainer}>
                     <Carousel
                       data={item ? item.images : images}
@@ -239,48 +238,18 @@ const ProductForm = (props) => {
                 NAME
                 </FormControl.Label>
                 
-                <Input
-  // Example width value, adjust as needed
-  borderWidth={0.2} 
-  borderColor={Colors.main} 
-  bg={Colors.lightpink} 
-  py={4}
-  mt={-5}
-  color={Colors.main}
-  _focus={{
-    bg: Colors.lightpink,
-    borderWidth: 1,
-    borderColor: Colors.main,
-  }}
-  placeholder="Name"
-  name="name"
-  id="name"
-  value={name}
-  onChangeText={(text) => setName(text)}
-/>
-
-                   <FormControl.Label
-                  _text={{
-                    fontSize: "12px",
-                    fontWeight: "bold"
-                  }}
-                >
-                PRICE
-                </FormControl.Label>
-                  
                   <Input
-                   
-                  borderWidth={.2} 
-                  borderColor={Colors.main} 
-                  bg={Colors.lightpink} 
-                  py={4}
-                  mt = {-5}
-                  color={Colors.main}
-                  _focus={{
-                    bg: Colors.lightpink,
-                    borderWidth: 1,
-                    borderColor: Colors.main,
-                  }}
+                  
+                    placeholder="Name"
+                    name="name"
+                    id="name"
+                    value={name}
+                    onChangeText={(text) => setName(text)}
+                  />
+                  <View style={styles.label}>
+                    <Text style={{ textDecorationLine: "underline" }}>Price</Text>
+                  </View>
+                  <Input
                     placeholder="Price"
                     name="price"
                     id="price"
@@ -288,28 +257,10 @@ const ProductForm = (props) => {
                     keyboardType={"numeric"}
                     onChangeText={(text) => setPrice(text)}
                   />
-                   <FormControl.Label
-                  _text={{
-                    fontSize: "12px",
-                    fontWeight: "bold"
-                  }}
-                >
-                STOCK
-                </FormControl.Label>
-                 
+                  <View style={styles.label}>
+                    <Text style={{ textDecorationLine: "underline" }}>Count in Stock</Text>
+                  </View>
                   <Input
-               
-                  borderWidth={.2} 
-                  borderColor={Colors.main} 
-                  bg={Colors.lightpink} 
-                  py={4}
-                  mt = {-5}
-                  color={Colors.main}
-                  _focus={{
-                    bg: Colors.lightpink,
-                    borderWidth: 1,
-                    borderColor: Colors.main,
-                  }}
                     placeholder="Stock"
                     name="stock"
                     id="stock"
@@ -317,57 +268,18 @@ const ProductForm = (props) => {
                     keyboardType={"numeric"}
                     onChangeText={(text) => setCountInStock(text)}
                   />
-                   <FormControl.Label
-                  _text={{
-                    fontSize: "12px",
-                    fontWeight: "bold"
-                  }}
-                >
-                DESCRIPTION
-                </FormControl.Label>
-                  
+                  <View style={styles.label}>
+                    <Text style={{ textDecorationLine: "underline" }}>Description</Text>
+                  </View>
                   <Input
-                
-                  borderWidth={.2} 
-                  borderColor={Colors.main} 
-                  bg={Colors.lightpink} 
-                  py={4}
-                  mt = {-5}
-                  color={Colors.main}
-                  _focus={{
-                    bg: Colors.lightpink,
-                    borderWidth: 1,
-                    borderColor: Colors.main,
-                  }}
                     placeholder="Description"
                     name="description"
                     id="description"
                     value={description}
                     onChangeText={(text) => setDescription(text)}
                   />
-                   <FormControl.Label
-                  _text={{
-                    fontSize: "12px",
-                    fontWeight: "bold"
-                  }}
-                >
-                BRAND
-                </FormControl.Label>
                   <Box>
-                    
                     <Select
-                  
-                    borderWidth={.2} 
-                    borderColor={Colors.main} 
-                    bg={Colors.lightpink} 
-                    py={4}
-                    mt = {-5}
-                    color={Colors.main}
-                    _focus={{
-                      bg: Colors.lightpink,
-                      borderWidth: 1,
-                      borderColor: Colors.main,
-                    }}
                       minWidth="90%" placeholder="Select your Brand"
                       selectedValue={pickerValue}
                       onValueChange={(e) => [setPickerValue(e), setBrand(e)]}
@@ -386,24 +298,21 @@ const ProductForm = (props) => {
                   {/* Display error message if there's an error */}
                   {error && <Error message={error} />}
                   {/* Button to add/update product */}
-                  
-                   
-                    <Buttone 
-              bg={Colors.main} 
-              color={Colors.white} 
-              mt={4}
-             
-              onPress={() => checkOut()}
-            >
-             <Text style={styles.buttonText}>
+                  <View style={styles.buttonContainer}>
+                    <EasyButton
+                      large
+                      primary
+                      onPress={addOrUpdateProduct}
+                    >
+                      <Text style={styles.buttonText}>
                         {item ? "Update" : "Confirm"}
                       </Text>
-            </Buttone>
-                 
+                    </EasyButton>
+                  </View>
                 </VStack>
               </ScrollView>
               </FormContainer>
-          </Center>
+            </Box>
           
         </View>
       </ScrollView>
