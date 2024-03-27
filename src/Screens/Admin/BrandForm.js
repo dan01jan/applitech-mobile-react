@@ -6,9 +6,8 @@ import {
     TouchableOpacity,
     Text,
 } from "react-native"
-import { Box, Select } from "native-base"
+import { Box, Center, Select, ScrollView, VStack, FormControl, Input  } from "native-base"
 import FormContainer from "../../../Shared/Form/FormContainer"
-import Input from "../../../Shared/Form/Input"
 import EasyButton from "../../../Shared/StyledComponents/EasyButton"
 import Icon from "react-native-vector-icons/FontAwesome"
 import Toast from "react-native-toast-message"
@@ -20,8 +19,13 @@ import * as ImagePicker from "expo-image-picker"
 import { useNavigation } from "@react-navigation/native"
 import mime from "mime";
 import Carousel from 'react-native-snap-carousel';
+import Colors from "../../color";
+import Header from './Header';
+import Sidebar from './Sidebar';
+import Buttone from '../../Components/Buttone';
 
 const BrandForm = (props) => {
+    const [sidebarVisible, setSidebarVisible] = useState(false);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
@@ -29,7 +33,17 @@ const BrandForm = (props) => {
     const [error, setError] = useState();
     const [item, setItem] = useState(null);
     const navigation = useNavigation()
-
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+      };
+    const sidebarItems = [
+        { id: 1, title: 'Home', screen: 'Main' },
+        { id: 2, title: 'Dashboard', screen: 'Dashboard' },
+        { id: 3, title: 'Product', screen: 'Products' },
+        { id: 4, title: 'Brand', screen: 'Brands' },
+        { id: 5, title: 'Order', screen: 'OrderAdmin' },
+        { id: 6, title: 'User', screen: 'UserAdmin' },
+      ];
     useEffect(() => {
         const retrieveToken = async () => {
             try {
@@ -255,60 +269,99 @@ const BrandForm = (props) => {
 
 
     return (
-        <FormContainer title={item ? "Update Brand" : "Add Brand"}>
-            <View style={styles.carouselContainer}>
-            <Carousel
-                    data={(item?.images || []).concat(images)}
-                    renderItem={renderImage}
-                    sliderWidth={300}
-                    itemWidth={300}
-                    loop={true}
-                    onSnapToItem={onSnapToItem}
-                    activeSlideAlignment="start"
-                    activeSlideOffset={10}
-             />
-                <TouchableOpacity onPress={pickImages} style={styles.imagePicker}>
-                    <Icon style={{ color: "white" }} name="camera" />
-                </TouchableOpacity>
-            </View>
+        <ScrollView style={styles.windowheight} showsVerticalScrollIndicator={false}>
+  <View style={styles.windowheight}>
+    <Header title="Dashboard" onPress={toggleSidebar} />
+    {sidebarVisible && <Sidebar items={sidebarItems} />}
     
-            <View style={styles.label}>
-                <Text style={{ textDecorationLine: "underline" }}>Name</Text>
+    <Center>
+      <FormContainer title={item ? "Update Brand" : "Add Brand"}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <VStack space={6} mt={5}>
+            <View style={styles.carouselContainer}>
+              <Carousel
+                data={(item?.images || []).concat(images)}
+                renderItem={renderImage}
+                sliderWidth={300}
+                itemWidth={300}
+                loop={true}
+                onSnapToItem={onSnapToItem}
+                activeSlideAlignment="start"
+                activeSlideOffset={10}
+              />
+              <TouchableOpacity onPress={pickImages} style={styles.imagePicker}>
+                <Icon style={{ color: "white" }} name="camera" />
+              </TouchableOpacity>
             </View>
+            <FormControl.Label
+              _text={{
+                fontSize: "12px",
+                fontWeight: "bold"
+              }}
+            >
+              NAME
+            </FormControl.Label>
             <Input
-                placeholder="Name"
-                name="name"
-                id="name"
-                value={name}
-                onChangeText={(text) => setName(text)}
+              borderWidth={0.2} 
+              borderColor={Colors.main} 
+              bg={Colors.lightpink} 
+              py={4}
+              mt={-5}
+              color={Colors.main}
+              _focus={{
+                bg: Colors.lightpink,
+                borderWidth: 1,
+                borderColor: Colors.main,
+              }}
+              placeholder="Name"
+              name="name"
+              id="name"
+              value={name}
+              onChangeText={(text) => setName(text)}
             />
-           
-            <View style={styles.label}>
-                <Text style={{ textDecorationLine: "underline" }}>Description</Text>
-            </View>
+            <FormControl.Label
+              _text={{
+                fontSize: "12px",
+                fontWeight: "bold"
+              }}
+            >
+              DESCRIPTION
+            </FormControl.Label>
             <Input
-                placeholder="Description"
-                name="description"
-                id="description"
-                value={description}
-                onChangeText={(text) => setDescription(text)}
+              borderWidth={0.2} 
+              borderColor={Colors.main} 
+              bg={Colors.lightpink} 
+              py={4}
+              mt={-5}
+              color={Colors.main}
+              _focus={{
+                bg: Colors.lightpink,
+                borderWidth: 1,
+                borderColor: Colors.main,
+              }}
+              placeholder="Description"
+              name="description"
+              id="description"
+              value={description}
+              onChangeText={(text) => setDescription(text)}
             />
-            {/* Display error message if there's an error */}
             {error && <Error message={error} />}
-            {/* Button to add/update product */}
-            <View style={styles.buttonContainer}>
-                <EasyButton
-                    large
-                    primary
-                    onPress={item ? updateBrand : addBrand}
-                >
-                    <Text style={styles.buttonText}>
-                        {item ? "Update" : "Confirm"}
-                    </Text>
-                </EasyButton>
-            </View>
-        </FormContainer>
-
+            <Buttone 
+              bg={Colors.main} 
+              color={Colors.white} 
+              mt={4}
+              onPress={item ? updateBrand : addBrand}
+            >
+              <Text style={styles.buttonText}>
+                {item ? "Update" : "Confirm"}
+              </Text>
+            </Buttone>
+          </VStack>
+        </ScrollView>
+      </FormContainer>
+    </Center>
+  </View>
+</ScrollView>
 
     )
 
@@ -316,6 +369,9 @@ const BrandForm = (props) => {
 
 
 const styles = StyleSheet.create({
+    windowheight:{
+        height: 1100
+    },
     carouselContainer: {
         width: '100%',
         height: 200,

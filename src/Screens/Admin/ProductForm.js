@@ -202,8 +202,8 @@ const ProductForm = (props) => {
     }
     
     return (
-        <ScrollView  style = {styles.windowheight}>
-      <View style = {styles.windowheight}>
+        <ScrollView style = {styles.windowheight} showsVerticalScrollIndicator={false}>
+            <View style = {styles.windowheight}>
   
           <Header title="Dashboard" onPress={toggleSidebar} />
           {sidebarVisible && <Sidebar items={sidebarItems} />}
@@ -353,7 +353,7 @@ const ProductForm = (props) => {
                 >
                 BRAND
                 </FormControl.Label>
-                  <Box>
+                  {/* <Box> */}
                     
                     <Select
                   
@@ -382,7 +382,7 @@ const ProductForm = (props) => {
                         )
                       })}
                     </Select>
-                  </Box>
+                  {/* </Box> */}
                   {/* Display error message if there's an error */}
                   {error && <Error message={error} />}
                   {/* Button to add/update product */}
@@ -416,9 +416,6 @@ const ProductForm = (props) => {
 }
 
 const styles = StyleSheet.create({
-    // scrollContainer: {
-    //     height: 00, // Set the desired fixed height
-    //   },
     windowheight:{
         height: 1100
     },
@@ -427,6 +424,30 @@ const styles = StyleSheet.create({
         height: 200,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    label: {
+        width: "80%",
+        marginTop: 10
+    },
+    buttonContainer: {
+        width: "80%",
+        marginBottom: 80,
+        marginTop: 20,
+        alignItems: "center"
+    },
+    buttonText: {
+        color: "white"
+    },
+    imageContainer: {
+        width: "100%",
+        height: "100%",
+        borderStyle: "solid",
+        borderWidth: 20,
+        padding: 0,
+        justifyContent: "center",
+        borderRadius: 100,
+        borderColor: "#E0E0E0",
+        elevation: 10
     },
     image: {
         width: "100%",
@@ -441,10 +462,6 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 100,
         elevation: 20
-    },
-    
-    buttonText: {
-        color: "white"
     }
 });
 

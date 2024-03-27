@@ -39,6 +39,7 @@ const Brands = (props) => {
         { id: 3, title: 'Product', screen: 'Products' },
         { id: 4, title: 'Brand', screen: 'Brands' },
         { id: 5, title: 'Order', screen: 'OrderAdmin' },
+        { id: 6, title: 'User', screen: 'UserAdmin' },
       ];
 
     const ListHeader = () => {
