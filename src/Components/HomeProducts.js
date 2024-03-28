@@ -20,19 +20,44 @@ function HomeProducts() {
     return sumRatings / reviews.length;
 };
 
-  const steps = [
-    {
-      id: '1',
-      message: 'Hello! How can I assist you today?',
-      trigger: '2',
+const steps = [
+  {
+    id: '1',
+    message: 'Hello! How can I assist you today?',
+    trigger: '2',
+  },
+  {
+    id: '2',
+    user: true,
+    trigger: ({ value }) => {
+      if(value.toLowerCase().includes("help")) return "3";
+      // You can add more conditions here to handle different user inputs
+      // For example, if the user asks about products, you can direct them to a "products" step
+      return "fallback"; // A fallback step in case the user's input doesn't match any condition
     },
-    {
-      id: '2',
-      user: true,
-      trigger: '3',
-    }
-  ];
-  
+  },
+  {
+    id: '3',
+    message: 'Sure, I can help you with that. Can you specify what kind of help you need?',
+    trigger: '4',
+  },
+  {
+    id: '4',
+    user: true,
+    trigger: '5', // Assuming next step is to process the user's detailed request
+  },
+  {
+    id: '5',
+    message: 'Got it, please wait a moment while I look that up for you.',
+    // No trigger here if this is the end of the conversation path or if you want to handle the next steps dynamically
+  },
+  {
+    id: 'fallback',
+    message: 'I\'m sorry, I didn\'t quite catch that. Can you please specify how I can assist you?',
+    trigger: '2', // Loops back to allow the user to respond again
+  },
+  // Add more steps as needed based on the different paths you want the conversation to take
+];
 
   useEffect(() => {
     setLoading(true);
