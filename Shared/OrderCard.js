@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { Picker, Select } from "native-base";
+import { HStack, Picker, Select } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import TrafficLight from "./StyledComponents/TrafficLight";
 import EasyButton from "./StyledComponents/EasyButton";
@@ -11,6 +11,7 @@ import baseURL from "../assets/common/baseurl";
 import { useNavigation } from "@react-navigation/native";
 import Buttone from "../src/Components/Buttone";
 import Colors from "../src/color";
+import {LinearGradient} from 'expo-linear-gradient';
 
 const codes = [
   { name: "pending", code: "3" },
@@ -118,15 +119,15 @@ const OrderCard = ({ item, select }) => {
       if (item.status === "3") {
         setOrderStatus(<TrafficLight unavailable></TrafficLight>);
         setStatusText("PENDING");
-        setCardColor("#FFDEDE");
+        setCardColor(["#FFDEDE", "#FFB5B5"]); // Set as an array
       } else if (item.status === "2") {
         setOrderStatus(<TrafficLight limited></TrafficLight>);
         setStatusText("SHIPPED");
-        setCardColor("#FFF8C7");
+        setCardColor(["#FFF8C7", "#FDE68A"]); // Set as an array
       } else {
         setOrderStatus(<TrafficLight available></TrafficLight>);
         setStatusText("DELIVERED");
-        setCardColor("#DEFFCB");
+        setCardColor(["#DEFFCB", "#AAFCAE"]); // Set as an array
       }
       
       console.log("Item Total Price:", item.totalPrice, item); // Log the data here
@@ -146,7 +147,9 @@ const OrderCard = ({ item, select }) => {
       //     <Text>Order Number: #{item.id}</Text>
       //   </View>
       // </View>
-      <View style={[{ backgroundColor: cardColor }, styles.container]}>
+<View style={styles.container}>
+<LinearGradient colors={Array.isArray(cardColor) ? cardColor : [cardColor]} style={styles.gradient}>
+
   <View style={styles.rowContainer}>
     <View style={styles.statusContainer}>
       <Text>Status: {statusText} {orderStatus}</Text>
@@ -162,24 +165,28 @@ const OrderCard = ({ item, select }) => {
     <Text>Address: {item.shippingAddress1} {item.shippingAddress2}</Text>
     <Text>City: {item.city}</Text>
     <Text>Country: {item.country}</Text>
-    <Text>Order Item IDs:</Text>
-    {item.orderItems && item.orderItems.map((orderItem, index) => (
+    <Text style = {[styles.productsordered, {marginTop: 20}]}>Products Ordered:</Text>
+    {/* {item.orderItems && item.orderItems.map((orderItem, index) => (
       <Text key={index}>- {orderItem}</Text>
-    ))}
+    ))} */}
     {/* Render product names */}
+   
     {productData && productData.map((product, index) => (
-      <View key={index}>
-        <Text>Product Name: {product.data.name}</Text>
-        {product.data.images.length > 0 && (
-          
-          <Image
-            source={{ uri: product.data.images[0] }} // Display the first image
-            style={{ width: 100, height: 100 }} // Set appropriate dimensions
-          />
-        )}
-        <Text>Price: {product.data.price}</Text>
-      </View>
-    ))}
+  <View style={[styles.productList, { marginTop: 20, marginLeft: 30, marginRight: 30 }]} key={index}>
+    <HStack justifyContent="space-between">
+      {product.data.images.length > 0 && (
+        <Image
+          source={{ uri: product.data.images[0] }} // Display the first image
+          style={{ width: 44, height: 44, borderRadius: 22 }} // Set appropriate dimensions and border radius
+        /> 
+      )}
+      <Text style =  {styles.dataText}>{product.data.name}</Text>
+      <Text  style =  {styles.dataText}>₱{product.data.price}</Text>
+    </HStack>
+  </View>
+))}
+    
+    
     <View>
       {select ? null : (
         <>
@@ -213,6 +220,7 @@ const OrderCard = ({ item, select }) => {
       )}
     </View>
   </View>
+  </LinearGradient>
 </View>
 
     
@@ -252,6 +260,28 @@ const OrderCard = ({ item, select }) => {
       fontWeight: "bold"
       // marginBottom: 15,
     },
+   productsordered:{
+    alignSelf: 'center',
+    marginTop: '20',
+    fontWeight: 'bold',
+    fontSize: 24
+   },
+   productList:{
+    marginTop: '20'
+   },
+   dataText:{
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginTop: 10
+   },
+   gradient: {
+    flex: 1,
+    borderRadius: 30,
+    overflow: "hidden",
+    padding: 20,
+    margin: 10,
+  },
+
   });
 
 
