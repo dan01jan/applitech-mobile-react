@@ -11,6 +11,7 @@ import { Center, HStack, ScrollView } from 'native-base';
 import Buttone from '../../Components/Buttone';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { LinearGradient } from 'expo-linear-gradient';
 // import Colors from '../../color';
 
 const UserList = () => {
@@ -137,7 +138,11 @@ const UserList = () => {
       ];
 
       const renderUserItem = ({ item }) => (
-        <View style={styles.container1}>
+       
+       <LinearGradient 
+    style={styles.gradient}
+    colors={['#FFDEDE', '#FFB5B5']} // Add colors array starting from #FFDEDE
+>
             <TouchableOpacity style={{ padding: 10 }}>
                 <Center>
                     <Text style={styles.roleText}>{item.name}</Text>
@@ -167,7 +172,8 @@ const UserList = () => {
                     </HStack>
                 </Buttone>
             </TouchableOpacity>
-        </View>
+            </LinearGradient>
+        
     );
     
     
@@ -186,22 +192,36 @@ const UserList = () => {
                 keyExtractor={item => item._id}
             />
         </View>
+
         </View>
+
     </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
+    // container: {
+    //     flex: 1,
+    // },
     container: {
+        // padding: 20,
+        // margin: 10,
+        // borderRadius: 30,
+        overflow: "hidden",
         flex: 1,
+        // backgroundColor: '#FFDEDE'
     },
-    container1: {
-        padding: 20,
-        margin: 10,
+    gradient: {
+        // flex: 1,
         borderRadius: 30,
         overflow: "hidden",
-        backgroundColor: '#FFDEDE'
-    },
+        padding: 20,
+        margin: 10,
+        width: '75%',
+    
+        alignSelf: 'center'
+
+      },
     roleText: {
         fontSize: 20,
         fontWeight: 'bold',
