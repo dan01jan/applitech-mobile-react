@@ -94,10 +94,14 @@ function SingleProductScreen({ route }) {
             inactiveDotScale={0.6}
           />
         </Center>
-        <Heading bold fontSize={15} mb={2} lineHeight={22}>
-          {product.name}
-        </Heading>
-        <Rating value={calculateAvgRating(product.reviews)} text={`${product.numReviews} reviews`} />
+       <HStack justifyContent="space-between" alignItems="center">
+  <Heading bold fontSize={15} mb={2} lineHeight={22}>
+    {product.name}
+  </Heading>
+  <Box flexDirection="row" alignItems="center"> {/* Use a Box to group Heading and Rating */}
+    <Rating value={calculateAvgRating(product.reviews)} text={`${product.numReviews} reviews`} />
+  </Box>
+</HStack>
         <HStack alignItems="center" my={5}>
           <Button size="sm" colorScheme="pink" onPress={decrement}>-</Button>
           <View

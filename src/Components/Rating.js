@@ -5,7 +5,7 @@ import colors from "../color";
 
 
 function Rating({ value}) {
-  const size = 8;
+  const size = 13;
   const color = colors.orange;
   return (
     <HStack space={0.4} mt={1} alignItems="center">

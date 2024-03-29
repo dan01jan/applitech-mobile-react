@@ -1,4 +1,4 @@
-import { ScrollView, Text, Flex, Pressable, Image, Box, Heading, Spinner } from "native-base";
+import { ScrollView, Text, Flex, Pressable, Image, Box, Heading, Spinner, HStack } from "native-base";
 import React, { useState, useEffect } from "react";
 import colors from "../color";
 import { useNavigation } from "@react-navigation/native";
@@ -127,13 +127,14 @@ const steps = [
               resizeMode="cover"
             />
             <Box px={4} pt={1}>
+            <HStack justifyContent="space-between" >
               <Heading size="sm" bold>
-                {product.price}
-              </Heading>
-              <Text fontSize={10} mt={1} isTruncated w="full">
                 {product.name}
-              </Text>
-              {/* rating */}
+              </Heading>
+              <Heading size="sm" bold>
+              ₱{product.price}
+              </Heading>
+              </HStack>
               <Rating value={calculateAvgRating(product.reviews)}></Rating>
             </Box>
           </Pressable>

@@ -41,7 +41,8 @@ const Brands = (props) => {
         { id: 5, title: 'Order', screen: 'OrderAdmin' },
         { id: 6, title: 'User', screen: 'UserAdmin' },
       ];
-
+    const windowHeight = Dimensions.get('window').height
+    const minHeight = windowHeight;
     const ListHeader = () => {
         return (
             <View style={styles.listHeader}>
@@ -160,8 +161,7 @@ const Brands = (props) => {
                     </View>
                 )}
             </View>
-        </View>
-        <View style = {styles.buttonContainer}>
+            <View style = {styles.buttonContainer}>
         <Buttone 
               bg={Colors.main} 
               color={Colors.white} 
@@ -176,6 +176,8 @@ const Brands = (props) => {
                   </HStack>
             </Buttone>
             </View>
+        </View>
+       
         </View>
     </ScrollView>
     );

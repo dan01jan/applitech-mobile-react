@@ -40,7 +40,10 @@ const Products = (props) => {
         { id: 4, title: 'Brand', screen: 'Brands' },
         { id: 5, title: 'Order', screen: 'OrderAdmin' },
       ];
+      const windowHeight = Dimensions.get('window').height;
 
+      // Convert 100vh to device-independent pixels (dp)
+      const minHeight = windowHeight;
       const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
       };
@@ -136,7 +139,7 @@ const Products = (props) => {
           <Header title="Dashboard" onPress={toggleSidebar} />
           {sidebarVisible && <Sidebar items={sidebarItems} />}
           
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ECECEC' }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ECECEC', minHeight }}>
         <View style={styles.flatListContainer}>
         <Center>
                     <View style = {styles.brandlistText}>
@@ -262,7 +265,9 @@ const styles = StyleSheet.create({
         fontSize: 18, // Adjust the font size as needed
         fontWeight: 'bold', // Optional: You can also make the header text bold
     },
-
+    scrollContainer: {
+        minHeight: 1000, // Set the minimum height here, adjust as needed
+      }
 })
 
 export default Products;
