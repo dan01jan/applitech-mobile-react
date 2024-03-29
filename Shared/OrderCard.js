@@ -99,7 +99,9 @@ const OrderCard = ({ item, select }) => {
       setStatusText();
       setCardColor();
     };
-  }, []);
+
+    console.log("OrderCard item prop:", item);
+  }, [item]);
 
   return (
     // <View style={[{ backgroundColor: cardColor }, styles.container]}>
@@ -123,6 +125,10 @@ const OrderCard = ({ item, select }) => {
       <Text>Address: {item.shippingAddress1} {item.shippingAddress2}</Text>
       <Text>City: {item.city}</Text>
       <Text>Country: {item.country}</Text>
+      <Text>Order Item IDs:</Text>
+          {item.orderItems && item.orderItems.map((orderItem, index) => (
+        <Text key={index}>- {orderItem}</Text>
+      ))}
       <View>
         {select ? null : (
           <>
