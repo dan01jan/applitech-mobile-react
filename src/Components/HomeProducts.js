@@ -7,12 +7,15 @@ import baseURL from "../../assets/common/baseurl";
 import axios from 'axios';
 import Rating from './Rating';
 import FloatingChatButton from './FloatingChatButton';
-
+import {
+  StyleSheet,
+} from "react-native";
 function HomeProducts() {
   const navigation = useNavigation();
   const [loadedProducts, setLoadedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1); // Track current page for pagination
+  const [allProductsLoaded, setAllProductsLoaded] = useState(false); // Track if all products are loaded
   const productsPerPage = 4; 
 
   const calculateAvgRating = (reviews) => {
@@ -21,6 +24,7 @@ function HomeProducts() {
     const sumRatings = reviews.reduce((sum, review) => sum + review.ratings, 0);
     return sumRatings / reviews.length;
   };
+  
 
   const steps = [
     {
@@ -68,6 +72,9 @@ function HomeProducts() {
         .then(response => {
             setLoadedProducts(prevProducts => [...prevProducts, ...response.data.products]);
             setLoading(false);
+            if (response.data.products.length === 0) {
+              setAllProductsLoaded(true); // Set all products loaded flag if no more products
+            }
             // setTotalPages(response.data.totalPages); // Update total pages
         })
         .catch(error => {
@@ -75,7 +82,8 @@ function HomeProducts() {
             setLoading(false);
         });
 
-}, [page]); // Fetch products when page changes
+  }, [page]); // Fetch products when page changes
+
   // Function to handle infinite scrolling
   const handleScroll = (event) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -83,7 +91,7 @@ function HomeProducts() {
     const paddingToBottom = 20; // Adjust as needed
     if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
       // User has reached the bottom of the list
-      if (!loading) {
+      if (!loading && !allProductsLoaded) {
         setPage(prevPage => prevPage + 1); // Increment page to fetch more products
       }
     }
@@ -97,7 +105,7 @@ function HomeProducts() {
           source={{ uri: "https://www.youtube.com/embed/e176vc5gxxM?si=MVAL6Jn14eiyS4u9" }}
         />
       </Flex>
-
+      <Text style = {styles.headerText}>Products</Text>
       <Flex
         flexWrap="wrap"
         direction="row"
@@ -142,9 +150,27 @@ function HomeProducts() {
           <Spinner color="#0000FF" thickness="5px" size={50} accessibilityLabel="Loading" />
         </Flex>
       )}
+      {!loading && allProductsLoaded && (
+        <Flex alignItems="center" justifyContent="center" mt={4}>
+          <Text style = {styles.loadingText}>No more products to load</Text>
+        </Flex>
+      )}
        <FloatingChatButton steps={steps} />
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+ loadingText:{
+  fontSize: 20,
+  marginBottom: 20
+ },
+ headerText:{
+  fontSize: 20,
+  marginBottom: 5,
+  alignSelf: 'center'
+ }
+})
+
 
 export default HomeProducts;
