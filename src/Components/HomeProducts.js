@@ -10,6 +10,7 @@ import FloatingChatButton from './FloatingChatButton';
 import {
   StyleSheet,
 } from "react-native";
+import {LinearGradient} from 'expo-linear-gradient';
 function HomeProducts() {
   const navigation = useNavigation();
   const [loadedProducts, setLoadedProducts] = useState([]);
@@ -113,36 +114,42 @@ function HomeProducts() {
         px={6}
       >
         {loadedProducts.map((product) => (
-          <Pressable
-            key={product._id}
-            onPress={() => navigation.navigate("Single", product)}
-            w="47%"
-            bg={colors.white}
-            rounded="md"
-            shadow={2}
-            my={3}
-            overflow="hidden"
-          >
-           <Image
-              source={{ uri: product.images && product.images.length > 0 ? product.images[0] : 'https://example.com/default-image.jpg' }}
-              alt={product.name}
-              w="100%"
-              h={200}
-              resizeMode="cover"
-            />
-            <Box px={4} pt={1}>
-            <HStack justifyContent="space-between" >
-              <Heading size="sm" bold>
-                {product.name}
-              </Heading>
-              <Heading size="sm" bold>
-              ₱{product.price}
-              </Heading>
-              </HStack>
-              <Rating value={calculateAvgRating(product.reviews)}></Rating>
-            </Box>
-          </Pressable>
-        ))}
+           
+           <Pressable
+             onPress={() => navigation.navigate("Single", product)}
+             w="47%"
+             bg={colors.white}
+             rounded="md"
+             shadow={2}
+             my={3}
+             overflow="hidden"
+           >
+             <Image
+               source={{ uri: product.images && product.images.length > 0 ? product.images[0] : 'https://example.com/default-image.jpg' }}
+               alt={product.name}
+               w="100%"
+               h={200}
+               resizeMode="cover"
+             />
+             <LinearGradient 
+    style={styles.gradient}
+    colors={['#f4c9e7', '#ffc0e0']} // Add colors array starting from #FFDEDE
+>
+             <Box px={4} pt={1}>
+               <HStack justifyContent="space-between">
+                 <Heading size="sm" bold>
+                   {product.name}
+                 </Heading>
+                 <Heading size="sm" bold>
+                   ₱{product.price}
+                 </Heading>
+               </HStack>
+               <Rating value={calculateAvgRating(product.reviews)}></Rating>
+             </Box>
+             </LinearGradient>
+           </Pressable>
+        
+       ))}
       
       </Flex>
       {loading && (
@@ -169,7 +176,18 @@ const styles = StyleSheet.create({
   fontSize: 20,
   marginBottom: 5,
   alignSelf: 'center'
- }
+ },
+ gradient: {
+  // flex: 1,
+  // borderRadius: 30,
+  // overflow: "hidden",
+  // padding: 20,
+  // margin: 10,
+  // width: '47%',
+
+  // alignSelf: 'center'
+
+},
 })
 
 
