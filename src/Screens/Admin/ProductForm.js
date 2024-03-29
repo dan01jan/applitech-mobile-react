@@ -393,7 +393,7 @@ const ProductForm = (props) => {
               color={Colors.white} 
               mt={4}
              
-              onPress={() => checkOut()}
+              onPress={() => addOrUpdateProduct()}
             >
              <Text style={styles.buttonText}>
                         {item ? "Update" : "Confirm"}

@@ -36,8 +36,8 @@ const ListItem = ({ item, deleteProduct, navigation }) => {
             </View> */}
             <TouchableOpacity
                 onPress={() => {
-                        navigation.navigate("ProductForm", { item });
-                        // setModalVisible(false);
+                    console.log("Item id:", item._id);
+                    deleteProduct(item._id);
                     }}
                 style={styles.deleteButton}
             >
@@ -47,7 +47,7 @@ const ListItem = ({ item, deleteProduct, navigation }) => {
                 style={[styles.deleteButton, { right: 40 }]}
                 onPress={() => {
                     console.log("Edit item with id:", item.id);
-                    navigation.navigate("BrandForm", { item });
+                    navigation.navigate("ProductForm", { item });
                 }}
             >
                 <Icon name="pencil" size={20} color="#545454" />
