@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -13,18 +13,25 @@ import { Center } from 'native-base';
 const Dashboard = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [chartData, setChartData] = useState(null);
+  const [animation] = useState(new Animated.Value(-300)); // Initial position outside of screen
+
   const [orderChartData, setOrderChartData] = useState(null);
   const [countryChartData, setCountryChartData] = useState(null); // State for orders by country
   const navigation = useNavigation();
 
+  const handleSidebarItemClick = (screen) => {
+    navigation.navigate(screen); // Navigate to the screen defined in the item object
+  };
+  
   const sidebarItems = [
-    { id: 1, title: 'Home', screen: 'Main' },
-    { id: 2, title: 'Dashboard', screen: 'Dashboard' },
-    { id: 3, title: 'Product', screen: 'Products' },
-    { id: 4, title: 'Brand', screen: 'Brands' },
-    { id: 5, title: 'Order', screen: 'OrderAdmin' },
-    { id: 6, title: 'User', screen: 'UserAdmin' },
+    { id: 1, title: 'Home', screen: 'Main', icon: 'home' },
+    { id: 2, title: 'Dashboard', screen: 'Dashboard', icon: 'dashboard' },
+    { id: 3, title: 'Product', screen: 'Products', icon: 'shopping-cart' },
+    { id: 4, title: 'Brand', screen: 'Brands', icon: 'folder' },
+    { id: 5, title: 'Order', screen: 'OrderAdmin', icon: 'list-alt' },
+    { id: 6, title: 'User', screen: 'UserAdmin', icon: 'user' },
   ];
+  
 
 
   useEffect(() => {
@@ -164,7 +171,7 @@ const Dashboard = () => {
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         <Header title="Dashboard" onPress={toggleSidebar} />
-        {sidebarVisible && <Sidebar items={sidebarItems} />}
+        {sidebarVisible && <Sidebar items={sidebarItems} onPressItem={handleSidebarItemClick} />}
 
         
         <View style={styles.mainContent}>
