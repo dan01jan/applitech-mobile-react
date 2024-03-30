@@ -33,13 +33,7 @@ const Products = (props) => {
     const [refreshing, setRefreshing] = useState(false);
     const navigation = useNavigation()
 
-    const sidebarItems = [
-        { id: 1, title: 'Home', screen: 'Main' },
-        { id: 2, title: 'Dashboard', screen: 'Dashboard' },
-        { id: 3, title: 'Product', screen: 'Products' },
-        { id: 4, title: 'Brand', screen: 'Brands' },
-        { id: 5, title: 'Order', screen: 'OrderAdmin' },
-      ];
+   
       const windowHeight = Dimensions.get('window').height;
 
       // Convert 100vh to device-independent pixels (dp)
@@ -129,7 +123,21 @@ const Products = (props) => {
             },
             [],
         )
+        
     )
+
+    const sidebarItems = [
+        { id: 1, title: 'Home', screen: 'Main', icon: 'home' },
+        { id: 2, title: 'Dashboard', screen: 'Dashboard', icon: 'dashboard' },
+        { id: 3, title: 'Product', screen: 'Products', icon: 'shopping-cart' },
+        { id: 4, title: 'Brand', screen: 'Brands', icon: 'folder' },
+        { id: 5, title: 'Order', screen: 'OrderAdmin', icon: 'list-alt' },
+        { id: 6, title: 'User', screen: 'UserAdmin', icon: 'user' },
+      ];
+      
+    const handleSidebarItemClick = (screen) => {
+        navigation.navigate(screen); // Navigate to the screen defined in the item object
+      };
     return (
      
         <ScrollView style={styles.scrollContainer}>
@@ -137,7 +145,7 @@ const Products = (props) => {
       
                 
           <Header title="Dashboard" onPress={toggleSidebar} />
-          {sidebarVisible && <Sidebar items={sidebarItems} />}
+          {sidebarVisible && <Sidebar items={sidebarItems} onPressItem={handleSidebarItemClick} />}
           
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ECECEC', minHeight }}>
         <View style={styles.flatListContainer}>

@@ -34,12 +34,12 @@ const Brands = (props) => {
     const navigation = useNavigation()
 
     const sidebarItems = [
-        { id: 1, title: 'Home', screen: 'Main' },
-        { id: 2, title: 'Dashboard', screen: 'Dashboard' },
-        { id: 3, title: 'Product', screen: 'Products' },
-        { id: 4, title: 'Brand', screen: 'Brands' },
-        { id: 5, title: 'Order', screen: 'OrderAdmin' },
-        { id: 6, title: 'User', screen: 'UserAdmin' },
+        { id: 1, title: 'Home', screen: 'Main', icon: 'home' },
+        { id: 2, title: 'Dashboard', screen: 'Dashboard', icon: 'dashboard' },
+        { id: 3, title: 'Product', screen: 'Products', icon: 'shopping-cart' },
+        { id: 4, title: 'Brand', screen: 'Brands', icon: 'folder' },
+        { id: 5, title: 'Order', screen: 'OrderAdmin', icon: 'list-alt' },
+        { id: 6, title: 'User', screen: 'UserAdmin', icon: 'user' },
       ];
     const windowHeight = Dimensions.get('window').height
     const minHeight = windowHeight;
@@ -92,6 +92,9 @@ const Brands = (props) => {
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
       };
+      const handleSidebarItemClick = (screen) => {
+        navigation.navigate(screen); // Navigate to the screen defined in the item object
+      };
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         fetchData().then(() => setRefreshing(false));
@@ -102,8 +105,8 @@ const Brands = (props) => {
         <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         
-        <Header title="Dashboard" onPress={toggleSidebar} />
-        {sidebarVisible && <Sidebar items={sidebarItems} />}
+      <Header title="Dashboard" onPress={toggleSidebar} />
+          {sidebarVisible && <Sidebar items={sidebarItems} onPressItem={handleSidebarItemClick} />}
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ECECEC' }}>
             <View style={styles.flatListContainer}>
                 <Center>
