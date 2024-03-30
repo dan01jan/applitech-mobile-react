@@ -138,7 +138,7 @@ function SingleProductScreen({ route }) {
           <Text style={{ marginTop: 20 }}>Currently Unavailable</Text>
         )}
         {/* Pass the product ID to the Review component */}
-        <Review productId={product._id} />
+        <Review productId={product._id} editable={false}/>
         <Toast ref={(ref) => Toast.setRef(ref)} />
       </ScrollView>
     </Box>

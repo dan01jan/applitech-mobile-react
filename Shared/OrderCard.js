@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { HStack, Picker, Select } from "native-base";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { HStack, VStack, Modal, Button, Heading, FormControl, TextArea, Select, CheckIcon } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import TrafficLight from "./StyledComponents/TrafficLight";
-import EasyButton from "./StyledComponents/EasyButton";
-import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import baseURL from "../assets/common/baseurl";
 import { useNavigation } from "@react-navigation/native";
 import Buttone from "../src/Components/Buttone";
 import Colors from "../src/color";
-import {LinearGradient} from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
+import Review from "../src/Components/Review";// Import the Review component
 
 const codes = [
   { name: "pending", code: "3" },
@@ -25,25 +24,75 @@ const OrderCard = ({ item, select }) => {
   const [statusChange, setStatusChange] = useState("");
   const [token, setToken] = useState("");
   const [cardColor, setCardColor] = useState("");
-  const navigation = useNavigation();
+  const [navigation, setNavigation] = useState(useNavigation());
   const [productData, setProductData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProductInfo, setSelectedProductInfo] = useState('');
+
+  const updateOrder = () => {
+    AsyncStorage.getItem("jwt")
+      .then((res) => {
+        setToken(res);
+      })
+      .catch((error) => console.log(error));
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const order = {
+      city: item.city,
+      country: item.country,
+      dateOrdered: item.dateOrdered,
+      id: item.id,
+      orderItems: item.orderItems,
+      phone: item.phone,
+      shippingAddress1: item.shippingAddress1,
+      shippingAddress2: item.shippingAddress2,
+      status: statusChange,
+      totalPrice: item.totalPrice,
+      user: item.user,
+      zip: item.zip,
+    };
+    axios
+      .put(`${baseURL}orders/${item.id}`, order, config)
+      .then((res) => {
+        if (res.status == 200 || res.status == 201) {
+          Toast.show({
+            topOffset: 60,
+            type: "success",
+            text1: "Order Edited",
+            text2: "",
+          });
+          setTimeout(() => {
+            navigation.navigate("OrderAdmin");
+          }, 500);
+        }
+      })
+      .catch((error) => {
+        Toast.show({
+          topOffset: 60,
+          type: "error",
+          text1: "Something went wrong",
+          text2: "Please try again",
+        });
+      });
+  };
 
   const fetchProductData = async (orderItemId) => {
     try {
       const response = await axios.get(`${baseURL}orders/orderItems/${orderItemId}`);
-      const productId = response.data.product; // Assuming response.data.product contains the product ID
+      const productId = response.data.product;
       return productId;
     } catch (error) {
       console.error("Error fetching product data:", error);
       return null;
     }
   };
-  
+
   const fetchOrderItemsData = async () => {
     try {
       const orderItems = item.orderItems;
-      console.log("Order Items:", orderItems);
-  
       const productDataPromises = orderItems.map(async (orderItemId) => {
         const productId = await fetchProductData(orderItemId);
         if (productId) {
@@ -51,238 +100,239 @@ const OrderCard = ({ item, select }) => {
         }
         return null;
       });
-  
       const fetchedProductData = await Promise.all(productDataPromises);
-      console.log("Fetched Product Data:", fetchedProductData);
-      setProductData(fetchedProductData.filter(Boolean)); // Filter out null values
+      setProductData(fetchedProductData.filter(Boolean));
     } catch (error) {
       console.error("Error fetching order item data:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchOrderItemsData();
   }, []);
 
-    
+  // const fetchOrderProducts = async () => {
+  //   try {
+  //     const productPromises = item.orderItems.map(async (orderItemId) => {
+  //       const response = await axios.get(`${baseURL}order-items/${orderItemId}`);
+  //       return response.data.product.name;
+  //     });
+  //     const products = await Promise.all(productPromises);
+  //     setOrderProducts(products);
+  //   } catch (error) {
+  //     console.error('Error fetching order products:', error);
+  //   }
+  // };
 
-    const updateOrder = () => {
-      AsyncStorage.getItem("jwt")
-        .then((res) => {
-          setToken(res);
-        })
-        .catch((error) => console.log(error));
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const order = {
-        city: item.city,
-        country: item.country,
-        dateOrdered: item.dateOrdered,
-        id: item.id,
-        orderItems: item.orderItems,
-        phone: item.phone,
-        shippingAddress1: item.shippingAddress1,
-        shippingAddress2: item.shippingAddress2,
-        status: statusChange,
-        totalPrice: item.totalPrice,
-        user: item.user,
-        zip: item.zip,
-      };
-      axios
-        .put(`${baseURL}orders/${item.id}`, order, config)
-        .then((res) => {
-          if (res.status == 200 || res.status == 201) {
-            Toast.show({
-              topOffset: 60,
-              type: "success",
-              text1: "Order Edited",
-              text2: "",
-            });
-            setTimeout(() => {
-              navigation.navigate("OrderAdmin");
-            }, 500);
-          }
-        })
-        .catch((error) => {
-          Toast.show({
-            topOffset: 60,
-            type: "error",
-            text1: "Something went wrong",
-            text2: "Please try again",
-          });
-        });
-    };
-    useEffect(() => {
-      if (item.status === "3") {
-        setOrderStatus(<TrafficLight unavailable></TrafficLight>);
-        setStatusText("PENDING");
-        setCardColor(["#FFDEDE", "#FFB5B5"]); // Set as an array
-      } else if (item.status === "2") {
-        setOrderStatus(<TrafficLight limited></TrafficLight>);
-        setStatusText("SHIPPED");
-        setCardColor(["#FFF8C7", "#FDE68A"]); // Set as an array
-      } else {
-        setOrderStatus(<TrafficLight available></TrafficLight>);
-        setStatusText("DELIVERED");
-        setCardColor(["#DEFFCB", "#AAFCAE"]); // Set as an array
-      }
-      
-      console.log("Item Total Price:", item.totalPrice, item); // Log the data here
-    
-      return () => {
-        setOrderStatus();
-        setStatusText();
-        setCardColor();
-      };
-    
-      console.log("OrderCard item prop:", item);
-    }, [item]);
 
-    return (
-      // <View style={[{ backgroundColor: cardColor }, styles.container]}>
-      //   <View style={styles.container}>
-      //     <Text>Order Number: #{item.id}</Text>
-      //   </View>
-      // </View>
-<View style={styles.container}>
-<LinearGradient colors={Array.isArray(cardColor) ? cardColor : [cardColor]} style={styles.gradient}>
-
-  <View style={styles.rowContainer}>
-    <View style={styles.statusContainer}>
-      <Text>Status: {statusText} {orderStatus}</Text>
-    </View>
-    <View style={styles.dateContainer}>
-      <Text style={styles.dateOrdered}>{item.dateOrdered.split("T")[0]}</Text>
-    </View>
-  </View>
-  <View style={styles.orderNumberContainer}>
-    <Text style={styles.orderNumber}>Order Number: #{item.id}</Text>
-  </View>
-  <View style={{ marginTop: 10 }}>
-    <Text>Address: {item.shippingAddress1} {item.shippingAddress2}</Text>
-    <Text>City: {item.city}</Text>
-    <Text>Country: {item.country}</Text>
-    <Text style = {[styles.productsordered, {marginTop: 20}]}>Products Ordered:</Text>
-    {/* {item.orderItems && item.orderItems.map((orderItem, index) => (
-      <Text key={index}>- {orderItem}</Text>
-    ))} */}
-    {/* Render product names */}
-   
-    {productData && productData.map((product, index) => (
-  <View style={[styles.productList, { marginTop: 20, marginLeft: 30, marginRight: 30 }]} key={index}>
-    <HStack justifyContent="space-between">
-      {product.data.images.length > 0 && (
-        <Image
-          source={{ uri: product.data.images[0] }} // Display the first image
-          style={{ width: 44, height: 44, borderRadius: 22 }} // Set appropriate dimensions and border radius
-        /> 
-      )}
-      <Text style =  {styles.dataText}>{product.data.name}</Text>
-      <Text  style =  {styles.dataText}>₱{product.data.price}</Text>
-    </HStack>
-  </View>
-))}
-    
-    
-    <View>
-      {select ? null : (
-        <>
-          <Select
-            width="100%"
-            mt={5}
-            iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
-            style={{ width: undefined }}
-            selectedValue={statusChange}
-            color="black"
-            placeholder="Change Status"
-            placeholderTextColor="black"
-            placeholderStyle={{ color: "black" }}
-            placeholderIconColor="#007aff"
-            onValueChange={(e) => setStatusChange(e)}
-            fontWeight={"bold"}
-          >
-            {codes.map((c) => (
-              <Select.Item key={c.code} label={c.name} value={c.code} />
-            ))}
-          </Select>
-          <Buttone 
-            bg={Colors.main} 
-            color={Colors.white} 
-            mt={4}
-            onPress={() => updateOrder()}
-          >
-            Continue
-          </Buttone>
-        </>
-      )}
-    </View>
-  </View>
-  </LinearGradient>
-</View>
+  useEffect(() => {
+    const fetchOrderStatus = () => {
+    if (item.status === "3") {
+      setOrderStatus(<TrafficLight unavailable></TrafficLight>);
+      setStatusText("PENDING");
+      setCardColor(["#FFDEDE", "#FFB5B5"]);
+    } else if (item.status === "2") {
+      setOrderStatus(<TrafficLight limited></TrafficLight>);
+      setStatusText("SHIPPED");
+      setCardColor(["#FFF8C7", "#FDE68A"]);
+    } else {
+      setOrderStatus(<TrafficLight available></TrafficLight>);
+      setStatusText("DELIVERED");
+      setCardColor(["#DEFFCB", "#AAFCAE"]);
+    }
 
     
-  );
+    return () => {
+      setOrderStatus();
+      setStatusText();
+      setCardColor();
+    }
+    
+  };
+  fetchOrderStatus();
+  // fetchOrderProducts();
+  }, [item]);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      padding: 20,
-      margin: 10,
-      borderRadius: 30,
-      overflow: "hidden",
-    },
-    rowContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    statusContainer: {
-      flex: 1,
-    },
-    dateContainer: {
-      marginLeft: 10,
-    },
-    orderNumberContainer: {
-      backgroundColor: "white",
-      padding: 10,
-      borderRadius: 10,
-      marginTop: 10,
-    },
-    orderNumber: {
-      color: "black",
-      fontWeight: "bold",
-    },
-    dateOrdered: {
-      textAlign: "right",
-      fontWeight: "bold"
-      // marginBottom: 15,
-    },
-   productsordered:{
+  const handleStarPress = (productId) => {
+    setSelectedProductInfo(productId);
+    toggleModal();
+  };  
+
+  return (
+    <View style={styles.container}>
+      <LinearGradient colors={Array.isArray(cardColor) ? cardColor : [cardColor]} style={styles.gradient}>
+        <View style={styles.rowContainer}>
+          <View style={styles.statusContainer}>
+            <Text>Status: {statusText} {orderStatus}</Text>
+          </View>
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateOrdered}>{item.dateOrdered.split("T")[0]}</Text>
+          </View>
+        </View>
+        <View style={styles.orderNumberContainer}>
+          <Text style={styles.orderNumber}>Order Number: #{item.id}</Text>
+        </View>
+        <View style={{ marginTop: 10 }}>
+          <Text>Address: {item.shippingAddress1} {item.shippingAddress2}</Text>
+          <Text>City: {item.city}</Text>
+          <Text>Country: {item.country}</Text>
+          <Text style={[styles.productsordered, { marginTop: 20 }]}>Products Ordered:</Text>
+          <View>
+            {productData && productData.map((product, index) => (
+              <View style={[styles.productList, { marginTop: 20, marginLeft: 30, marginRight: 30 }]} key={index}>
+                <HStack justifyContent="space-between">
+                  {product.data.images.length > 0 && (
+                    <Image
+                      source={{ uri: product.data.images[0] }}
+                      style={{ width: 44, height: 44, borderRadius: 22 }}
+                    />
+                  )}
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {item.status === "1" && (
+                      <TouchableOpacity onPress={() => handleStarPress(product.data._id)} style={styles.starIconContainer}>
+                      <Icon name="star" size={24} color="gold" style={styles.starIcon} />
+                    </TouchableOpacity>
+                    
+                    )}
+                    <Text style={styles.dataText}>{product.data.name}</Text>
+                  </View>
+                  <Text style={styles.dataText}>₱{product.data.price}</Text>
+                </HStack>
+              </View>
+            ))}
+          </View>
+          <View>
+            {select ? null : (
+              <>
+                <Select
+                  width="100%"
+                  mt={5}
+                  iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+                  style={{ width: undefined }}
+                  selectedValue={statusChange}
+                  color="black"
+                  placeholder="Change Status"
+                  placeholderTextColor="black"
+                  placeholderStyle={{ color: "black" }}
+                  placeholderIconColor="#007aff"
+                  onValueChange={(e) => setStatusChange(e)}
+                  fontWeight={"bold"}
+                >
+                  {codes.map((c) => (
+                    <Select.Item key={c.code} label={c.name} value={c.code} />
+                  ))}
+                </Select>
+                <Buttone
+                  bg={Colors.main}
+                  color={Colors.white}
+                  mt={4}
+                  onPress={() => updateOrder()}
+                >
+                  Continue
+                </Buttone>
+              </>
+            )}
+          </View>
+        </View>
+        <Modal isOpen={isModalVisible} onClose={toggleModal} size="lg" safeAreaTop>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>
+              <Heading>Review for {selectedProductInfo} </Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <Review productId={selectedProductInfo} toggleModal={toggleModal} />
+            </Modal.Body>
+          </Modal.Content>
+        </Modal>
+      </LinearGradient>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    margin: 10,
+    borderRadius: 30,
+    overflow: "hidden",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  statusContainer: {
+    flex: 1,
+  },
+  dateContainer: {
+    marginLeft: 10,
+  },
+  orderNumberContainer: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  orderNumber: {
+    color: "black",
+    fontWeight: "bold",
+  },
+  dateOrdered: {
+    textAlign: "right",
+    fontWeight: "bold"
+  },
+  productsordered: {
     alignSelf: 'center',
-    marginTop: '20',
+    marginTop: 20,
     fontWeight: 'bold',
     fontSize: 24
-   },
-   productList:{
-    marginTop: '20'
-   },
-   dataText:{
+  },
+  productList: {
+    marginTop: 20
+  },
+  dataText: {
     fontWeight: 'bold',
     fontSize: 16,
     marginTop: 10
-   },
-   gradient: {
+  },
+  gradient: {
     flex: 1,
     borderRadius: 30,
     overflow: "hidden",
     padding: 20,
     margin: 10,
   },
+  starIconContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+  },
+  starIcon: {
+    position: 'absolute',
+    left: 120,
+    top: 2,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background color
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5, // Shadow on Android
+    shadowColor: 'black', // Shadow color on iOS
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.84, // Shadow radius
+  },
+});
 
-  });
-
-
-  export default OrderCard;
+export default OrderCard;

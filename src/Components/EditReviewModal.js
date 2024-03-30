@@ -1,4 +1,3 @@
-// EditReviewModal.js
 import React, { useState } from 'react';
 import { Modal, VStack, FormControl, Heading, Select, TextArea, Button, CheckIcon } from 'native-base';
 import colors from '../color';
@@ -16,7 +15,7 @@ const EditReviewModal = ({ isOpen, onClose, initialRatings, initialComment, onSu
         <Modal isOpen={isOpen} onClose={onClose}>
             <Modal.Content>
                 <Modal.Header>
-                    <Heading>Edit Review</Heading>
+                    <Heading> Edit Review</Heading>
                 </Modal.Header>
                 <Modal.Body>
                     <VStack space={4}>
@@ -58,7 +57,7 @@ const EditReviewModal = ({ isOpen, onClose, initialRatings, initialComment, onSu
                                 bg={colors.lightpink}
                                 py={4}
                                 value={comment}
-                                onChangeText={(value) => setComment(value)}
+                                onChangeText={(value) => setComment(value)} // Corrected onChangeText prop
                                 _focus={{
                                     bg: colors.lightpink
                                 }}

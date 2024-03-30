@@ -12,7 +12,7 @@ import EditReviewModal from './EditReviewModal';
 import AuthGlobal from '../../Context/Store/AuthGlobal';
 import { useNavigation } from "@react-navigation/native";
 
-const Review = ({ productId }, props) => {
+const Review = ({ productId, editable = true }) => {
     const [ratings, setRatings] = useState('');
     const [comment, setComment] = useState('');
     const [reviews, setReviews] = useState([]);
@@ -45,7 +45,7 @@ const Review = ({ productId }, props) => {
             setError('Rating and comment are required.');
             return;
         }
-
+    
         try {
             await axios.post(`${baseURL}products/${productId}/reviews`, {
                 userId: context.stateUser.user.userId,
@@ -55,8 +55,8 @@ const Review = ({ productId }, props) => {
                 headers: {
                     Authorization: `Bearer ${context.stateUser.userToken}`
                 }
-            });
-
+            });            
+    
             setRatings('');
             setComment('');
             fetchReviews(); // Refresh reviews after submission
@@ -66,6 +66,7 @@ const Review = ({ productId }, props) => {
             console.error('Error submitting review:', error);
         }
     };
+    
 
     const openEditModal = (review) => {
       setEditingReview(review);
@@ -111,10 +112,6 @@ const Review = ({ productId }, props) => {
     }
 };
 
-
-
-
-
   const submitEdit = async (newRatings, newComment) => {
     if (!editingReview || !editingReview._id) {
         console.error("Editing review ID is undefined.");
@@ -149,8 +146,6 @@ const Review = ({ productId }, props) => {
     }
 };
 
-
-
     // Render the component UI
     return (
         <Box my={9}>
@@ -163,77 +158,71 @@ const Review = ({ productId }, props) => {
                         <Rating value={review.ratings} />
                         <Message color={colors.black} bg={colors.white} size="sm">{review.comment}</Message>
                     </Box>
-                    <Box ml={2} mt={3}>
-    <Icon name="pencil" size={20} color="gray" onPress={() => setEditingReview(review)} />
-    <Icon name="trash" size={20} color="red" onPress={() => deleteReview(review._id, productId, reviews, setReviews, setError)} />
-</Box>
-
+                    {editable && (
+                      <Box ml={2} mt={3}>
+                          <Icon name="pencil" size={20} color="gray" onPress={() => setEditingReview(review)} />
+                          <Icon name="trash" size={20} color="red" onPress={() => deleteReview(review._id, productId, reviews, setReviews, setError)} />
+                      </Box>
+                    )}
                 </Box>
             ))}
-            <EditReviewModal
-                isOpen={!!editingReview}
-                onClose={closeEditModal}
-                initialRatings={editingReview?.ratings || ''}
-                initialComment={editingReview?.comment || ''}
-                onSubmit={submitEdit}
-            />
-            <Box mt={6}>
-                <Heading
-                fontSize={15} bold mb={4}>
-                WRITE A REVIEW
-                </Heading>
-                <VStack space={6}>
-                <FormControl>
-                <FormControl.Label _text={{ fontSize: '12px', fontWeight: 'bold' }}>Rating</FormControl.Label>
-                <Select
-                bg={colors.lightPink}
-                borderWidth={0}
-                rounded={5}
-                py={3}
-                placeholder="Choose Rate"
-                _selectedItem={{
-                bg: colors.lightpink,
-                endIcon: <CheckIcon size={3} />,
-                }}
-                value={ratings}
-                onValueChange={(value) => setRatings(value)}
-                >
-                <Select.Item label="1 - Poor" value="1" />
-                <Select.Item label="2 - Fair" value="2" />
-                <Select.Item label="3 - Good" value="3" />
-                <Select.Item label="4 - Great" value="4" />
-                <Select.Item label="5 - Excellent" value="5" />
-                </Select>
-                </FormControl>
-                <FormControl>
-                <FormControl.Label
-                _text={{
-                fontSize: "12px",
-                fontWeight: "bold"
-                }}>
-                Comment
-                </FormControl.Label>
-                <TextArea
-                h={20}
-                w="full"
-                placeholder="Write your comment"
-                borderWidth={0}
-                bg={colors.lightpink}
-                py={4}
-                value={comment}
-                onChangeText={(value) => setComment(value)}
-                _focus={{
-                bg: colors.lightpink
-                }}
-                />
-                </FormControl>
-                <Buttone bg={colors.main} color={colors.white} onPress={submitReview}>
-                SUBMIT
-                </Buttone>
-                </VStack>
-                </Box>
-                </Box>
-                );
-                };
-                
-                export default Review;
+            {editable && (
+                <>
+                    <EditReviewModal
+                        isOpen={!!editingReview}
+                        onClose={closeEditModal}
+                        initialRatings={editingReview?.ratings || ''}
+                        initialComment={editingReview?.comment || ''}
+                        onSubmit={submitEdit}
+                    />
+                    <Box mt={6}>
+                        <Heading fontSize={15} bold mb={4}>WRITE A REVIEW</Heading>
+                        <VStack space={6}>
+                            <FormControl>
+                                <FormControl.Label _text={{ fontSize: '12px', fontWeight: 'bold' }}>Rating</FormControl.Label>
+                                <Select
+                                    bg={colors.lightPink}
+                                    borderWidth={0}
+                                    rounded={5}
+                                    py={3}
+                                    placeholder="Choose Rate"
+                                    _selectedItem={{
+                                        bg: colors.lightpink,
+                                        endIcon: <CheckIcon size={3} />,
+                                    }}
+                                    value={ratings}
+                                    onValueChange={(value) => setRatings(value)}
+                                >
+                                    <Select.Item label="1 - Poor" value="1" />
+                                    <Select.Item label="2 - Fair" value="2" />
+                                    <Select.Item label="3 - Good" value="3" />
+                                    <Select.Item label="4 - Great" value="4" />
+                                    <Select.Item label="5 - Excellent" value="5" />
+                                </Select>
+                            </FormControl>
+                            <FormControl>
+                                <FormControl.Label _text={{ fontSize: "12px", fontWeight: "bold" }}>Comment</FormControl.Label>
+                                <TextArea
+                                    h={20}
+                                    w="full"
+                                    placeholder="Write your comment"
+                                    borderWidth={0}
+                                    bg={colors.lightpink}
+                                    py={4}
+                                    value={comment}
+                                    onChangeText={(value) => setComment(value)}
+                                    _focus={{
+                                        bg: colors.lightpink
+                                    }}
+                                />
+                            </FormControl>
+                            <Buttone bg={colors.main} color={colors.white} onPress={submitReview}>SUBMIT</Buttone>
+                        </VStack>
+                    </Box>
+                </>
+            )}
+        </Box>
+    );
+};
+
+export default Review;
