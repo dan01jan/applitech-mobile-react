@@ -10,7 +10,6 @@ import { Box, Center, Select, ScrollView, VStack, FormControl, Input  } from "na
 import FormContainer from "../../../Shared/Form/FormContainer"
 import EasyButton from "../../../Shared/StyledComponents/EasyButton"
 import Icon from "react-native-vector-icons/FontAwesome"
-import Toast from "react-native-toast-message"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import baseURL from "../../../assets/common/baseurl"
 import Error from "../../../Shared/Error"
@@ -23,6 +22,7 @@ import Colors from "../../color";
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Buttone from '../../Components/Buttone';
+import Toast from 'react-native-toast-message'; 
 
 const BrandForm = (props) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -158,29 +158,25 @@ const BrandForm = (props) => {
             }
         }
         if (item !== null) {
-            console.log(item)
             axios
                 .put(`${baseURL}brands/${item.id}`, formData, config)
                 .then((res) => {
                     if (res.status === 200 || res.status === 201) {
                         Toast.show({
-                            topOffset: 60,
                             type: "success",
-                            text1: "Brand successfuly updated",
-                            text2: ""
+                            text1: "Brand successfully updated"
                         });
                         setTimeout(() => {
                             navigation.navigate("Brands");
-                        }, 500)
+                        }, 2000); // Display the toast for 2 seconds before navigating
                     }
                 })
                 .catch((error) => {
                     Toast.show({
-                        topOffset: 60,
                         type: "error",
                         text1: "Something went wrong",
                         text2: "Please try again"
-                    })
+                    });
                 })
         } else {
             axios
@@ -188,27 +184,24 @@ const BrandForm = (props) => {
                 .then((res) => {
                     if (res.status === 200 || res.status === 201) {
                         Toast.show({
-                            topOffset: 60,
                             type: "success",
-                            text1: "New Brand added",
-                            text2: ""
+                            text1: "New Brand added"
                         });
                         setTimeout(() => {
                             navigation.navigate("Brands");
-                        }, 500)
+                        }, 2000); // Display the toast for 2 seconds before navigating
                     }
                 })
                 .catch((error) => {
                     console.log(error)
                     Toast.show({
-                        topOffset: 60,
                         type: "error",
                         text1: "Something went wrong",
                         text2: "Please try again"
-                    })
+                    });
                 })
-
         }
+    
 
     }
 
@@ -241,28 +234,25 @@ const BrandForm = (props) => {
         };
     
         axios
-            .put(`${baseURL}brands/${item.id}`, formData, config)
-            .then((res) => {
-                if (res.status === 200 || res.status === 201) {
-                    Toast.show({
-                        topOffset: 60,
-                        type: "success",
-                        text1: "Brand successfully updated",
-                        text2: "",
-                    });
-                    setTimeout(() => {
-                        navigation.navigate("Brands");
-                    }, 500);
-                }
-            })
-            .catch((error) => {
+        .put(`${baseURL}brands/${item.id}`, formData, config)
+        .then((res) => {
+            if (res.status === 200 || res.status === 201) {
                 Toast.show({
-                    topOffset: 60,
-                    type: "error",
-                    text1: "Something went wrong",
-                    text2: "Please try again",
+                    type: "success",
+                    text1: "Brand successfully updated"
                 });
+                setTimeout(() => {
+                    navigation.navigate("Brands");
+                }, 2000); // Display the toast for 2 seconds before navigating
+            }
+        })
+        .catch((error) => {
+            Toast.show({
+                type: "error",
+                text1: "Something went wrong",
+                text2: "Please try again",
             });
+        });
     };
     
     
@@ -270,97 +260,98 @@ const BrandForm = (props) => {
 
     return (
         <ScrollView style={styles.windowheight} showsVerticalScrollIndicator={false}>
-  <View style={styles.windowheight}>
-    <Header title="Dashboard" onPress={toggleSidebar} />
-    {sidebarVisible && <Sidebar items={sidebarItems} />}
-    
-    <Center>
-      <FormContainer title={item ? "Update Brand" : "Add Brand"}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <VStack space={6} mt={5}>
-            <View style={styles.carouselContainer}>
-              <Carousel
-                data={(item?.images || []).concat(images)}
-                renderItem={renderImage}
-                sliderWidth={300}
-                itemWidth={300}
-                loop={true}
-                onSnapToItem={onSnapToItem}
-                activeSlideAlignment="start"
-                activeSlideOffset={10}
-              />
-              <TouchableOpacity onPress={pickImages} style={styles.imagePicker}>
-                <Icon style={{ color: "white" }} name="camera" />
-              </TouchableOpacity>
+    <View style={styles.windowheight}>
+        <Header title="Dashboard" />
+        <Center>
+            <FormContainer title={item ? "Update Brand" : "Add Brand"}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <VStack space={6} mt={5}>
+                        <View style={styles.carouselContainer}>
+                            <Carousel
+                                data={(item?.images || []).concat(images)}
+                                renderItem={renderImage}
+                                sliderWidth={300}
+                                itemWidth={300}
+                                loop={true}
+                                onSnapToItem={onSnapToItem}
+                                activeSlideAlignment="start"
+                                activeSlideOffset={10}
+                            />
+                            <TouchableOpacity onPress={pickImages} style={styles.imagePicker}>
+                                <Icon style={{ color: "white" }} name="camera" />
+                            </TouchableOpacity>
+                        </View>
+                        <FormControl.Label
+                            _text={{
+                                fontSize: "12px",
+                                fontWeight: "bold"
+                            }}
+                        >
+                            NAME
+                        </FormControl.Label>
+                        <Input
+                            borderWidth={0.2} 
+                            borderColor={Colors.main} 
+                            bg={Colors.lightpink} 
+                            py={4}
+                            mt={-5}
+                            color={Colors.main}
+                            _focus={{
+                                bg: Colors.lightpink,
+                                borderWidth: 1,
+                                borderColor: Colors.main,
+                            }}
+                            placeholder="Name"
+                            name="name"
+                            id="name"
+                            value={name}
+                            onChangeText={(text) => setName(text)}
+                        />
+                        <FormControl.Label
+                            _text={{
+                                fontSize: "12px",
+                                fontWeight: "bold"
+                            }}
+                        >
+                            DESCRIPTION
+                        </FormControl.Label>
+                        <Input
+                            borderWidth={0.2} 
+                            borderColor={Colors.main} 
+                            bg={Colors.lightpink} 
+                            py={4}
+                            mt={-5}
+                            color={Colors.main}
+                            _focus={{
+                                bg: Colors.lightpink,
+                                borderWidth: 1,
+                                borderColor: Colors.main,
+                            }}
+                            placeholder="Description"
+                            name="description"
+                            id="description"
+                            value={description}
+                            onChangeText={(text) => setDescription(text)}
+                        />
+                        {error && <Error message={error} />}
+                        <Buttone 
+                            bg={Colors.main} 
+                            color={Colors.white} 
+                            mt={4}
+                            onPress={item ? updateBrand : addBrand}
+                        >
+                            <Text style={styles.buttonText}>
+                                {item ? "Update" : "Confirm"}
+                            </Text>
+                        </Buttone>
+                    </VStack>
+                </ScrollView>
+            </FormContainer>
+            <View style={styles.toastContainer}>
+                <Toast ref={(ref) => Toast.setRef(ref)} />
             </View>
-            <FormControl.Label
-              _text={{
-                fontSize: "12px",
-                fontWeight: "bold"
-              }}
-            >
-              NAME
-            </FormControl.Label>
-            <Input
-              borderWidth={0.2} 
-              borderColor={Colors.main} 
-              bg={Colors.lightpink} 
-              py={4}
-              mt={-5}
-              color={Colors.main}
-              _focus={{
-                bg: Colors.lightpink,
-                borderWidth: 1,
-                borderColor: Colors.main,
-              }}
-              placeholder="Name"
-              name="name"
-              id="name"
-              value={name}
-              onChangeText={(text) => setName(text)}
-            />
-            <FormControl.Label
-              _text={{
-                fontSize: "12px",
-                fontWeight: "bold"
-              }}
-            >
-              DESCRIPTION
-            </FormControl.Label>
-            <Input
-              borderWidth={0.2} 
-              borderColor={Colors.main} 
-              bg={Colors.lightpink} 
-              py={4}
-              mt={-5}
-              color={Colors.main}
-              _focus={{
-                bg: Colors.lightpink,
-                borderWidth: 1,
-                borderColor: Colors.main,
-              }}
-              placeholder="Description"
-              name="description"
-              id="description"
-              value={description}
-              onChangeText={(text) => setDescription(text)}
-            />
-            {error && <Error message={error} />}
-            <Buttone 
-              bg={Colors.main} 
-              color={Colors.white} 
-              mt={4}
-              onPress={item ? updateBrand : addBrand}
-            >
-              <Text style={styles.buttonText}>
-                {item ? "Update" : "Confirm"}
-              </Text>
-            </Buttone>
-          </VStack>
-        </ScrollView>
-      </FormContainer>
-    </Center>
-  </View>
+        </Center>
+    </View>
 </ScrollView>
 
     )
@@ -415,7 +406,14 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 100,
         elevation: 20
-    }
+    },
+    toastContainer: {
+        position: 'absolute',
+        top: 20, // Adjust this value as needed
+        width: '100%',
+        paddingHorizontal: 20,
+        zIndex: 1,
+    },
 })
 
 
