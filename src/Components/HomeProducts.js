@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { ScrollView, Text, Flex, Pressable, Image, Box, Heading, Spinner, HStack } from "native-base";
 import colors from "../color";
 import { useNavigation } from "@react-navigation/native";
@@ -11,6 +11,8 @@ import {
   StyleSheet,
 } from "react-native";
 import {LinearGradient} from 'expo-linear-gradient';
+import { Animated } from "react-native";
+
 function HomeProducts() {
   const navigation = useNavigation();
   const [loadedProducts, setLoadedProducts] = useState([]);
@@ -18,6 +20,8 @@ function HomeProducts() {
   const [page, setPage] = useState(1); // Track current page for pagination
   const [allProductsLoaded, setAllProductsLoaded] = useState(false); // Track if all products are loaded
   const productsPerPage = 4; 
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [translationAnim] = useState(new Animated.Value(100));
 
   const calculateAvgRating = (reviews) => {
     if (reviews.length === 0) return 0;
@@ -25,46 +29,6 @@ function HomeProducts() {
     const sumRatings = reviews.reduce((sum, review) => sum + review.ratings, 0);
     return sumRatings / reviews.length;
   };
-  
-
-  const steps = [
-    {
-      id: '1',
-      message: 'Hello! How can I assist you today?',
-      trigger: '2',
-    },
-    {
-      id: '2',
-      user: true,
-      trigger: ({ value }) => {
-        if(value.toLowerCase().includes("help")) return "3";
-        // You can add more conditions here to handle different user inputs
-        // For example, if the user asks about products, you can direct them to a "products" step
-        return "fallback"; // A fallback step in case the user's input doesn't match any condition
-      },
-    },
-    {
-      id: '3',
-      message: 'Sure, I can help you with that. Can you specify what kind of help you need?',
-      trigger: '4',
-    },
-    {
-      id: '4',
-      user: true,
-      trigger: '5', // Assuming next step is to process the user's detailed request
-    },
-    {
-      id: '5',
-      message: 'Got it, please wait a moment while I look that up for you.',
-      // No trigger here if this is the end of the conversation path or if you want to handle the next steps dynamically
-    },
-    {
-      id: 'fallback',
-      message: 'I\'m sorry, I didn\'t quite catch that. Can you please specify how I can assist you?',
-      trigger: '2', // Loops back to allow the user to respond again
-    },
-    // Add more steps as needed based on the different paths you want the conversation to take
-  ];
 
   useEffect(() => {
     setLoading(true);
@@ -73,10 +37,13 @@ function HomeProducts() {
         .then(response => {
             setLoadedProducts(prevProducts => [...prevProducts, ...response.data.products]);
             setLoading(false);
+            
             if (response.data.products.length === 0) {
+              slideInAnimation();
               setAllProductsLoaded(true); // Set all products loaded flag if no more products
+              
             }
-            // setTotalPages(response.data.totalPages); // Update total pages
+            slideInAnimation(); // Trigger fade-in animation when new products are loaded
         })
         .catch(error => {
             console.error('Error fetching products:', error);
@@ -94,9 +61,45 @@ function HomeProducts() {
       // User has reached the bottom of the list
       if (!loading && !allProductsLoaded) {
         setPage(prevPage => prevPage + 1); // Increment page to fetch more products
+       slideInAnimation();
       }
     }
   };
+
+  const fadeIn = () => {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 1,
+        duration: 5000, // Adjust duration as needed
+        useNativeDriver: true,
+      }
+    ).start();
+  };
+
+  const fromBottomAnimation = () => {
+    fadeAnim.setValue(0); // Start the animation from the bottom
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 1,
+        duration: 2000, // Adjust duration as needed
+        useNativeDriver: true,
+      }
+    ).start();
+  };
+
+  const slideInAnimation = () => {
+    Animated.timing(
+      translationAnim,
+      {
+        toValue: 0, // Animate to its original position
+        duration: 2000, // Adjust duration as needed
+        useNativeDriver: true,
+      }
+    ).start();
+  };
+
 
   return (
     <ScrollView flex={1} showsVerticalScrollIndicator={false} onScroll={handleScroll}>
@@ -124,6 +127,7 @@ function HomeProducts() {
              my={3}
              overflow="hidden"
            >
+             <Animated.View style={{ transform: [{ translateY: translationAnim }] }}>
              <Image
                source={{ uri: product.images && product.images.length > 0 ? product.images[0] : 'https://example.com/default-image.jpg' }}
                alt={product.name}
@@ -147,6 +151,7 @@ function HomeProducts() {
                <Rating value={calculateAvgRating(product.reviews)}></Rating>
              </Box>
              </LinearGradient>
+             </Animated.View>
            </Pressable>
         
        ))}
@@ -162,7 +167,7 @@ function HomeProducts() {
           <Text style = {styles.loadingText}>No more products to load</Text>
         </Flex>
       )}
-       <FloatingChatButton steps={steps} />
+
     </ScrollView>
   );
 }
@@ -177,17 +182,7 @@ const styles = StyleSheet.create({
   marginBottom: 5,
   alignSelf: 'center'
  },
- gradient: {
-  // flex: 1,
-  // borderRadius: 30,
-  // overflow: "hidden",
-  // padding: 20,
-  // margin: 10,
-  // width: '47%',
-
-  // alignSelf: 'center'
-
-},
+ 
 })
 
 

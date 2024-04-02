@@ -10,6 +10,7 @@ import { Heading, ScrollView } from 'native-base';
 import Colors from '../../color';
 import { Center } from 'native-base';
 
+
 const Dashboard = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [chartData, setChartData] = useState(null);
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [orderChartData, setOrderChartData] = useState(null);
   const [countryChartData, setCountryChartData] = useState(null); // State for orders by country
   const navigation = useNavigation();
+  const [translationAnim] = useState(new Animated.Value(100));
 
   const handleSidebarItemClick = (screen) => {
     navigation.navigate(screen); // Navigate to the screen defined in the item object
@@ -44,6 +46,17 @@ const Dashboard = () => {
     setSidebarVisible(!sidebarVisible);
   };
 
+  const slideInAnimation = () => {
+    Animated.timing(
+      translationAnim,
+      {
+        toValue: 0, // Animate to its original position
+        duration: 2000, // Adjust duration as needed
+        useNativeDriver: true,
+      }
+    ).start();
+  }
+
   const fetchData = async () => {
     try {
       const response = await axios.get(`${baseURL}products`);
@@ -66,6 +79,7 @@ const Dashboard = () => {
       };
       
       setChartData(chartData);
+      slideInAnimation();
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -97,6 +111,7 @@ const Dashboard = () => {
         data: data[index],
         color: getRandomColor(), // Add random color
       })));
+      slideInAnimation();
     } catch (error) {
       console.error('Error fetching order data:', error);
     }
@@ -121,6 +136,7 @@ const Dashboard = () => {
         data: data[index],
         color: getRandomColor(), // Add random color
       })));
+      slideInAnimation();
     } catch (error) {
       console.error('Error fetching country data:', error);
     }
@@ -176,12 +192,14 @@ const Dashboard = () => {
         
         <View style={styles.mainContent}>
        
-          
+        <Animated.View style={{ transform: [{ translateY: translationAnim }] }}>
           <View style={styles.chartContainer}>
           <Center>
     <Text style={[styles.chartTitle, {textAlign: 'center'}]}>Products and Prices</Text>
 </Center>
+
             {chartData && (
+             
               <LineChart
                 data={chartData}
                 width={300}
@@ -203,8 +221,13 @@ const Dashboard = () => {
                   borderRadius: 16,
                 }}
               />
+             
             )}
+           
           </View>
+          
+          </Animated.View>
+          <Animated.View style={{ transform: [{ translateY: translationAnim }] }}>
           <View style={styles.chartContainer}>
           <Center>
     <Text style={[styles.chartTitle, {textAlign: 'center'}]}>Orders By Month</Text>
@@ -233,6 +256,8 @@ const Dashboard = () => {
               />
             )}
           </View>
+          </Animated.View>
+          <Animated.View style={{ transform: [{ translateY: translationAnim }] }}>
           <View style={styles.chartContainer}>
           <Center>
     <Text style={[styles.chartTitle, {textAlign: 'center'}]}>Orders By Country</Text>
@@ -256,6 +281,7 @@ const Dashboard = () => {
               />
             )}
           </View>
+          </Animated.View>
         </View>
       </View>
     </ScrollView>
